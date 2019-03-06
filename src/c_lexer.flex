@@ -14,6 +14,10 @@ int current_scope=0;
 %}
 
 %%
+
+"//"[.]*{newline} {;}  //oneline comments check
+"/*"[^(\*)][*]+"\" {;} //multiline comments checks
+
 /*Operators*/
 /*----arithmetic operators*/
 [*]             { return T_TIMES; }
@@ -89,15 +93,11 @@ octescape "\"{octdigit}|"\"{octdigit}{octdigit}|"\"{octdigit}{octdigit}{octdigit
 escapeseq {hexescape}|{octescape}
 
 
-
-
-
 digit     [0-9]+
-decdigit  [1-9][0-9]*
 hexdigit  ("0")[xX][0-9A-Fa-f]+
 octdigit  [0][0-7]+
 /*----integer constant*/
-dec                 {decdigit}+[eE][+-]?{decdigit}?
+dec                 [1-9]{digit}*
 decsigned           {dec}[uU]
 declong
 declong             {dec}[lL]
@@ -164,9 +164,6 @@ while      { return T_WHILE;}
 
 string \"[^"\n]*["\n] //check strings can't cross line boundaries
 variable ^"{nondigit}[a-zA-Z0-9_]*
-
-"//"[.]*{newline} {;}  //oneline comments check
-"/*"[^(\*)][*]+"\" {;} //multiline comments checks
 
 {white} { }
 {real} { yylval.number=strtod(yytext, 0); return T_NUMBER; }
