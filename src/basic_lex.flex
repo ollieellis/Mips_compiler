@@ -2,9 +2,10 @@
 %option noyywrap
 
 %{
-#include "t_parser.tab.hpp" //confused on what this is
+#include "t_parser.tab.hpp" //this was a bison parser
+//i think we need to make our own using bison 3.0.4.
 #include <string.h> //ide thing?
-//#include "histogram.hpp"//check commented as unsure whether we hav/need
+//#include "histogram.hpp"//check commented as unsure whether we hav/need?
 
 // This is to work around an irritating bug in Flex
 // https://stackoverflow.com/questions/46213840/get-rid-of-warning-implicit-declaration-of-function-fileno-in-flex
@@ -13,7 +14,7 @@ int num_lines=0; int num_chars=0;
 int current_scope=0;
 %}
 
-
+%%
 //keywords
 while   { return T_WHILE;}
 if      { return T_IF;}
@@ -29,11 +30,18 @@ void	{ return T_VOID;} //maybe not for basic idk?
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
 
-//binary operators
+//binary operators //&&... not included bc can be done using below 
 "=="    { return T_EQ; } // is " alllowed???
 "!="    { return T_NEQ;}
+
 
 //logical operators
 [&]    { return T_BWAND; }
 [|]    { return T_BWOR;  }
 [~]    { return T_BWNOT; }
+
+//identifiers - yylval was something he created :L
+[a-zA-z_]+[a-zA-z_0-9]  { yylval.string=new std::string(yytext); return T_NON_DIGIT; }
+[0-9]+ 					{ yylval.number=strtod(yytext, 0); return T_NUMBER; }
+
+%%
