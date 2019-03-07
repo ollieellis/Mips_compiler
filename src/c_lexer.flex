@@ -20,7 +20,7 @@ int current_scope=0;
 
 /*Operators*/
 /*----arithmetic operators*/
-[*]             { return T_TIMES; }
+[*]             { return T_STAR; }
 [/]             { return T_DIVIDE; }
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
@@ -168,5 +168,6 @@ variable ^"{nondigit}[a-zA-Z0-9_]*
 {white} { }
 {real} { yylval.number=strtod(yytext, 0); return T_NUMBER; }
 {keyword} {}
+{variable} { yylval.string=new std::string(yytext); return T_VARIABLE; }
 
 %%

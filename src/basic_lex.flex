@@ -19,8 +19,9 @@ int current_scope=0;
 while   { return T_WHILE;}
 if      { return T_IF;}
 else    { return T_ELSE;}
-int		{ return T_INT;}
-void	{ return T_VOID;} //maybe not for basic idk?
+int			{ return T_INT;}
+void		{ return T_VOID;} //maybe not for basic idk?
+return  { return T_RETURN;}
 //main	{ return T_MAIN;} //function name not needed
 
 /*Operators*/
@@ -30,7 +31,7 @@ void	{ return T_VOID;} //maybe not for basic idk?
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
 
-//binary operators //&&... not included bc can be done using below 
+//binary operators //&&... not included bc can be done using below
 "=="    { return T_EQ; } // is " alllowed???
 "!="    { return T_NEQ;}
 
