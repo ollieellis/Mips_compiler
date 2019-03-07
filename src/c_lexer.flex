@@ -99,7 +99,6 @@ octdigit  [0][0-7]+
 /*----integer constant*/
 dec                 [1-9]{digit}*
 decsigned           {dec}[uU]
-declong
 declong             {dec}[lL]
 decunsignedlong     {declong}[uU][lL]
 decsignedlong       {decsigned}[lL]

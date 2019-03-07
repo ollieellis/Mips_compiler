@@ -22,7 +22,7 @@ struct Tree{
     std::vector<TreePtr> branches;
 };
 
-inline TreePtr Number(int32_t x){ return std::make_shared<Tree>(std::to_string(x)); }
+inline TreePtr Nfumber(int32_t x){ return std::make_shared<Tree>(std::to_string(x)); }
 inline TreePtr Variable(std::string id){ return std::make_shared<Tree>(id); }
 
 

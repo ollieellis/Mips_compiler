@@ -41,8 +41,15 @@ return  { return T_RETURN;}
 [|]    { return T_BWOR;  }
 [~]    { return T_BWNOT; }
 
+digit     [0-9]+
+int       [1-9]{digit}*
+
+
+nondigit [a-zA-z_]
+variable ^"{nondigit}[a-zA-Z0-9_]*
+
 //identifiers - yylval was something he created :L
-[a-zA-z_]+[a-zA-z_0-9]  { yylval.string=new std::string(yytext); return T_NON_DIGIT; }
-[0-9]+ 					{ yylval.number=strtod(yytext, 0); return T_NUMBER; }
+{variable} { yylval.string=new std::string(yytext); return T_VARIABLE; }
+{int}					{ yylval.number=strtod(yytext, 0); return T_NUMBER; }
 
 %%
