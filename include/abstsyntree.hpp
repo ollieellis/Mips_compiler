@@ -5,11 +5,14 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <list>
+#include abstsyntree_compile
 
 typedef std::shared_ptr<node> nodePtr;
-const std::map<std::string,double> &symtab;
+extern const std::map<std::string,double> &symtab;//check
 
 class node {
+	/*
 	protected:
 		std::string type;
 		std::string value;
@@ -20,10 +23,26 @@ class node {
 
 		template<class ...TArgs>//?
 		node(std::string _type, TArgs ...args): type(_type), branches{args...}{}//?
+		*/
+		virtual uint_t interpret() = 0;
+		virtual uint_t compile() = 0;
 }
 
+//---------------- base nodes
+class primary_expr: public node{
+	//functions
+	//virtual void print() = 0;
+
+}
+class binary_expr: public primary_expr {
+  protected:
+    node *L;
+    node *R;
+  public:
+    binary_expr(node *lval, node *rval): L(lval), R(rval) {}
+}
 //----------------
-class primary_expr: public node{}
+
 
 class identifier: public primary_expr {
 	protected:
@@ -33,7 +52,7 @@ class identifier: public primary_expr {
       id = _id;
     }
 }
-class const: public primary_expr{//number, can be int_const or float_const or... etc?
+class const_: public primary_expr{//number, can be int_const or float_const or... etc?
 	protected:
 		double value;
 	public:
@@ -49,40 +68,81 @@ class str_lit: public primary_expr{
 			str = _str;
 	}
 }
+
+//---------------- arith expr
+class additive_expr: public binary_expr{}
+
+class plus_expr: public additive_expr{
+	public:
+		plus_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+}
+class minus_expr: public additive_expr{
+  public:
+    div_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+}
+
+class multiplicative_expr: public binary_expr{}
+
+class times_expr: public multiplicative_expr{
+	public:
+		times_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+}
+class div_expr: public multiplicative_expr{
+  public:
+    div_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+}
+//-----------------------
+class postfix_expr{}
+/*class primary_expression_postfix_expression {
+	protected:
+	exp_node *exp;
+	public:
+	assignment_stmt(string name, exp_node *expression);
+	void print();
+	void evaluate();
+}
+*/
+class argument_expr_list{
+	protected:
+	 list<assignment_expr*> *args;
+	public:
+	 argument_expr_list(list<assignment_expr*> *stmtlist);
+ }
+
+class unary_expr{}
+
+class cast_expr{}
+
+class cast_expr{}}
+
+
+
+shift_expr
+
+cast_expr
+
+//---------------- boolean expr
+
+class relational_expr: public binary_expr{
+	
+}
+
+equality_expr
+
+and_expr
+
+exclusive_or_expression
+
+inclusive_or_expression
+
+logical_and_expression
+
+logical_or_expression
+
+conditional_expression
+
 //----------------
 
-class arith_expr: public primary_expr {
-  protected:
-    node *L;
-    node *R;
-  public:
-    arith_expr(node *lval, node *rval): L(lval), R(rval) {}
-}
-class plus_expr: public arith_expr {
-	public:
-		plus_expr(node *lval, node *lval): arith_expr(lval, lval) {}
-}
-class minus_expr: public arith_expr {
-  public:
-    div_expr(node *lval, node *lval): arith_expr(lval, lval) {}
-}
-class times_expr: public arith_expr {
-	public:
-		times_expr(node *lval, node *lval): arith_expr(lval, lval) {}
-}
-class div_expr: public arith_expr {
-  public:
-    div_expr(node *lval, node *lval): arith_expr(lval, lval) {}
-}
-
-class postfix_expression {}
-
-class argument_expression_list {}
-
-class unary_expression {}
-
-
-unary_operator
 void Translate(
 
 );

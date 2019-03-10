@@ -1,59 +1,17 @@
-#include "ast.hpp"
+#include <fstream>
+#include "abstyntree.hpp"
 
-
-
-//static int makeNameUnq=0;
-
-static std::string getReg(std::string base)
-{
-  //return "_"+base+"_"+std::to_string(makeNameUnq++);
-}
-
-void CompileRec(std::string resultReg, nodePtr program){
-  if(program->type="Number"){
-
-  }else if(program->type="Variable"){
-
-  }else if(program->type=="Param"){
-
-  }else if(program->type=="Seq"){
-    for(unsigned i=0; i<program->branches.size(); i++){
+int main(int argc, char *argv[]){
+    if(argc < 2){
+      fprintf(stderr, "usage : compiler sourceCode\n");
+      exit(1);
     }
-  }else if(program->type=="Input"){
-
-  }else if(program->type=="Output"){
-
-  }else if(program->type=="LessThan"){
-
-  }else if(program->type=="Add"){
-		std::string s=findReg();
-		std::string t=findReg();
-		CompileRec(s, program->branches[0]);
-		CompileRec(t, program->branches[1]);
-		std::cout<<"add "<<resultReg<<", "<<s<<", "<<t<<std::endl;
-  }else if(program->type=="Sub"){
-		std::string s=findReg();
-		std::string t=findReg();
-		CompileRec(s, program->branches[0]);
-		CompileRec(t, program->branches[1]);
-		std::cout<<"sub "<<resultReg<<", "<<s<<", "<<t<<std::endl;
-  }else if(program->type=="Mult"){
-		std::string s=findReg();
-		std::string t=findReg();
-		CompileRec(s, program->branches[0]);
-		CompileRec(t, program->branches[1]);
-		std::cout<<"mult "<<s<<", "<<t<<std::endl;
-  }else if(program->type=="Div"){
-		std::string s=findReg();
-		std::string t=findReg();
-		CompileRec(s, program->branches[0]);
-		CompileRec(t, program->branches[1]);
-		std::cout<<"div "<<s<<", "<<t<<std::endl;
-  }
-	else{
-      throw std::runtime_error("Unknown construct '"+program->type+"'");
-  }
-}
-void Compile(nodePtr program){
-    CompileRec(res, program);//compile all
+    std::ifstream src(argv[1]);
+    if(!src.is_open()){
+      fprintf(stderr, "Couldn't open '%s'\n", argv[1]);
+      exit(1);
+    }
+    TreePtr tree=Parse(src);
+    compile(tree);
+    return 0;
 }
