@@ -1,8 +1,7 @@
 
 //static int makeNameUnq=0;
 
-static std::string getReg(std::string base)
-{
+static std::string getReg(std::string base){
   //return "_"+base+"_"+std::to_string(makeNameUnq++);
 }
 

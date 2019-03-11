@@ -9,32 +9,32 @@
 #include abstsyntree_compile
 
 typedef std::shared_ptr<node> nodePtr;
+//typedef extern const Expression* exp_p;
 extern const std::map<std::string,double> &symtab;//check
 
 class node {
-	/*
 	protected:
 		std::string type;
 		std::string value;
-		std::vector<nodePtr> branches;
+		//std::vector<nodePtr> branches;
 	public:
-		node(std::string _type, std::string _value, const std::vector<TreePtr> &_branches): type(_type), value(_value), branches(_branches){}
+		//node(std::string _type, std::string _value, const std::vector<TreePtr> &_branches): type(_type), value(_value), branches(_branches){}
 		node(std::string _type, std::string _value): type(_type), value(_value){}
 
-		template<class ...TArgs>//?
-		node(std::string _type, TArgs ...args): type(_type), branches{args...}{}//?
-		*/
+		//template<class ...TArgs>//?
+		//node(std::string _type, TArgs ...args): type(_type), branches{args...}{}//?
+
 		virtual uint_t interpret() = 0;
 		virtual uint_t compile() = 0;
 }
 
 //---------------- base nodes
-class primary_expr: public node{
+/*class primary_expr: public node{
 	//functions
 	//virtual void print() = 0;
 
-}
-class binary_expr: public primary_expr {
+}*/
+class binary_expr: public node {
   protected:
     node *L;
     node *R;
@@ -44,7 +44,7 @@ class binary_expr: public primary_expr {
 //----------------
 
 
-class identifier: public primary_expr {
+class identifier: public node {
 	protected:
 		std::string id;
 	public:
@@ -52,15 +52,13 @@ class identifier: public primary_expr {
       id = _id;
     }
 }
-class const_: public primary_expr{//number, can be int_const or float_const or... etc?
-	protected:
-		double value;
+class const_: public node{//number, can be int_const or float_const or... etc?
 	public:
 		const(double _value) {
 			value = _value;
 	}
 }
-class str_lit: public primary_expr{
+class str_lit: public node{
 	protected:
 		std::string str;
 	public:
@@ -75,25 +73,32 @@ class additive_expr: public binary_expr{}
 class plus_expr: public additive_expr{
 	public:
 		plus_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+		uint_t evaluate();
 }
 class minus_expr: public additive_expr{
   public:
     div_expr(node *lval, node *rval): binary_expr(lval, lval) {}
 }
 
-class multiplicative_expr: public binary_expr{}
-
-class times_expr: public multiplicative_expr{
-	public:
-		times_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+class multi_expr: public binary_expr{
+public:
+	div_expr(node *lval, node *rval): multi_expr(lval, lval) {}
 }
-class div_expr: public multiplicative_expr{
+
+class times_expr: public multi_expr{
+	public:
+		times_expr(node *lval, node *rval): multi_expr(lval, lval) {}
+}
+class div_expr: public multi_expr{
   public:
-    div_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+    div_expr(node *lval, node *rval): multi_expr(lval, lval) {}
 }
 //-----------------------
-class postfix_expr{}
-/*class primary_expression_postfix_expression {
+class postfix_expr{
+
+
+}
+/*class nodeession_postfix_expression {
 	protected:
 	exp_node *exp;
 	public:
@@ -109,22 +114,23 @@ class argument_expr_list{
 	 argument_expr_list(list<assignment_expr*> *stmtlist);
  }
 
-class unary_expr{}
+class unary_expr{
 
-class cast_expr{}
+}
 
-class cast_expr{}}
+class shift_expr{
 
+}
 
+class cast_expr{
 
-shift_expr
+}
 
-cast_expr
 
 //---------------- boolean expr
 
 class relational_expr: public binary_expr{
-	
+
 }
 
 equality_expr
@@ -142,13 +148,6 @@ logical_or_expression
 conditional_expression
 
 //----------------
-
-void Translate(
-
-);
-void Compile(
-    TreePtr program
-);
 
 extern const Expression *parseAST();
 
