@@ -23,8 +23,8 @@ class node {
 
 		//template<class ...TArgs>//?
 		//node(std::string _type, TArgs ...args): type(_type), branches{args...}{}//?
-
-		virtual uint_t interpret() = 0;
+		virtual uint_t evaluate() = 0;
+		virtual uint_t translate() = 0;
 		virtual uint_t compile() = 0;
 }
 
@@ -45,26 +45,21 @@ class binary_expr: public node {
 
 
 class identifier: public node {
-	protected:
-		std::string id;
 	public:
 		identifier(const std::string &_id) {
       id = _id;
     }
 }
 class const_: public node{//number, can be int_const or float_const or... etc?
+	protected:
 	public:
-		const(double _value) {
-			value = _value;
-	}
+
 }
 class str_lit: public node{
 	protected:
-		std::string str;
+
 	public:
-		str_lit(const std::string &_str) {
-			str = _str;
-	}
+		str_lit(node *lval, node *rval): node(lval, rval) {}
 }
 
 //---------------- arith expr
@@ -133,19 +128,19 @@ class relational_expr: public binary_expr{
 
 }
 
-equality_expr
+class equality_expr
 
-and_expr
+class and_expr
 
-exclusive_or_expression
+class exclusive_or_expr
 
-inclusive_or_expression
+class inclusive_or_expr
 
-logical_and_expression
+class logical_and_expr
 
-logical_or_expression
+class logical_or_expr
 
-conditional_expression
+class conditional_expr
 
 //----------------
 
