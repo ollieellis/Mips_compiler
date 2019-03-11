@@ -46,20 +46,15 @@ class binary_expr: public node {
 
 class identifier: public node {
 	public:
-		identifier(const std::string &_id) {
-      id = _id;
-    }
+		identifier(std::string _type, std::string _value): node(_type, _value) {}
 }
 class const_: public node{//number, can be int_const or float_const or... etc?
-	protected:
 	public:
-
+		const(std::string _type, std::string _value): node( _type, _value){}
 }
 class str_lit: public node{
-	protected:
-
 	public:
-		str_lit(node *lval, node *rval): node(lval, rval) {}
+		str_lit(std::string _type, std::string _value): node( _type, _value) {}
 }
 
 //---------------- arith expr
@@ -67,26 +62,28 @@ class additive_expr: public binary_expr{}
 
 class plus_expr: public additive_expr{
 	public:
-		plus_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+		plus_expr(std::string _type, std::string _value): node( _type, _value){}
+		plus_expr(node *lval, node *rval): binary_expr(lval, rval){}
 		uint_t evaluate();
 }
 class minus_expr: public additive_expr{
   public:
-    div_expr(node *lval, node *rval): binary_expr(lval, lval) {}
+		div_expr(std::string _type, std::string _value): node( _type, _value){}
+    div_expr(node *lval, node *rval): binary_expr(lval, rval) {}
 }
 
 class multi_expr: public binary_expr{
-public:
-	div_expr(node *lval, node *rval): multi_expr(lval, lval) {}
+	public:
+		mult_expr(node *lval, node *rval): binary_expr(lval, rval) {}
 }
 
 class times_expr: public multi_expr{
 	public:
-		times_expr(node *lval, node *rval): multi_expr(lval, lval) {}
+		times_expr(node *lval, node *rval): multi_expr(lval, rval) {}
 }
 class div_expr: public multi_expr{
   public:
-    div_expr(node *lval, node *rval): multi_expr(lval, lval) {}
+    div_expr(node *lval, node *rval): multi_expr(lval, rval) {}
 }
 //-----------------------
 class postfix_expr{
@@ -128,19 +125,19 @@ class relational_expr: public binary_expr{
 
 }
 
-class equality_expr
+class equality_expr{}
 
-class and_expr
+class and_expr{}
 
-class exclusive_or_expr
+class exclusive_or_expr{}
 
-class inclusive_or_expr
+class inclusive_or_expr{}
 
-class logical_and_expr
+class logical_and_expr{}
 
-class logical_or_expr
+class logical_or_expr{}
 
-class conditional_expr
+class conditional_expr{}
 
 //----------------
 
