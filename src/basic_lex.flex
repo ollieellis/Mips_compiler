@@ -32,11 +32,20 @@ return  { return T_RETURN;}
 [-]             { return T_MINUS; }
 
 //binary operators //&&... not included bc can be done using below
-"=="    { return T_EQ; } // is " alllowed???
+"=="    { return T_EQ; } 
 "!="    { return T_NEQ;}
 
+//punctuation and paired operators
+[;]		{ return T_SEMI; }
+[(]		{ return T_LBRACKET; }
+[)]		{ return T_RBRACKET; }
+[\[]	{ return T_LSQBRACKET; }
+[\]]	{ return T_RSQBRACKET; }
+[\{]	{ return T_LCBRACKET; }
+[\}]	{ return T_RCBRACKET; }
 
-//logical operators
+
+//logical bitwise operators
 [&]    { return T_BWAND; }
 [|]    { return T_BWOR;  }
 [~]    { return T_BWNOT; }
