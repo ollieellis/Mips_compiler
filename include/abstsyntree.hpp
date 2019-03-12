@@ -6,160 +6,180 @@
 #include <map>
 #include <memory>
 #include <list>
-#include "abstsyntree_evaluate.hpp"
+//#include "abstsyntree_evaluate.hpp"
 
-typedef std::shared_ptr<node> nodePtr;
+
 //typedef extern const Expression* exp_p;
 extern const std::map<std::string,double> &symtab;//check
 
-class node {
+
+//decl_node/
+//types_node
+//param_node
+class node{
+protected:
+	node();
+};
+typedef std::shared_ptr<node> nodePtr;
+//---------------- base nodes
+/*
+typdef enum{
+//expression tokens
+}; expr_kind;
+*/
+class expr_node: public node{
 	protected:
-		std::string type;
 		std::string value;
-		//std::vector<nodePtr> branches;
+		//std::vector<expr_nodePtr> branches;
 	public:
-		//node(std::string _type, std::string _value, const std::vector<TreePtr> &_branches): type(_type), value(_value), branches(_branches){}
-		node(std::string _type, std::string _value): type(_type), value(_value){}
+		//expr_node(std::string _kind, std::string _value, const std::vector<TreePtr> &_branches): type(_kind), value(_value), branches(_branches){};
+		expr_node();
+		expr_node(std::string _kind, std::string _value): node(_kind), value(_value){};
 
 		//template<class ...TArgs>//?
-		//node(std::string _type, TArgs ...args): type(_type), branches{args...}{}//?
-		virtual uint_t evaluate() = 0;
-		//virtual uint_t translate() = 0;
-		//virtual uint_t compile() = 0;
-}
+		//expr_node(std::string _kind, TArgs ...args): type(_kind), branches{args...};{};//?
+		//virtual //int32_t evaluate() = 0;
+		//virtual int32_t translate() = 0;
+		//virtual int32_t compile() = 0;
+};
+class stmt_node: public node{
+	protected:
+};;
+class decl_node: public node{
+	protected:
 
-//---------------- base nodes
-/*class primary_expr: public node{
+};
+/*class primary_expr: public expr_node{
 	//functions
 	//virtual void print() = 0;
 
-}*/
-class binary_expr: public node {
+};*/
+class binary_expr: public expr_node {
   protected:
-    node *L;
-    node *R;
+    nodePtr L;
+    nodePtr R;
   public:
-    binary_expr(std::string _type, std::string _value, node *lval, node *rval): node(_type, _value), L(lval), R(rval) {}
-}
+    binary_expr(nodePtr lval, nodePtr rval): L(lval), R(rval) {};
+};
+class unary_expr: public expr_node {
+  protected:
+    nodePtr R;
+  public:
+};
 //----------------
 
 
-class identifier: public node {
+class identifier: public expr_node {
 	public:
-		identifier(std::string _type, std::string _value): node(_type, _value) {}
-		uint_t evaluate();
-}
-class const_: public node{//number, can be int_const or float_const or... etc?
+		identifier(std::string _value): expr_node(_value) {};
+		//int32_t evaluate();
+};
+class constant: public expr_node{//number, can be int_const or float_const or... etc?
 	public:
-		const(std::string _type, std::string _value): node( _type, _value){}
-		uint_t evaluate();
-}
-class str_lit: public node{
+		constant(std::string _value): expr_node(_value){};
+		//int32_t evaluate();
+};
+class str_lit: public expr_node{
 	public:
-		str_lit(std::string _type, std::string _value): node( _type, _value) {}
-		uint_t evaluate();
-}
+		str_lit(std::string _value): expr_node(_value) {};
+		//int32_t evaluate();
+};
 
 //---------------- arith expr
-//class additive_expr: public binary_expr{} //check
+//class additive_expr: public binary_expr{}; //check
 
-class plus_expr: public additive_expr{
+class plus_expr: public binary_expr{
 	public:
-		plus_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr( _type, _value, lval, rval){}
-		uint_t evaluate();
-}
-class minus_expr: public additive_expr{
+		plus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		//int32_t evaluate();
+};
+class minus_expr: public binary_expr{
   public:
-		div_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr( _type, _value, lval, rval){}
-		uint_t evaluate();
-}
+		minus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		//int32_t evaluate();
+};
 
-class multi_expr: public binary_expr{
+/*class multi_expr: public binary_expr{
 	public:
-		mult_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr( _type, _value, lval, rval){}
-		uint_t evaluate();
-}
+		multi_expr(std::string _kind, std::string _value, nodePtr lval, nodePtr rval): binary_expr(_kind, _value, lval, rval){};
+		//int32_t evaluate();
+};*/
 
-class times_expr: public multi_expr{
+class times_expr: public binary_expr{
 	public:
-		times_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr( _type, _value, lval, rval){}
-		uint_t evaluate();
-}
-class div_expr: public multi_expr{
+		times_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		//int32_t evaluate();
+};
+class div_expr: public binary_expr{
   public:
-    plus_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr( _type, _value, lval, rval){}
-		uint_t evaluate();
-}
+    div_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		//int32_t evaluate();
+};
 //-----------------------
 class postfix_expr{
 	protected:
-		node *R;
+		nodePtr R;
 	public:
-		postfix_expr(std::string _type, std::string _value, node *optionalr): node( _type, _value) R(optionalr)){}
-		uint_t evaluate();
-}
-/*class nodeession_postfix_expression {
+		postfix_expr(nodePtr optionalr): R(optionalr){};
+		//int32_t evaluate();
+};
+/*class expr_nodeession_postfix_expression {
 	protected:
-	exp_node *exp;
+	exp_nodePtr exp;
 	public:
-	assignment_stmt(string name, exp_node *expression);
+	assignment_stmt(string name, exp_nodePtr expression);
 	void print();
 	void evaluate();
-}
+};
 */
 class argument_expr_list{
 	protected:
-	 list<assignment_expr*> *args;
 	public:
-	 argument_expr_list(list<assignment_expr*> *stmtlist);
- }
 
-class unary_expr{
-
-}
+ };
 
 class shift_expr{
 
-}
+};
 
 class cast_expr{
 
-}
+};
 
 
 //---------------- boolean expr
 
 class relational_expr: public binary_expr{
 	public:
-		relational_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr(_type, _value, lval,rval) {}
-}
-class EQ_expr: public binary_expr{
+		relational_expr(nodePtr lval, nodePtr rval): binary_expr(lval,rval) {};
+};
+class EQ_expr: public relational_expr{
 	public:
-		EQ_expr(std::string _type, std::string _value, node *lval, node *rval): relational_expr(_type, _value, lval, rval){}
-}
-class NEQ_expr: public binary_expr{
+		EQ_expr(nodePtr lval, nodePtr rval): relational_expr(lval, rval){};
+};
+class NEQ_expr: public relational_expr{
 	public:
-		NEQ_expr(std::string _type, std::string _value, node *lval, node *rval): relational_expr(_type, _value), L(lval), R(rval) {}
-}
+		NEQ_expr(nodePtr lval, nodePtr rval): relational_expr(lval, rval) {};
+};
 
-class equality_expr{
+class equality_expr: public relational_expr{
 	public:
-		equality_expr(std::string _type, std::string _value, node *lval, node *rval): binary_expr(_type, _value, lval,rval){}
-}
+		equality_expr(nodePtr lval, nodePtr rval): relational_expr(lval,rval){};
+};
 
 class and_expr{
 
-}
+};
 
-class exclusive_or_expr{}
+class exclusive_or_expr{};
 
-class inclusive_or_expr{}
+class inclusive_or_expr{};
 
-class logical_and_expr{}
+class logical_and_expr{};
 
-class logical_or_expr{}
+class logical_or_expr{};
 
-class conditional_expr{}
+class conditional_expr{};
 /*
 assignment_expression
 
@@ -169,6 +189,27 @@ expression
 
 constant_expression
 */
+class labeled_stmt{
+
+};
+class compound_stmt{
+
+};
+class expression_stmt{
+
+};
+class selection_stmt{//ifelse
+	protected:
+
+	public:
+
+};
+class iteration_stmt{
+
+};
+class jump_stmt{
+
+};
 /*
 declaration
 
@@ -215,7 +256,7 @@ pointer
 type_qualifier_list
 
 
-parameter_type_list
+parameter_kind_list
 
 parameter_list
 
@@ -232,25 +273,13 @@ direct_abstract_declarator
 initializer
 
 initializer_list
+*/
 
-statement
-
-labeled_statement
-
-compound_statement
+/*
 
 declaration_list
 
 statement_list
-
-expression_statement
-
-selection_statement
-
-
-iteration_statement
-
-jump_statement
 
 translation_unit
 
@@ -261,6 +290,6 @@ function_definition
 */
 //----------------
 
-extern const Expression *parseAST();
+//extern const Expression *parseAST();
 
 #endif
