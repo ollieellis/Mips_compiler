@@ -6,14 +6,14 @@ symtab symboltable;
 symtab(){};
 //check destructor?
 int32_t symtab::Lookup(std::string id){
-	if(bindings.count(id)==0){
+	if(symboltable.count(id)==0){
 		std::cerr<<"variable "<<id<<"not found"<<std::endl;
 		return -1;//check
 	}
 };
 void symtab::Bind(std::string id, int32_t value){
-	if(bindings.count(id)!= 0) {
+	if(symboltable.count(id)!= 0) {
 		std::cerr<<"variable "<<id<<"already bound"<<std::endl;
 	}
-	else bindings(id)=value;
+	else symboltable(id)=value;
 };
