@@ -36,11 +36,30 @@
 //punctuation and paired operators
 %token T_SEMI T_LBRACKET T_RBRACKET T_LCBRACKET T_RCBRACKET
 //possibly unused 
-% T_LSBRACKET T_RSBRACKET
+%token T_LSBRACKET T_RSBRACKET
 
 //logical and bitwise operators
 %token T_BWAND T_BWOR t_BWNOT
 
+
+
+
 //Types 
-%type 
+%type <expr> EXPR TERM FACTOR //unsure wher statement fits in
+%type <number> T_NUMBER
+%type <string> T_VARIABLE T_LOG T_EXP T_SQRT FUNCTION_NAME
+
+
+
+
+//start a translation unit is sometimes used not sure if we need
+//https://en.wikipedia.org/wiki/Translation_unit_(programming)
+//https://www.lysator.liu.se/c/ANSI-C-grammar-y.html
+
+%start ROOT_NODE
+
+ROOT_NODE : EXPR { g_root = $1; }
+
+
+
 

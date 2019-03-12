@@ -38,22 +38,22 @@ return  { return T_RETURN;}
 //punctuation and paired operators
 //https://www.lysator.liu.se/c/ANSI-C-grammar-l.html#check-type
 //above may be an easier way of doing punctuation
-[;]		{ return ';'; }
-[(]		{ return '('; }
-[)]		{ return ')'; }
-[\[]	{ return '['; }
-[\]]	{ return ']'; }
-[\{]	{ return '{'; }
-[\}]	{ return '}'; }
+[;]		{ return T_SEMI; }
+[(]		{ return T_LBRACKET; }
+[)]		{ return T_RBRACKET; }
+[\[]	{ return T_LSQBRACKET; }
+[\]]	{ return T_RSQBRACKET; }
+[\{]	{ return T_LCBRACKET; }
+[\}]	{ return T_RCBRACKET; }
 
 //assignment operators
-[=]		{ return '='; }
+[=]		{ return T_ASSIGN; }
 
 
 //logical bitwise operators
-[&]    { return '&'; }
-[|]    { return '|';  }
-//[~]    { return '~'; } 
+[&]    { return T_BWAND; }
+[|]    { return T_BWOR;  }
+[~]    { return T_BWNOT; } 
 
 digit     [0-9]+
 int       [1-9]{digit}*
