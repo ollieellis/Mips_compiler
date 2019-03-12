@@ -44,11 +44,14 @@ return  { return T_RETURN;}
 [\{]	{ return T_LCBRACKET; }
 [\}]	{ return T_RCBRACKET; }
 
+//assignment operators
+[=]		{ return T_ASSIGN; }
+
 
 //logical bitwise operators
 [&]    { return T_BWAND; }
 [|]    { return T_BWOR;  }
-[~]    { return T_BWNOT; }
+[~]    { return T_BWNOT; } 
 
 digit     [0-9]+
 int       [1-9]{digit}*
