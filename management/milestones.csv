@@ -1,6 +1,6 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-DefineInitialMilestones,N/A,1,Both,,ÊCome up with initial milestones for getting started
-Write Tests for test suite,N/A,3,Both,,Write test cases 1-10
+DefineInitialMilestones,N/A,1,Both,Yes,ÊCome up with initial milestones for getting started
+Write Tests for test suite,N/A,3,Both,,Write test cases 1-10 and extras
 Finish labs for preperation,N/A,6,N/A,,Do labs 2 and 3 and examine feedback
 basic lexer,N/A,1,Harriet,,"create lex file to tokenise the ""basic"" compiler spec"
 basic parser,basic lexer,3,Ollie,,generate parser to use alongside ast 
