@@ -6,21 +6,16 @@
 #include <map>
 #include <memory>
 #include <list>
-//#include "abstsyntree_evaluate.hpp"
-
 
 //typedef extern const Expression* exp_p;
-extern const std::map<std::string,double> &symtab;//check
 
 
-//decl_node/
-//types_node
-//param_node
 class node{
 protected:
 	node();
 };
-typedef std::shared_ptr<node> nodePtr;
+
+typedef std::shared_ptr<node> nodePtr; //don't do cyclical references
 //---------------- base nodes
 /*
 typdef enum{
@@ -34,34 +29,53 @@ class expr_node: public node{
 	public:
 		//expr_node(std::string _kind, std::string _value, const std::vector<TreePtr> &_branches): type(_kind), value(_value), branches(_branches){};
 		expr_node();
-		expr_node(std::string _kind, std::string _value): node(_kind), value(_value){};
-
+		//expr_node(std::string _kind, std::string _value): node(_kind), value(_value){};
 		//template<class ...TArgs>//?
 		//expr_node(std::string _kind, TArgs ...args): type(_kind), branches{args...};{};//?
-		//virtual //int32_t evaluate() = 0;
-		//virtual int32_t translate() = 0;
-		//virtual int32_t compile() = 0;
+		virtual void translate() = 0;
+		virtual void compile() = 0;
 };
 class stmt_node: public node{
 	protected:
-};;
+		std::vector<nodePtr> body;
+	public:
+		virtual void translate() = 0;
+		virtual void compile() = 0;
+};
 class decl_node: public node{
 	protected:
-
+		nodePtr name;
+		std::vector<nodePtr> body;
+	public:
+		virtual void translate() = 0;
+		virtual void compile() = 0;
 };
+
+class integer_type: public type{
+	protected:
+
+	public:
+};
+class float_type: public type{
+	protected:
+
+	public:
+};
+//types_node
+//param_node
 /*class primary_expr: public expr_node{
 	//functions
 	//virtual void print() = 0;
 
 };*/
-class binary_expr: public expr_node {
+class binary_expr: public expr_node{
   protected:
     nodePtr L;
     nodePtr R;
   public:
     binary_expr(nodePtr lval, nodePtr rval): L(lval), R(rval) {};
 };
-class unary_expr: public expr_node {
+class unary_expr: public expr_node{
   protected:
     nodePtr R;
   public:
@@ -69,20 +83,20 @@ class unary_expr: public expr_node {
 //----------------
 
 
-class identifier: public expr_node {
+class identifier: public expr_node{
 	public:
 		identifier(std::string _value): expr_node(_value) {};
-		//int32_t evaluate();
+		//int32_t translate();
 };
 class constant: public expr_node{//number, can be int_const or float_const or... etc?
 	public:
 		constant(std::string _value): expr_node(_value){};
-		//int32_t evaluate();
+		//int32_t translate();
 };
 class str_lit: public expr_node{
 	public:
 		str_lit(std::string _value): expr_node(_value) {};
-		//int32_t evaluate();
+		//int32_t translate();
 };
 
 //---------------- arith expr
@@ -91,29 +105,33 @@ class str_lit: public expr_node{
 class plus_expr: public binary_expr{
 	public:
 		plus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		//int32_t evaluate();
+		void translate();
+		void compile();
 };
 class minus_expr: public binary_expr{
   public:
 		minus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		//int32_t evaluate();
+		void translate();
+		void compile();
 };
 
 /*class multi_expr: public binary_expr{
 	public:
 		multi_expr(std::string _kind, std::string _value, nodePtr lval, nodePtr rval): binary_expr(_kind, _value, lval, rval){};
-		//int32_t evaluate();
+		//int32_t translate();
 };*/
 
 class times_expr: public binary_expr{
 	public:
 		times_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		//int32_t evaluate();
+		void translate();
+		void compile();
 };
 class div_expr: public binary_expr{
   public:
     div_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		//int32_t evaluate();
+		void translate();
+		void compile();
 };
 //-----------------------
 class postfix_expr{
@@ -121,7 +139,6 @@ class postfix_expr{
 		nodePtr R;
 	public:
 		postfix_expr(nodePtr optionalr): R(optionalr){};
-		//int32_t evaluate();
 };
 /*class expr_nodeession_postfix_expression {
 	protected:
@@ -129,7 +146,7 @@ class postfix_expr{
 	public:
 	assignment_stmt(string name, exp_nodePtr expression);
 	void print();
-	void evaluate();
+	void translate();
 };
 */
 class argument_expr_list{
@@ -171,7 +188,9 @@ class and_expr{
 
 };
 
-class exclusive_or_expr{};
+class exclusive_or_expr{
+
+};
 
 class inclusive_or_expr{};
 
@@ -211,7 +230,6 @@ class jump_stmt{
 
 };
 /*
-declaration
 
 declaration_specifiers
 
@@ -286,10 +304,15 @@ translation_unit
 
 external_declaration
 
-function_definition
+
 */
+class function_definition: public declaration{
+	public:
+	protected:
+
+};
 //----------------
 
-//extern const Expression *parseAST();
+extern const node *parseAST();
 
 #endif

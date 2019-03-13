@@ -12,6 +12,6 @@ int main(int argc, char *argv[]){
       exit(1);
     }
     TreePtr tree=Parse(src);
-    compile(tree);
+    tree->compile(res, symtab);//compile all
     return 0;
 }
