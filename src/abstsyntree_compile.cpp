@@ -4,29 +4,43 @@
 std::vector<std::string> regs;//just use unchangeable registers pluse two
 ///use r1 and r2 names each time
 #include "abstsyntree.hpp"
-void const_::compile(){
-  std::cout<<"t0"<<regs[0]<<value;
+std::string  const_::compile(){
+	return value;
 }
-void identifier::compile(){
-  std::cout<<symtab[id];//check
+std::string identifier::compile(){
+  return value;
 }
-void str_lit::compile(){
-  std::cout<<str;
+std::string str_lit::compile(){
+  return value;
 }
-void identifier::compile()
-  return id;
+std::string identifier::compile(){
+  return value;;
 }
-void add_expr::compile()
+void add_expr::compile(){
+	regs(0) = L->compile();//act of compiling should return a value or load a variable from memory?
+	regs(1) = R->compile();
+	std::cout<<"addi t0, zero, "<<regs(0);
+	std::cout<<"addi t0, zero, "<<regs(1);
+	std::cout<<"add t0, t1, t0"<<std::endl;
 }
-void sub_expr::compile()
+void sub_expr::compile(){
+	regs(0) = L->compile();//act of compiling should return a value or load a variable from memory?
+	regs(1) = R->compile();
+	std::cout<<"addi t0, zero, "<<regs(0);
+	std::cout<<"addi t0, zero, "<<regs(1);
+	std::cout<<"sub t0, t1, t0"<<std::endl;
 }
-void div_expr::compile()
+void div_expr::compile(){
 }
-void mult_expr::compile()
+void mult_expr::compile(){
+	std::string lhs = L->compile();
+	std::string rhs= R->compile();
+	//std::cout<<"mult: "<<
+
+	//std::cout<<"jr $ra";
 }
-void mult_expr::compile()
-}
-void function_definition::compile{
-	protected:
-		
+void function_definition::compile(){
+	std::cout<<name<<": ";
+	body->compile();
+  std::cout<<"jr $ra";
 };

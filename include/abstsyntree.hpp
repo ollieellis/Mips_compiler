@@ -160,6 +160,7 @@ public:
 	void compile();
 }
 
+//declarations---------------------------------------------------
 class function_definition: public declaration{
 	public:
 		function_definition(nodePtr name, nodePtr body): declaration(name,body){};
