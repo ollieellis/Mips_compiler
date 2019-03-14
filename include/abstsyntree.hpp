@@ -7,25 +7,20 @@
 #include <memory>
 #include <list>
 
-//typedef extern const Expression* exp_p;
-
-
 class node{
-protected:
-	node();
+	protected:
+		node();
+	public:
+		virtual void translate() = 0;
+		virtual void compile() = 0;
 };
 
 typedef std::shared_ptr<node> nodePtr; //don't do cyclical references
 //---------------- base nodes
-/*
-typdef enum{
-//expression tokens
-}; expr_kind;
-*/
+
 class expr_node: public node{
 	protected:
 		std::string value;
-		//std::vector<expr_nodePtr> branches;
 	public:
 		//expr_node(std::string _kind, std::string _value, const std::vector<TreePtr> &_branches): type(_kind), value(_value), branches(_branches){};
 		expr_node();
@@ -37,7 +32,7 @@ class expr_node: public node{
 };
 class stmt_node: public node{
 	protected:
-		std::vector<nodePtr> body;
+		std::vector<nodePtr> stmts;
 	public:
 		virtual void translate() = 0;
 		virtual void compile() = 0;
@@ -50,7 +45,7 @@ class decl_node: public node{
 		virtual void translate() = 0;
 		virtual void compile() = 0;
 };
-
+//types------------
 class integer_type: public type{
 	protected:
 
@@ -58,16 +53,10 @@ class integer_type: public type{
 };
 class float_type: public type{
 	protected:
-
+		nodePtr
 	public:
 };
-//types_node
-//param_node
-/*class primary_expr: public expr_node{
-	//functions
-	//virtual void print() = 0;
-
-};*/
+//extended base nodes----------
 class binary_expr: public expr_node{
   protected:
     nodePtr L;
@@ -79,29 +68,30 @@ class unary_expr: public expr_node{
   protected:
     nodePtr R;
   public:
+		unary_expr(nodePtr rval): R(rval) {};
 };
-//----------------
 
-
+//basic units----------------
 class identifier: public expr_node{
 	public:
 		identifier(std::string _value): expr_node(_value) {};
-		//int32_t translate();
+		void translate();
+		void compile();
 };
 class constant: public expr_node{//number, can be int_const or float_const or... etc?
 	public:
 		constant(std::string _value): expr_node(_value){};
-		//int32_t translate();
+		void translate();
+		void compile();
 };
 class str_lit: public expr_node{
 	public:
 		str_lit(std::string _value): expr_node(_value) {};
-		//int32_t translate();
+		void translate();
+		void compile();
 };
 
-//---------------- arith expr
-//class additive_expr: public binary_expr{}; //check
-
+//---------------- expressions
 class plus_expr: public binary_expr{
 	public:
 		plus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
@@ -115,11 +105,6 @@ class minus_expr: public binary_expr{
 		void compile();
 };
 
-/*class multi_expr: public binary_expr{
-	public:
-		multi_expr(std::string _kind, std::string _value, nodePtr lval, nodePtr rval): binary_expr(_kind, _value, lval, rval){};
-		//int32_t translate();
-};*/
 
 class times_expr: public binary_expr{
 	public:
@@ -134,182 +119,52 @@ class div_expr: public binary_expr{
 		void compile();
 };
 //-----------------------
-class postfix_expr{
+class postfix_expr: public unary_expr{
 	protected:
 		nodePtr R;
 	public:
 		postfix_expr(nodePtr optionalr): R(optionalr){};
 };
-/*class expr_nodeession_postfix_expression {
-	protected:
-	exp_nodePtr exp;
+class iseq_expr: public binary_expr{
 	public:
-	assignment_stmt(string name, exp_nodePtr expression);
-	void print();
+		NEQ_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate();
+		void compile();
+};
+
+class isneq_expr: public binary_expr{
+	public:
+		and_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate();
+		void compile();
+};
+
+class xor_expr: public binary_expr{
+	public:
+		exclusive_or_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate();
+		void compile();
+};
+
+class or_expr: public binary_expr{
+	public:
+		exclusive_or_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate();
+		void compile();
+};
+//statements---------------------------------------------------
+class while_stmt{
+public:
+	while_stmt(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
 	void translate();
-};
-*/
-class argument_expr_list{
-	protected:
-	public:
+	void compile();
+}
 
- };
-
-class shift_expr{
-
-};
-
-class cast_expr{
-
-};
-
-
-//---------------- boolean expr
-
-class relational_expr: public binary_expr{
-	public:
-		relational_expr(nodePtr lval, nodePtr rval): binary_expr(lval,rval) {};
-};
-class EQ_expr: public relational_expr{
-	public:
-		EQ_expr(nodePtr lval, nodePtr rval): relational_expr(lval, rval){};
-};
-class NEQ_expr: public relational_expr{
-	public:
-		NEQ_expr(nodePtr lval, nodePtr rval): relational_expr(lval, rval) {};
-};
-
-class equality_expr: public relational_expr{
-	public:
-		equality_expr(nodePtr lval, nodePtr rval): relational_expr(lval,rval){};
-};
-
-class and_expr{
-
-};
-
-class exclusive_or_expr{
-
-};
-
-class inclusive_or_expr{};
-
-class logical_and_expr{};
-
-class logical_or_expr{};
-
-class conditional_expr{};
-/*
-assignment_expression
-
-assignment_operator
-
-expression
-
-constant_expression
-*/
-class labeled_stmt{
-
-};
-class compound_stmt{
-
-};
-class expression_stmt{
-
-};
-class selection_stmt{//ifelse
-	protected:
-
-	public:
-
-};
-class iteration_stmt{
-
-};
-class jump_stmt{
-
-};
-/*
-
-declaration_specifiers
-
-init_declarator_list
-
-
-init_declarator
-
-storage_class_specifier
-
-type_specifier
-
-struct_or_union_specifier
-
-struct_or_union
-
-struct_declaration_list
-
-struct_declaration
-
-specifier_qualifier_list
-
-struct_declarator_list
-
-struct_declarator
-
-enum_specifier
-
-enumerator_list
-
-enumerator
-
-type_qualifier
-
-declarator
-
-direct_declarator
-
-pointer
-
-
-type_qualifier_list
-
-
-parameter_kind_list
-
-parameter_list
-
-parameter_declaration
-
-identifier_list
-
-type_name
-
-abstract_declarator
-
-direct_abstract_declarator
-
-initializer
-
-initializer_list
-*/
-
-/*
-
-declaration_list
-
-statement_list
-
-translation_unit
-
-
-external_declaration
-
-
-*/
 class function_definition: public declaration{
 	public:
-	protected:
-
+		function_definition(nodePtr name, nodePtr body): declaration(name,body){};
+		void translate();
+		void compile();
 };
 //----------------
 
