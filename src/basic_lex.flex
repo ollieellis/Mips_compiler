@@ -52,8 +52,8 @@ return  { return T_RETURN;}
 
 //logical bitwise operators
 [&]    { return '&'; }
-[|]    { return '|';  }
-//[~]    { return '~'; } 
+[|]    { return '|'; }
+[~]    { return '~'; } 
 
 digit     [0-9]+
 int       [1-9]{digit}*
