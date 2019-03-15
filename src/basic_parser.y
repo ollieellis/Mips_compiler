@@ -78,7 +78,7 @@ VARIABLE_TYPE			: T_INT
 
 //not sure how the following works with type checker
 ASSIGNMENT_OPERATOR     
-						: T_INT '=' FACTOR {;} //not true if variable is type string
+						: T_INT T_VARIABLE '=' FACTOR {;} //not true if variable is type string
 
 //arethmatic stuff
 NUMERICAL_EXPR 			: TERM                 			{ $$ = $1; }
@@ -104,14 +104,16 @@ SELECTION				: T_IF '(' STATEMENT ')' '{' STUFF0 '}' { ;} //IF
 ITTERATION 				: T_WHILE '(' STATEMENT ')' '{' STUFF0 '}' { ;}
 //for loops will also go here
 
-STATEMENT				: something T_EQ something 	{ ;} 
-						| something T_NEQ something { ;}
+STATEMENT				: STATEMENT_SIDE T_EQ STATEMENT_SIDE	{ ;} 
+						| STATEMENT_SIDE T_NEQ STATEMENT_SIDE 	{ ;}
 /*somthing can be a 
 numerical expresion
 bool dunno if including
 int
 function w retun type int or bool
 */
+STATEMENT_SIDE			: T_INT {;}
+						| NUMERICAL_EXPR{;}
 
 FUNCTION_DECLERATION 	: T_VOID T_VARIABLE '(' ')' '{' STUFF0 '}' { ;} //NO ARGUMENTS
 						| T_INT T_VARIABLE '(' ')' '{' STUFF0 '}' 	{ ;}//NO ARGUMENTS				
@@ -119,6 +121,7 @@ FUNCTION_DECLERATION 	: T_VOID T_VARIABLE '(' ')' '{' STUFF0 '}' { ;} //NO ARGUM
 //I also don't know whether to inlcude declorations without implemtation 
 
 FUNCTION_CALL           : T_VARIABLE '(' ')' {;} //dont know if this is correct
+//feel like this should have type the fiunction is eg string int ect
 
 STUFF0					: VARIABLE_DECLERATION {;}
 						| ASSIGNMENT_OPERATOR {;}
