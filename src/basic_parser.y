@@ -54,7 +54,7 @@
 
 %%
 
-ROOT_NODE : STUFF0 { g_root = $1; } 	//all things apart from above tokens and chars are pointers
+ROOT_NODE : STUFF0 {g_root = $1;} 	//all things apart from above tokens and chars are pointers
 									//to some sort of node
 
 //will need to add the following the the %type things
