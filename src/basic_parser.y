@@ -1,4 +1,4 @@
-%code requires{
+%{
   #include "ast.hpp"
 
   #include <cassert>
@@ -10,7 +10,7 @@
   // that Bison generated code can call them.
   int yylex(void);
   void yyerror(const char *);
-}
+%}
 
 
 //The %union declaration specifies the entire collection of possible data types for
@@ -24,6 +24,7 @@
 }
 
 //Tokens
+%token T_VARIABLE T_NUMBER
 //keywords
 %token T_WHILE T_IF T_ELSE T_INT T_VOID T_RETURN
 
@@ -33,19 +34,8 @@
 //binary operators
 %token T_EQ T_NEQ
 
-
-/*
-//punctuation and paired operators
-%token T_SEMI T_LBRACKET T_RBRACKET T_LCBRACKET T_RCBRACKET
-//possibly unused
-%token T_LSBRACKET T_RSBRACKET
-*/
-
 //logical and bitwise operators
 %token T_BWAND T_BWOR t_BWNOT
-
-
-
 
 //Types
 %type <expr> NUMERICAL_EXPR TERM FACTOR VARIABLE_DECLERATION VARIABLE_TYPE ASSIGNMENT_OPERATOR SELECTION ITTERATION STATEMENT STATEMENT_SIDE FUNCTION_DECLERATION FUNCTION_CALL STUFF0
@@ -84,9 +74,9 @@ ASSIGNMENT_OPERATOR
 
 //arethmatic stuff
 NUMERICAL_EXPR 			: TERM                 			{ $$ = $1; }
-						| NUMERICAL_EXPR T_PLUS TERM 	{ ; }
-						| NUMERICAL_EXPR T_MINUS TERM 	{ ; }
-						;
+								| NUMERICAL_EXPR T_PLUS TERM 	{ ; }
+								| NUMERICAL_EXPR T_MINUS TERM 	{ ; }
+								;
 
 TERM 					: FACTOR               	{ $$ = $1; }
 						| TERM T_STAR FACTOR 	{ ; }
