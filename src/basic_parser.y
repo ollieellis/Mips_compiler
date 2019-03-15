@@ -28,10 +28,10 @@
 %token T_WHILE T_IF T_ELSE T_INT T_VOID T_RETURN
 
 //arethmatic operators
-%token T_STAR T_DEVIDE T_PLUS T_MINUS
+%token T_STAR T_DIVIDE T_PLUS T_MINUS
 
 //binary operators
-&token T_EQ, T_NEQ
+%token T_EQ T_NEQ
 
 
 /*
@@ -48,9 +48,9 @@
 
 
 //Types 
-%type <expr> EXPR TERM FACTOR //unsure where statement fits in
+%type <expr> NUMERICAL_EXPR TERM FACTOR VARIABLE_DECLERATION VARIABLE_TYPE ASSIGNMENT_OPERATOR SELECTION ITTERATION STATEMENT STATEMENT_SIDE FUNCTION_DECLERATION FUNCTION_CALL STUFF0
 //%type <number> T_NUMBER
-%type <string> T_VARIABLE T_LOG T_EXP T_SQRT FUNCTION_NAME 
+%type <string> T_VARIABLE  
 // think all tokens must be declared as type string
 // above comment is false
 
@@ -62,7 +62,9 @@
 
 %start ROOT_NODE
 
-ROOT_NODE : EXPR { g_root = $1; } 	//all things apart from above tokens and chars are pointers 
+%%
+
+ROOT_NODE : STUFF0 { g_root = $1; } 	//all things apart from above tokens and chars are pointers 
 									//to some sort of node
 
 //will need to add the following the the %type things
@@ -73,7 +75,7 @@ VARIABLE_DECLERATION	:VARIABLE_TYPE T_VARIABLE {;}
 						;
 
 //not sure how the following works with type checker
-VARIABLE_TYPE			: T_INT
+VARIABLE_TYPE			: T_INT {;}
 						;
 
 //not sure how the following works with type checker
@@ -87,7 +89,7 @@ NUMERICAL_EXPR 			: TERM                 			{ $$ = $1; }
 						;
 
 TERM 					: FACTOR               	{ $$ = $1; }
-						| TERM T_TIMES FACTOR 	{ ; }
+						| TERM T_STAR FACTOR 	{ ; }
 						| TERM T_DIVIDE FACTOR 	{ ; }
 
 FACTOR 					: T_NUMBER           					{ ;}
@@ -95,7 +97,7 @@ FACTOR 					: T_NUMBER           					{ ;}
 //dont no about this 1	| T_VARIABLE 							{ ; }
 
 SELECTION				: T_IF '(' STATEMENT ')' '{' STUFF0 '}' { ;} //IF
-						: T_IF '(' STATEMENT ')' '{' STUFF0 '}' T_ELSE '{' STUFF0 '}' //IF ELSE
+						| T_IF '(' STATEMENT ')' '{' STUFF0 '}' T_ELSE '{' STUFF0 '}' //IF ELSE
 
 //where stufF0 is a place holder for the start of the grammer
 //simular yo expresion in lab 2

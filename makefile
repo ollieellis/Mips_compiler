@@ -2,6 +2,7 @@ CXXFLAGS += -std=c++11 -w -Wall -g
 CXXFLAGS += -I include
 
 
+
 src/basic_parser.tab.cpp src/basic_parser.tab.hpp : src/basic_parser.y
 	bison -v -d src/basic_parser.y -o src/basic_parser.tab.cpp
 
@@ -15,9 +16,8 @@ bin/% : src/%.cpp
 
 bin/translator :
 
-bin/compiler : 
+bin/compiler : src/c_compiler.o src/abstsyntree_compile.o src/symtab.o
 
 clean :
 	-rm bin/*
 	-rm src/*.o
-	-rm working/*/*.txt
