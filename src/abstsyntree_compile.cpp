@@ -4,7 +4,7 @@
 std::vector<std::string> regs;//just use unchangeable registers pluse two
 ///use r1 and r2 names each time
 #include "abstsyntree.hpp"
-std::string  const_::compile(){
+std::string  const_::compile(){//ostream printing?
 	return value;
 }
 std::string identifier::compile(){
@@ -43,4 +43,7 @@ void function_definition::compile(){
 	std::cout<<name<<": ";
 	body->compile();
   std::cout<<"jr $ra";
+};
+void compile(){
+
 };

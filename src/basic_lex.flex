@@ -15,29 +15,24 @@ int current_scope=0;
 %}
 
 %%
-//keywords
+
 while   { return T_WHILE;}
 if      { return T_IF;}
 else    { return T_ELSE;}
 int			{ return T_INT;}
 void		{ return T_VOID;} //maybe not for basic idk?
 return  { return T_RETURN;}
-//main	{ return T_MAIN;} //function name not needed
 
-/*Operators*/
-/*----arithmetic operators*/
+
 [*]             { return T_STAR; } //dont know how to use w pointers
 [/]             { return T_DIVIDE; }
 [+]             { return T_PLUS; }
 [-]             { return T_MINUS; }
 
-//binary operators //&&... not included bc can be done using below
-"=="    { return T_EQ; } 
+
+"=="    { return T_EQ; }
 "!="    { return T_NEQ;}
 
-//punctuation and paired operators
-//https://www.lysator.liu.se/c/ANSI-C-grammar-l.html#check-type
-//above may be an easier way of doing punctuation
 [;]		{ return ';'; }
 [(]		{ return '('; }
 [)]		{ return ')'; }
@@ -46,14 +41,14 @@ return  { return T_RETURN;}
 [\{]	{ return '{'; }
 [\}]	{ return '}'; }
 
-//assignment operators
+
 [=]		{ return '='; }
 
 
-//logical bitwise operators
+
 [&]    { return '&'; }
 [|]    { return '|'; }
-[~]    { return '~'; } 
+[~]    { return '~'; }
 
 digit     [0-9]+
 int       [1-9]{digit}*

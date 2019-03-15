@@ -3,7 +3,7 @@
 
   #include <cassert>
 
-  extern const Expression *g_root; // A way of getting the AST out
+  extern const nodePtr *g_root; // A way of getting the AST out
 
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
@@ -13,12 +13,12 @@
 }
 
 
-//The %union declaration specifies the entire collection of possible data types for 
-//semantic values. The keyword %union is followed by braced code containing the same 
+//The %union declaration specifies the entire collection of possible data types for
+//semantic values. The keyword %union is followed by braced code containing the same
 //thing that goes inside a union in C.
 
 %union{
-  const Expression *expr; //is statement needed?
+  const nodePtr *expr; //is statement needed?
   double number; //believe this means all numbers are doubles not sure if i need int??
   std::string *string;
 }
@@ -37,7 +37,7 @@
 /*
 //punctuation and paired operators
 %token T_SEMI T_LBRACKET T_RBRACKET T_LCBRACKET T_RCBRACKET
-//possibly unused 
+//possibly unused
 %token T_LSBRACKET T_RSBRACKET
 */
 
@@ -47,10 +47,10 @@
 
 
 
-//Types 
+//Types
 %type <expr> NUMERICAL_EXPR TERM FACTOR VARIABLE_DECLERATION VARIABLE_TYPE ASSIGNMENT_OPERATOR SELECTION ITTERATION STATEMENT STATEMENT_SIDE FUNCTION_DECLERATION FUNCTION_CALL STUFF0
 //%type <number> T_NUMBER
-%type <string> T_VARIABLE  
+%type <string> T_VARIABLE
 // think all tokens must be declared as type string
 // above comment is false
 
@@ -64,13 +64,13 @@
 
 %%
 
-ROOT_NODE : STUFF0 { g_root = $1; } 	//all things apart from above tokens and chars are pointers 
+ROOT_NODE : STUFF0 { g_root = $1; } 	//all things apart from above tokens and chars are pointers
 									//to some sort of node
 
 //will need to add the following the the %type things
 //cant remeber how blank spaces are treated i think im doing correctly
 
-VARIABLE_DECLERATION	:VARIABLE_TYPE T_VARIABLE {;} 
+VARIABLE_DECLERATION	:VARIABLE_TYPE T_VARIABLE {;}
 						|VARIABLE_TYPE T_VARIABLE ASSIGNMENT_OPERATOR{;}
 						;
 
@@ -79,7 +79,7 @@ VARIABLE_TYPE			: T_INT {;}
 						;
 
 //not sure how the following works with type checker
-ASSIGNMENT_OPERATOR     
+ASSIGNMENT_OPERATOR
 						: T_INT T_VARIABLE '=' FACTOR {;} //not true if variable is type string
 
 //arethmatic stuff
@@ -106,9 +106,9 @@ SELECTION				: T_IF '(' STATEMENT ')' '{' STUFF0 '}' { ;} //IF
 ITTERATION 				: T_WHILE '(' STATEMENT ')' '{' STUFF0 '}' { ;}
 //for loops will also go here
 
-STATEMENT				: STATEMENT_SIDE T_EQ STATEMENT_SIDE	{ ;} 
+STATEMENT				: STATEMENT_SIDE T_EQ STATEMENT_SIDE	{ ;}
 						| STATEMENT_SIDE T_NEQ STATEMENT_SIDE 	{ ;}
-/*somthing can be a 
+/*somthing can be a
 numerical expresion
 bool dunno if including
 int
@@ -118,9 +118,9 @@ STATEMENT_SIDE			: T_INT {;}
 						| NUMERICAL_EXPR{;}
 
 FUNCTION_DECLERATION 	: T_VOID T_VARIABLE '(' ')' '{' STUFF0 '}' { ;} //NO ARGUMENTS
-						| T_INT T_VARIABLE '(' ')' '{' STUFF0 '}' 	{ ;}//NO ARGUMENTS				
+						| T_INT T_VARIABLE '(' ')' '{' STUFF0 '}' 	{ ;}//NO ARGUMENTS
 //MAYBE TRY COMBINE THE TYPE THING BUT LATER
-//I also don't know whether to inlcude declorations without implemtation 
+//I also don't know whether to inlcude declorations without implemtation
 
 FUNCTION_CALL           : T_VARIABLE '(' ')' {;} //dont know if this is correct
 //feel like this should have type the fiunction is eg string int ect
