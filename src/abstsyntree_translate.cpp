@@ -1,4 +1,5 @@
-#include "abstsyntree.hpp"
+#include "abstsyntree.hpp"//global variables create vector to add any pgloab faviables to ie functions etc?
+std::vector<nodePtr> global_var;
 void const_::translate(translate_context &context, nodePtr program){//ostream printing?
   std::cout<<value<<";";
 }
@@ -40,7 +41,11 @@ void div_expr::translate(translate_context &context, nodePtr program){
 }
 
 void function_definition::translate(translate_context &context, nodePtr program){
+	std::cout<<"def ";
 	std::cout<<translate()->name:
+	std::cout<<"(";
+	std::cout<<translate()->args:
+	std::cout<<"):";
 	translate()->body;
 }
 

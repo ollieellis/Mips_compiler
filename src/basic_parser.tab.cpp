@@ -1395,7 +1395,7 @@ yyreduce:
     {
         case 2:
 #line 57 "src/basic_parser.y"
-    { g_root = (yyvsp[(1) - (1)].expr); ;}
+    {g_root = (yyvsp[(1) - (1)].expr);;}
     break;
 
   case 3:

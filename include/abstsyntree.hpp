@@ -19,8 +19,8 @@ typedef std::shared_ptr<node> nodePtr;//don't do cyclical references
 
 class node{
 	protected:
-		node();
 	public:
+		node();
 		virtual void translate(nodePtr program, translation_context &context) = 0;
 		virtual void compile(nodePtr program, translation_context &context) = 0;
 };
@@ -56,9 +56,9 @@ class decl_node: public node{
 		virtual void compile(nodePtr program, translation_context &context) = 0;
 };
 //types------------
-class type{
+/*class type: public node{
 	protected:
-
+		std::string kind;
 	public:
 };
 class integer_type: public type{
@@ -71,6 +71,12 @@ class float_type: public type{
 
 	public:
 };
+class pointer: public type{
+	protected:
+
+	public:
+};
+*/
 //extended base nodes----------
 class binary_expr: public expr_node{
   protected:
@@ -132,6 +138,13 @@ class div_expr: public binary_expr{
 		void translate(nodePtr program, translation_context &context);
 		void compile(nodePtr program, translation_context &context);
 };
+class mod_expr: public binary_expr{
+  public:
+    div_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		void translate(nodePtr program, translation_context &context);
+		void compile(nodePtr program, translation_context &context);
+};
+
 //-----------------------
 class postfix_expr: public unary_expr{
 	protected:
@@ -169,15 +182,25 @@ class or_expr: public binary_expr{
 		void compile(nodePtr program, translation_context &context);
 };
 //statements---------------------------------------------------
-class while_stmt: public binary_expr{
+class while_stmt: public stmt{
 public:
 	while_stmt(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
 	virtual void translate(nodePtr program, translation_context &context);
 	virtual void compile(nodePtr program, translation_context &context);
 };
-
+class ifelse_stmt: public stmt{
+protected:
+	nodePtr condition;
+	std::vector<nodePtr> else_body;
+public:
+	ifelse_stmt(nodePtr name, std::vector<nodePtr> body): binary_expr(name, body) {};//body - then
+	virtual void translate(nodePtr program, translation_context &context);
+	virtual void compile(nodePtr program, translation_context &context);
+};
 //declarations---------------------------------------------------
 class function_definition: public decl_node{
+	protected:
+		std::vector<nodePtr> args;
 	public:
 		function_definition(nodePtr name, std::vector<nodePtr> body): decl_node(name,body){};
 		virtual void translate(nodePtr program, translation_context &context);

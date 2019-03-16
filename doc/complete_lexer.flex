@@ -28,14 +28,15 @@ int current_scope=0;
 [%]             { return T_MOD; }
 
 [;]              { return T_SEMI; }
+[,]							 { return T_COMM; }
 [\.]             { return T_DOT;}
 "->"             { return T_POINT;}
 "~"              { return T_TILDE;}
 "..."            { return T_ELL;}
 /*"sizeof"       { return T_SIZE;}  - in keyword*/
 /*----paired operators*/
-[(]             { return T_LBRACKET; }
-[)]             { return T_RBRACKET; }
+[(]              { return T_LBRACKET; }
+[)]              { return T_RBRACKET; }
 [\[]             { return T_LSQBRACKET; }
 [\]]             { return T_RSQBRACKET; }
 [\{]             { return T_LCBRACKET; }
@@ -80,9 +81,9 @@ int current_scope=0;
 "<<"   { return T_RSHIFT;}
 ">>"   { return T_RSHIFT;}
 
-log    { return T_LOG;   }
+log    { return T_LOG; }
 exp    { return T_EXP; }
-sqrt   { return T_SQRT; }
+sqrt   { return T_SQRT;}
 
 newline [\r\n]+ //check
 white .|{newline}|[ \t] //check
@@ -161,12 +162,13 @@ static     { return T_STATIC;}
 while      { return T_WHILE;}
 
 
-string \"[^"\n]*["\n] //check strings can't cross line boundaries
+string L?\"[^"\n]*["\n] //check strings can't cross line boundaries
 variable ^"{nondigit}[a-zA-Z0-9_]*
 
 {white} { }
+{string}{return T_STR;}
 {real} { yylval.number=strtod(yytext, 0); return T_NUMBER; }
 {keyword} {}
-{variable} { yylval.string=new std::string(yytext); return T_VARIABLE; }
+{variable} { yylval.string=new std::string(yytext); return T_IDENTIFIER; }
 
 %%
