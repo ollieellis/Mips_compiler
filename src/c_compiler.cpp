@@ -14,6 +14,6 @@ int main(int argc, char *argv[]){
 		translate_context context;
 		//std::vector<uint32_t> regs;
     nodePtr tree=Parse(src);
-    tree->compile(symtab);//compile all
+    tree->compile(context);//compile all
     return 0;
 }
