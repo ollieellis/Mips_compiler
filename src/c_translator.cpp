@@ -11,10 +11,12 @@ int main(int argc, char *argv[]){
 
     std::ifstream code(argv[1]);
     translate_context context;
-		
+
     for(int i=2; i<argc; i++){
         context.params.push_back(atol(argv[i]));
     }
     nodePtr src=Parse(code);
-    return Interpret(context, src);
+		src->translate(context);
+
+    return 0;
 }

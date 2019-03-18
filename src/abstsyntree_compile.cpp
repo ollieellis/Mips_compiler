@@ -1,9 +1,7 @@
 #include "abstsyntree.hpp"
 //static int makeNameUnq=0;
-
-std::vector<std::string> regs;//just use unchangeable registers pluse two
 ///use r1 and r2 names each time
-#include "abstsyntree.hpp"
+
 std::string  const_::compile(){//ostream printing?
 	return value;
 }
@@ -14,7 +12,7 @@ std::string str_lit::compile(){
   return value;
 }
 std::string identifier::compile(){
-  return value;;
+  return value;
 }
 void add_expr::compile(){
 	regs(0) = L->compile();//act of compiling should return a value or load a variable from memory?

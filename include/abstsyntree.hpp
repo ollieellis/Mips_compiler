@@ -1,7 +1,6 @@
 #ifndef abstsyntree_hpp
 #define abstsyntree_hpp
 
-#include "symtab.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
@@ -13,6 +12,7 @@ class translate_context{
 	public:
     std::vector<int32_t> params;
     std::map<std::string,int32_t> symtab;
+		std::vector<uint32_t> regs;//just use unchangeable registers pluse two
 };
 
 class node;
@@ -22,31 +22,27 @@ class node{
 	protected:
 	public:
 		node();
-		virtual void translate(nodePtr program, translate_context &context) = 0;
-		virtual void compile(nodePtr program, translate_context &context) = 0;
+		virtual void translate(translate_context &context) = 0;
+		virtual void compile(translate_context &context) = 0;
 };
 //---------------- base nodes
 class expr_node: public node{
 	protected:
 		std::string value;
 	public:
-		//expr_node(std::string _kind, std::string _value, const std::vector<TreePtr> &_branches): type(_kind), value(_value), branches(_branches){};
 		expr_node(){}
 		expr_node(std::string val): value(val){}
-		//expr_node(std::string _kind, std::string _value): node(_kind), value(_value){};
-		//template<class ...TArgs>//?
-		//expr_node(std::string _kind, TArgs ...args): type(_kind), branches{args...};{};//?
 
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context) = 0;
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context) = 0;
 };
 class stmt_node: public node{
 	protected:
 		std::vector<nodePtr> stmts;
 	public:
 		stmt_node(std::vector<nodePtr> body): stmts(body){}
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context) = 0;
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context) = 0;
 };
 class decl_node: public node{
 	protected:
@@ -54,8 +50,8 @@ class decl_node: public node{
 		std::vector<nodePtr> body;
 	public:
 		decl_node(nodePtr n_name, std::vector<nodePtr> n_body): name(n_name), body(n_body){};
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context) = 0;
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context) = 0;
 };
 //types------------
 /*class type: public node{
@@ -97,54 +93,54 @@ class unary_expr: public expr_node{
 class identifier: public expr_node{
 	public:
 		identifier(std::string _value): expr_node(_value) {};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 class constant: public expr_node{//number, can be int_const or float_const or... etc?
 	public:
 		constant(std::string _value): expr_node(_value){};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 class str_lit: public expr_node{
 	public:
 		str_lit(std::string _value): expr_node(_value) {};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 //---------------- expressions
 class plus_expr: public binary_expr{
 	public:
 		plus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 class minus_expr: public binary_expr{
   public:
 		minus_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 
 class times_expr: public binary_expr{
 	public:
 		times_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 class div_expr: public binary_expr{
   public:
     div_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 class mod_expr: public binary_expr{
   public:
     mod_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 //-----------------------
@@ -153,42 +149,42 @@ class postfix_expr: public unary_expr{
 		nodePtr R;
 	public:
 		postfix_expr(nodePtr r): unary_expr(r) {};
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context);
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
 };
 class iseq_expr: public binary_expr{
 	public:
 		iseq_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 class and_expr: public binary_expr{
 	public:
 		and_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 class xor_expr: public binary_expr{
 	public:
 		xor_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 class or_expr: public binary_expr{
 	public:
 		or_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
-		void translate(nodePtr program, translate_context &context);
-		void compile(nodePtr program, translate_context &context);
+		void translate(translate_context &context);
+		void compile(translate_context &context);
 };
 //statements---------------------------------------------------
 class while_stmt: public stmt_node{
 	public:
 		while_stmt(std::vector<nodePtr> body): stmt_node(body) {};
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context);
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
 };
 class ifelse_stmt: public stmt_node{
 	protected:
@@ -197,14 +193,14 @@ class ifelse_stmt: public stmt_node{
 	public:
 		ifelse_stmt(nodePtr fact, std::vector<nodePtr> body, std::vector<nodePtr> other): condition(fact), else_body(other), stmt_node(body) {};//body - then
 		ifelse_stmt(nodePtr fact, std::vector<nodePtr> body): condition(fact), stmt_node(body) {};
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context);
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
 };
 class return_stmt: public stmt_node{
 	public:
 		return_stmt(std::vector<nodePtr> body): stmt_node(body) {};
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context);
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
 };
 //declarations---------------------------------------------------
 class function_definition: public decl_node{
@@ -212,8 +208,8 @@ class function_definition: public decl_node{
 		std::vector<nodePtr> args;
 	public:
 		function_definition(nodePtr name, std::vector<nodePtr> body): decl_node(name,body){};
-		virtual void translate(nodePtr program, translate_context &context);
-		virtual void compile(nodePtr program, translate_context &context);
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
 };
 //----------------
 

@@ -1,5 +1,5 @@
 #include <fstream>
-#include "abstyntree.hpp"
+#include "abstsyntree.hpp"
 
 int main(int argc, char *argv[]){
     if(argc < 2){
@@ -11,7 +11,9 @@ int main(int argc, char *argv[]){
       fprintf(stderr, "Couldn't open '%s'\n", argv[1]);
       exit(1);
     }
-    TreePtr tree=Parse(src);
-    tree->compile(res, symtab);//compile all
+		translate_context context;
+		//std::vector<uint32_t> regs;
+    nodePtr tree=Parse(src);
+    tree->compile(symtab);//compile all
     return 0;
 }

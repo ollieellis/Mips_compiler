@@ -2,59 +2,59 @@
 std::vector<nodePtr> global_var;
 
 void const_::translate(translate_context &context, nodePtr program){//ostream printing?
-  std::cout<<value<<";";
+  std::cout<<value;
 }
 void identifier::translate(translate_context &context, nodePtr program){
     std::cout<<context->symtab[id];
 }
 void str_lit::translate(translate_context &context, nodePtr program){
-  std::cout<<value<<";";
+  std::cout<<value;
 }
 void identifier::translate(translate_context &context, nodePtr program){
-  std::cout<<id<<";";
+  std::cout<<id;
 }
 //arithmetic
 void plus_expr::translate(translate_context &context, nodePtr program){
 	L->translate();
-	std::cout<<" + "<<;
+	std::cout<<" + ";
 	R->translate();
 }
 void minus_expr::translate(translate_context &context, nodePtr program){
 	L->translate();
-	std::cout<<" - "<<;
+	std::cout<<" - ";
 	R->translate();
 }
 void times_expr::translate(translate_context &context, nodePtr program){
 	L->translate();
-	std::cout<<"*"<<;
+	std::cout<<"*";
 	R->translate();
 }
 void div_expr::translate(translate_context &context, nodePtr program){
 	L->translate();
-	std::cout<<"/"<<;
+	std::cout<<"/";
 	R->translate();
 }
 
 void div_expr::translate(translate_context &context, nodePtr program){
 	L->translate();
-	std::cout<<"/"<<;
+	std::cout<<"/";
 	R->translate();
 }
 
 void function_definition::translate(translate_context &context, nodePtr program){
 	std::cout<<"def ";
-	std::cout<<translate()->name:
+	std::cout<<name->translate();
 	std::cout<<"(";
-	std::cout<<translate()->args:
+	std::cout<<args->translate();
 	std::cout<<"):"<<std::endl;
-	translate()->body;
+	body->translate();
 }
 
 void ifelse_stmt::translate(translate_context &context, nodePtr program){
 	std::cout<<"if ";
-	std::cout<<translate()->name:
+	std::cout<<name->translate();
 	std::cout<<"(";
-	std::cout<<translate()->args:
+	std::cout<<args->translate();
 	std::cout<<"):"<<std::endl;
 	for(int i=0;i++;i<body.size()){
 		translate()->body(i);
@@ -70,14 +70,14 @@ void while_stmt::translate(translate_context &context, nodePtr program){
 	std::cout<<"while ";
 	std::cout<<"(";
 	for(int i=0;i++;i<body.size()){
-		std::cout<<translate()->condition:
+		std::cout<<condition->translate():
 		std::cout<<"):"<<std::endl;
-		translate()->body;
+		body->translate();
 	}
 }
 void return_stmt::translate(translate_context &context, nodePtr program){
 	std::cout<<"return ";
-	translate()->body;
+	body->translate();
 }
 void translate(nodePtr program, translate_context &context){
 	program->translate();
