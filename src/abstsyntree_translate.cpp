@@ -55,26 +55,28 @@ void ifelse_stmt::translate(translate_context &context, nodePtr program){
 	std::cout<<"(";
 	std::cout<<translate()->args:
 	std::cout<<"):"<<std::endl;
-	translate()->body;
-	std::cout<<";";
+	for(int i=0;i++;i<body.size()){
+		translate()->body(i);
+	}
 	if(else_body.size()!=0){
 		std::cout<<"if ";
-		translate()->else_body;
-		std::cout<<";";
+		for(int i=0;i++;i<body.size()){
+			translate()->else_body(i);
+		}
 	}
 }
 void while_stmt::translate(translate_context &context, nodePtr program){
 	std::cout<<"while ";
 	std::cout<<"(";
-	std::cout<<translate()->condition:
-	std::cout<<"):"<<std::endl;
-	translate()->body;
-	std::cout<<";";
+	for(int i=0;i++;i<body.size()){
+		std::cout<<translate()->condition:
+		std::cout<<"):"<<std::endl;
+		translate()->body;
+	}
 }
 void return_stmt::translate(translate_context &context, nodePtr program){
 	std::cout<<"return ";
 	translate()->body;
-	std::cout<<";";
 }
 
 void translate(nodePtr program, translation_context &context){
