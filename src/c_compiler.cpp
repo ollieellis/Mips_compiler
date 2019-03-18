@@ -12,8 +12,9 @@ int main(int argc, char *argv[]){
       exit(1);
     }
 		translate_context context;
+		std::string r;
 		//std::vector<uint32_t> regs;
     nodePtr tree=Parse(src);
-    tree->compile(context);//compile all
+    compile_all(r, context, tree);//compile all
     return 0;
 }

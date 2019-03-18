@@ -8,6 +8,7 @@
 #include <memory>
 #include <list>
 
+
 class translate_context{
 	public:
     std::vector<int32_t> params;
@@ -17,6 +18,9 @@ class translate_context{
 
 class node;
 typedef std::shared_ptr<node> nodePtr;//don't do cyclical references
+nodePtr Parse(
+    std::istream &src
+);
 
 class node{
 	protected:
@@ -105,8 +109,8 @@ class constant: public expr_node{//number, can be int_const or float_const or...
 class str_lit: public expr_node{
 	public:
 		str_lit(std::string _value): expr_node(_value) {};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		std::string  translate(translate_context &context);
+		std::string compile(translate_context &context);
 };
 
 //---------------- expressions
@@ -212,7 +216,10 @@ class function_definition: public decl_node{
 		virtual void compile(translate_context &context);
 };
 //----------------
-
+void compile_all(std::string returnval, translate_context context, nodePtr program){
+	    program->compile(context);
+	    std::cout<<" "<<returnval<<"\n";
+};
 extern const node *parseAST();
 
 #endif
