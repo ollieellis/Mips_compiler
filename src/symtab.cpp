@@ -12,7 +12,7 @@ int32_t symtab::Lookup(std::string id){
 	}
 };
 void symtab::Bind(std::string id, int32_t value){
-	if(symboltable.count(id)!= 0) {
+	if(symboltable.count(id)!= 0){
 		std::cerr<<"variable "<<id<<"already bound"<<std::endl;
 	}
 	else symboltable(id)=value;
