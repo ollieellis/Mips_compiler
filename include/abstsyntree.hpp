@@ -182,20 +182,27 @@ class or_expr: public binary_expr{
 		void compile(nodePtr program, translation_context &context);
 };
 //statements---------------------------------------------------
-class while_stmt: public stmt{
-public:
-	while_stmt(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
-	virtual void translate(nodePtr program, translation_context &context);
-	virtual void compile(nodePtr program, translation_context &context);
+class while_stmt: public stmt_node{
+	public:
+		while_stmt(nodePtr lval, nodePtr rval): stmt_node(lval, rval) {};
+		virtual void translate(nodePtr program, translation_context &context);
+		virtual void compile(nodePtr program, translation_context &context);
 };
-class ifelse_stmt: public stmt{
-protected:
-	nodePtr condition;
-	std::vector<nodePtr> else_body;
-public:
-	ifelse_stmt(nodePtr name, std::vector<nodePtr> body): binary_expr(name, body) {};//body - then
-	virtual void translate(nodePtr program, translation_context &context);
-	virtual void compile(nodePtr program, translation_context &context);
+class ifelse_stmt: public stmt_node{
+	protected:
+		nodePtr condition;
+		std::vector<nodePtr> else_body;
+	public:
+		ifelse_stmt(nodePtr fact, std::vector<nodePtr> body, std::vector<nodePtr> other): condition(fact), else_body(other), stmt_node(body) {};//body - then
+		ifelse_stmt(nodePtr fact, std::vector<nodePtr> body): condition(fact), stmt_node(body) {};
+		virtual void translate(nodePtr program, translation_context &context);
+		virtual void compile(nodePtr program, translation_context &context);
+};
+class return_stmt: public stmt_node{
+	public:
+		return_stmt(std::vector<nodePtr> body): stmt_node(body) {};
+		virtual void translate(nodePtr program, translation_context &context);
+		virtual void compile(nodePtr program, translation_context &context);
 };
 //declarations---------------------------------------------------
 class function_definition: public decl_node{

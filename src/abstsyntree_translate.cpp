@@ -45,8 +45,36 @@ void function_definition::translate(translate_context &context, nodePtr program)
 	std::cout<<translate()->name:
 	std::cout<<"(";
 	std::cout<<translate()->args:
-	std::cout<<"):";
+	std::cout<<"):"<<std::endl;
 	translate()->body;
+}
+
+void ifelse_stmt::translate(translate_context &context, nodePtr program){
+	std::cout<<"if ";
+	std::cout<<translate()->name:
+	std::cout<<"(";
+	std::cout<<translate()->args:
+	std::cout<<"):"<<std::endl;
+	translate()->body;
+	std::cout<<";";
+	if(else_body.size()!=0){
+		std::cout<<"if ";
+		translate()->else_body;
+		std::cout<<";";
+	}
+}
+void while_stmt::translate(translate_context &context, nodePtr program){
+	std::cout<<"while ";
+	std::cout<<"(";
+	std::cout<<translate()->condition:
+	std::cout<<"):"<<std::endl;
+	translate()->body;
+	std::cout<<";";
+}
+void return_stmt::translate(translate_context &context, nodePtr program){
+	std::cout<<"return ";
+	translate()->body;
+	std::cout<<";";
 }
 
 void translate(nodePtr program, translation_context &context){

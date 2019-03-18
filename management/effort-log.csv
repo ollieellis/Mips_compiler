@@ -1,1 +1,17 @@
 Date,Effort,Developers,Milestones
+,,,DefineInitialMilestones
+,,,Write Tests for test suite
+,,,Finish labs for preperation
+,,,basic lexer
+,,,basic parser
+,,,basic ast
+,,,basic compiler codegen
+,,,intermediate lexer
+,,,intermediate parser
+,,,intermediate ast
+,,,intermediate compiler codegen
+,,,advanced lexer
+,,,advanced parser
+,,,advanced ast
+,,,advanced codegen for compiler
+,,,translator
