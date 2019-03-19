@@ -1,5 +1,5 @@
 %{
-  #include "ast.hpp"
+  #include "abstsyntree.hpp"
 
   #include <cassert>
 
