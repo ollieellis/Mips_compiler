@@ -214,7 +214,7 @@
 typedef union YYSTYPE
 #line 20 "src/test_parser.y"
 {
-  const nodePtr *expr;
+  nodePtr expr;
   double number;
   std::string *string;
 }

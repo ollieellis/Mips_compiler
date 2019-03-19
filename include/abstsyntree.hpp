@@ -17,25 +17,20 @@ class translate_context{
 };
 
 class node;
-typedef std::shared_ptr<node> nodePtr;//don't do cyclical references
-nodePtr Parse(
-    std::istream &src
-);
+typedef node* nodePtr;//if sharered don't do cyclical references
+// nodePtr Parse(std::istream &src);
 
 class node{
 	protected:
 	public:
-		node();
+	 	nodePtr parseAST(FILE* src);
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
 //---------------- base nodes
 class expr_node: public node{
-	protected:
-		std::string value;
 	public:
 		expr_node(){}
-		expr_node(std::string val): value(val){}
 
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
@@ -95,20 +90,26 @@ class unary_expr: public expr_node{
 };
 //basic units----------------
 class identifier: public expr_node{
+	protected:
+		std::string value;
 	public:
-		identifier(std::string _value): expr_node(_value) {};
+		identifier(std::string _value): value(_value) {};
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
 class constant: public expr_node{//number, can be int_const or float_const or... etc?
+	protected:
+		double value;
 	public:
-		constant(std::string _value): expr_node(_value){};
+		constant(double _value): value(_value){};
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
 class str_lit: public expr_node{
+	protected:
+		std::string value;
 	public:
-		str_lit(std::string _value): expr_node(_value) {};
+		str_lit(std::string _value): value(_value) {};
 		void  translate(translate_context &context);
 		void compile(translate_context &context);
 };
@@ -222,6 +223,6 @@ void compile_all(std::string returnval, translate_context context, nodePtr progr
 	    program->compile(context);
 	    std::cout<<" "<<returnval<<"\n";
 };
-extern const node *parseAST();
+extern nodePtr parseAST();
 
 #endif

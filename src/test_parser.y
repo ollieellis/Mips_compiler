@@ -3,7 +3,7 @@
 
   #include <cassert>
 
-  extern const nodePtr *g_root; // A way of getting the AST out
+  extern nodePtr g_root; // A way of getting the AST out
 
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
@@ -18,7 +18,7 @@
 //thing that goes inside a union in C.
 
 %union{
-  const nodePtr *expr;
+  nodePtr expr;
   double number;
   std::string *string;
 }
@@ -62,9 +62,9 @@
 %%
 
 PRI_EXPR//check
-	: T_IDENTIFIER { $$ = $1;}
-	| T_NUMBER
-	| T_STRING
+	: T_IDENTIFIER { $$ = new identifier(*$1);}
+	| T_NUMBER { $$ = new constant($1);}
+	| T_STRING { $$ = new str_lit(*$1);}
 	| T_LBRACKET EXPR T_RBRACKET
 	;
 
@@ -109,14 +109,14 @@ CAST_EXPR
 
 MULTIPLICATIVE_EXPR
 	: CAST_EXPR
-	| MULTIPLICATIVE_EXPR T_STAR CAST_EXPR { $$ = new mult_expr($1, $3);}
+	| MULTIPLICATIVE_EXPR T_STAR CAST_EXPR { $$ = new times_expr($1, $3);}
 	| MULTIPLICATIVE_EXPR T_DIV CAST_EXPR { $$ = new div_expr($1, $3);}
 	| MULTIPLICATIVE_EXPR T_MOD CAST_EXPR { $$ = new mod_expr($1, $3);}
 	;
 
 ADDITIVE_EXPR
 	: MULTIPLICATIVE_EXPR
-	| ADDITIVE_EXPR T_PLUS MULTIPLICATIVE_EXPR { $$ = new plus_expr($1, $3);}
+	| ADDITIVE_EXPR T_PLUS MULTIPLICATIVE_EXPR { $$ = new times_expr($1, $3);}
 	| ADDITIVE_EXPR T_MINUS MULTIPLICATIVE_EXPR { $$ = new minus_expr($1, $3);}
 	;
 
@@ -460,3 +460,14 @@ FUNC_DEF
 	| DECLARATOR DECL_LIST COMP_STMT
 	| DECLARATOR COMP_STMT
 	;
+
+	%%
+
+	nodePtr g_root;
+	extern FILE *yyin;
+	 nodePtr parseAST(FILE* src){
+	  g_root=0;
+		yyin=src;
+	  yyparse();
+	  return g_root;
+	}

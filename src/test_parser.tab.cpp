@@ -244,7 +244,7 @@
 
   #include <cassert>
 
-  extern const nodePtr *g_root; // A way of getting the AST out
+  extern nodePtr g_root; // A way of getting the AST out
 
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
@@ -275,7 +275,7 @@
 typedef union YYSTYPE
 #line 20 "src/test_parser.y"
 {
-  const nodePtr *expr;
+  nodePtr expr;
   double number;
   std::string *string;
 }
@@ -2069,12 +2069,22 @@ yyreduce:
     {
         case 2:
 #line 65 "src/test_parser.y"
-    { (yyval.expr) = (yyvsp[(1) - (1)].string);;}
+    { (yyval.expr) = new identifier(*(yyvsp[(1) - (1)].string));;}
+    break;
+
+  case 3:
+#line 66 "src/test_parser.y"
+    { (yyval.expr) = new constant((yyvsp[(1) - (1)].number));;}
+    break;
+
+  case 4:
+#line 67 "src/test_parser.y"
+    { (yyval.expr) = new str_lit(*(yyvsp[(1) - (1)].string));;}
     break;
 
   case 31:
 #line 112 "src/test_parser.y"
-    { (yyval.expr) = new mult_expr((yyvsp[(1) - (3)].expr), (yyvsp[(3) - (3)].expr));;}
+    { (yyval.expr) = new times_expr((yyvsp[(1) - (3)].expr), (yyvsp[(3) - (3)].expr));;}
     break;
 
   case 32:
@@ -2089,7 +2099,7 @@ yyreduce:
 
   case 35:
 #line 119 "src/test_parser.y"
-    { (yyval.expr) = new plus_expr((yyvsp[(1) - (3)].expr), (yyvsp[(3) - (3)].expr));;}
+    { (yyval.expr) = new times_expr((yyvsp[(1) - (3)].expr), (yyvsp[(3) - (3)].expr));;}
     break;
 
   case 36:
@@ -2099,7 +2109,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2103 "src/test_parser.tab.cpp"
+#line 2113 "src/test_parser.tab.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2313,4 +2323,15 @@ yyreturn:
 }
 
 
+#line 464 "src/test_parser.y"
+
+
+	nodePtr g_root;
+	extern FILE *yyin;
+	 nodePtr parseAST(FILE* src){
+	  g_root=0;
+		yyin=src;
+	  yyparse();
+	  return g_root;
+	}
 
