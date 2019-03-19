@@ -37,7 +37,7 @@ class expr_node: public node{
 		expr_node(){}
 		expr_node(std::string val): value(val){}
 
-		virtual void translate(translate_context &context);
+		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
 class stmt_node: public node{
@@ -45,16 +45,16 @@ class stmt_node: public node{
 		std::vector<nodePtr> stmts;
 	public:
 		stmt_node(std::vector<nodePtr> body): stmts(body){}
-		virtual void translate(translate_context &context);
+		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
 class decl_node: public node{
 	protected:
 		nodePtr name;
-		std::vector<nodePtr> body;
+		std::vector<nodePtr> d_body;
 	public:
-		decl_node(nodePtr n_name, std::vector<nodePtr> n_body): name(n_name), body(n_body){};
-		virtual void translate(translate_context &context);
+		decl_node(nodePtr n_name, std::vector<nodePtr> n_body): name(n_name), d_body(n_body){};
+		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
 //types------------
@@ -109,8 +109,8 @@ class constant: public expr_node{//number, can be int_const or float_const or...
 class str_lit: public expr_node{
 	public:
 		str_lit(std::string _value): expr_node(_value) {};
-		std::string  translate(translate_context &context);
-		std::string compile(translate_context &context);
+		void  translate(translate_context &context);
+		void compile(translate_context &context);
 };
 
 //---------------- expressions
@@ -185,6 +185,8 @@ class or_expr: public binary_expr{
 };
 //statements---------------------------------------------------
 class while_stmt: public stmt_node{
+	protected:
+		nodePtr condition;
 	public:
 		while_stmt(std::vector<nodePtr> body): stmt_node(body) {};
 		virtual void translate(translate_context &context);

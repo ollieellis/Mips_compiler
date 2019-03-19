@@ -1,44 +1,45 @@
 #include "abstsyntree.hpp"
+#include <string>
+#include <vector>
 //static int makeNameUnq=0;
 ///use r1 and r2 names each time
 
-void  const_::compile(context){//ostream printing?
+void  constant::compile(translate_context &context){//ostream printing?
 	std::cout<<value;
 }
-void identifier::compile(context){
+void identifier::compile(translate_context &context){
   std::cout<<value;
 }
-void str_lit::compile(context){
+void str_lit::compile(translate_context &context){
   std::cout<<value;
 }
-void identifier::compile(context){
-  std::cout<<value;
-}
-void add_expr::compile(context){
-	regs(0) = L->compile(context);//act of compiling should return a value or load a variable from memory?
-	regs(1) = R->compile(context);
-	std::cout<<"addi t0, zero, "<<regs(0);
-	std::cout<<"addi t0, zero, "<<regs(1);
+void plus_expr::compile(translate_context &context){
+	L->compile(context);//act of compiling should return a value or load a variable from memory?
+	R->compile(context);
+	std::cout<<"addi t0, zero, "<<context.regs[0];
+	std::cout<<"addi t0, zero, "<<context.regs[1];
 	std::cout<<"add t0, t1, t0"<<std::endl;
 }
-void sub_expr::compile(context){
-	regs(0) = L->compile(context);//act of compiling should return a value or load a variable from memory?
-	regs(1) = R->compile(context);
-	std::cout<<"addi t0, zero, "<<regs(0);
-	std::cout<<"addi t0, zero, "<<regs(1);
+void minus_expr::compile(translate_context &context){
+	L->compile(context);//act of compiling should return a value or load a variable from memory?
+	R->compile(context);
+	std::cout<<"addi t0, zero, "<<context.regs[0];
+	std::cout<<"addi t0, zero, "<<context.regs[1];
 	std::cout<<"sub t0, t1, t0"<<std::endl;
 }
-void div_expr::compile(context){
+void div_expr::compile(translate_context &context){
 }
-void mult_expr::compile(context){
-	std::string lhs = L->compile(context);
-	std::string rhs= R->compile(context);
+void times_expr::compile(translate_context &context){
+	L->compile(context);
+	R->compile(context);
 	//std::cout<<"mult: "<<
 
 	//std::cout<<"jr $ra";
 }
-void function_definition::compile(context){
+void function_definition::compile(translate_context &context){
 	std::cout<<name<<": ";
-	body->compile(context);
+	for(int i=0;i++;i<d_body.size()){
+		d_body[i]->translate(context);
+	}
   std::cout<<"jr $ra";
 };

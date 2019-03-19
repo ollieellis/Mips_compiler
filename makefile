@@ -3,7 +3,7 @@ CXXFLAGS += -I include
 
 
 
-src/basic_parser.tab.cpp src/basic_parser.tab.hpp : src/basic_parser.y
+src/complete_parser.tab.cpp src/basic_parser.tab.hpp : src/test_parser.y
 	bison -v -d src/basic_parser.y -o src/basic_parser.tab.cpp
 
 src/basic_lex.yy.cpp : src/basic_lex.flex src/basic_parser.tab.hpp
@@ -14,9 +14,9 @@ bin/% : src/%.cpp
 	mkdir -p bin
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-bin/translator :
+bin/translator : src/c_translator.o src/abstsyntree_translate.o
 
-bin/compiler : src/c_compiler.o src/abstsyntree_compile.o src/symtab.o
+bin/compiler : src/c_compiler.o src/abstsyntree_compile.o
 
 clean :
 	-rm bin/*
