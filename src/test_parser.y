@@ -1,8 +1,9 @@
-%{
+%code requires{
   #include "abstsyntree.hpp"
 
   #include <cassert>
-
+	#include <fstream>
+	#include <string>
   extern nodePtr g_root; // A way of getting the AST out
 
   //! This is to fix problems when generating C++
@@ -10,7 +11,7 @@
   // that Bison generated code can call them.
   int yylex(void);
   void yyerror(const char *);
-%}
+}
 
 
 //The %union DECL specifies the entire collection of possible data types for
@@ -23,17 +24,12 @@
   std::string *string;
 }
 
-
-
-//start a translation unit is sometimes used not sure if we need
-//https://en.wikipedia.org/wiki/ROOT_(programming)
-//https://www.lysator.liu.se/c/ANSI-C-grammar-y.html
 %token T_NUMBER T_IDENTIFIER T_STRING T_CONST
-%token T_PLUS T_MINUS T_DIV T_STAR T_MOD
+%token T_PLUS T_MINUS T_DIVIDE T_STAR T_MOD
 %token T_POINT T_INCR T_DECR T_LSHIFT T_RSHIFT T_EQ T_NEQ T_GT T_GTE T_LT T_LTE T_NOT
-%token T_AND T_OR T_BWXOR T_BWAND T_BWOR
+%token T_AND T_OR T_BWXOR T_BWAND T_BWOR T_BWNOT
 %token  T_EQMULT T_EQDIV T_EQMOD T_EQPLUS T_EQMINUS T_EQLSHIFT T_EQRSHIFT T_ASSIGN T_EQEXPONENT T_EQBWOR T_EQBWAND
-%token  T_TYPE_NAME T_SIZEOF T_SEMI T_QBEGIN T_QEND T_DOT T_COMM T_TILDE
+%token  T_TYPE_NAME T_SIZEOF T_SEMI T_QBEGIN T_QEND T_DOT T_COMM
 
 %token T_TYPEDEF T_EXTERN T_STATIC T_AUTO T_REGISTER
 %token T_CHAR T_SHORT T_INT T_LONG T_SIGNED T_UNSIGNED T_FLOAT T_DOUBLE T_VOLATILE T_VOID
@@ -41,6 +37,8 @@
 %token T_LBRACKET T_RBRACKET T_LSQBRACKET T_RSQBRACKET T_LCBRACKET T_RCBRACKET
 
 %token T_CASE T_DEFAULT T_IF T_ELSE T_SWITCH T_WHILE T_DO T_FOR T_GOTO T_CONTINUE T_BREAK T_RETURN
+
+
 
 %type <expr> PRI_EXPR POSTFIX_EXPR ARG_EXPR_LIST UNARY_EXPR UNARY_OP
 %type <expr> CAST_EXPR MULTIPLICATIVE_EXPR ADDITIVE_EXPR SHFT_EXPR REL_EXPR EQ_EXPR AND_EXPR
@@ -98,7 +96,7 @@ UNARY_OP
 	| T_STAR
 	| T_PLUS
 	| T_MINUS
-	| T_TILDE
+	| T_BWNOT
 	| T_NOT
 	;
 
@@ -110,7 +108,7 @@ CAST_EXPR
 MULTIPLICATIVE_EXPR
 	: CAST_EXPR
 	| MULTIPLICATIVE_EXPR T_STAR CAST_EXPR { $$ = new times_expr($1, $3);}
-	| MULTIPLICATIVE_EXPR T_DIV CAST_EXPR { $$ = new div_expr($1, $3);}
+	| MULTIPLICATIVE_EXPR T_DIVIDE CAST_EXPR { $$ = new div_expr($1, $3);}
 	| MULTIPLICATIVE_EXPR T_MOD CAST_EXPR { $$ = new mod_expr($1, $3);}
 	;
 
@@ -425,13 +423,13 @@ EXPR_STMT
 	;
 
 SELEC_STMT
-	: T_IF T_LBRACKET EXPR T_RBRACKET STMT
-	| T_IF T_LBRACKET EXPR T_RBRACKET STMT T_ELSE STMT
+	: T_IF T_LBRACKET EXPR T_RBRACKET STMT { $$ = new ifelse_stmt($1,$3);}
+	| T_IF T_LBRACKET EXPR T_RBRACKET STMT T_ELSE STMT { $$ = new ifelse_stmt($1, $3);}
 	| T_SWITCH T_LBRACKET EXPR T_RBRACKET STMT
 	;
 
 ITER_STMT
-	: T_WHILE T_LBRACKET EXPR T_RBRACKET STMT
+	: T_WHILE T_LBRACKET EXPR T_RBRACKET STMT  { $$ = new while_stmt($1, $3);}
 	| T_DO STMT T_WHILE T_LBRACKET EXPR T_RBRACKET T_SEMI
 	| T_FOR T_LBRACKET EXPR_STMT EXPR_STMT T_RBRACKET STMT
 	| T_FOR T_LBRACKET EXPR_STMT EXPR_STMT EXPR T_RBRACKET STMT
@@ -465,7 +463,7 @@ FUNC_DEF
 
 	nodePtr g_root;
 	extern FILE *yyin;
-	 nodePtr parseAST(FILE* src){
+	const nodePtr parseAST(FILE* src){
 	  g_root=0;
 		yyin=src;
 	  yyparse();

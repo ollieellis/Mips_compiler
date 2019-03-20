@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 //static int makeNameUnq=0;
-///use r1 and r2 names each time
+//use r1 and r2 names each time
 
 void  constant::compile(translate_context &context){//ostream printing?
 	std::cout<<value;
@@ -36,10 +36,23 @@ void times_expr::compile(translate_context &context){
 
 	//std::cout<<"jr $ra";
 }
+void mod_expr::compile(translate_context &context){
+
+}
+void while_stmt::compile(translate_context &context){
+
+}
+void ifelse_stmt::compile(translate_context &context){
+
+}
+void return_stmt::compile(translate_context &context){
+
+}
+
 void function_definition::compile(translate_context &context){
 	std::cout<<name<<": ";
 	for(int i=0;i++;i<d_body.size()){
-		d_body[i]->translate(context);
+		d_body[i]->compile(context);
 	}
   std::cout<<"jr $ra";
 };

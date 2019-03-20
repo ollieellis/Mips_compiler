@@ -33,7 +33,11 @@ void div_expr::translate(translate_context &context){
 	std::cout<<"/";
 	R->translate(context);
 }
-
+void mod_expr::translate(translate_context &context){
+	L->translate(context);
+	std::cout<<'%';
+	R->translate(context);
+}
 void function_definition::translate(translate_context &context){
 	std::cout<<"def ";
 	std::cout<<name;
@@ -77,7 +81,6 @@ void return_stmt::translate(translate_context &context){
 	for(int i=0;i++;i<stmts.size()){
 		stmts[i]->translate(context);
 	}
-
 }
 void translate(nodePtr program, translate_context &context){
 	program->translate(context);

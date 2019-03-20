@@ -23,6 +23,7 @@ typedef node* nodePtr;//if sharered don't do cyclical references
 class node{
 	protected:
 	public:
+		node(){};
 	 	nodePtr parseAST(FILE* src);
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
@@ -30,8 +31,7 @@ class node{
 //---------------- base nodes
 class expr_node: public node{
 	public:
-		expr_node(){}
-
+		expr_node(){};
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
@@ -219,10 +219,13 @@ class function_definition: public decl_node{
 		virtual void compile(translate_context &context);
 };
 //----------------
+/*
 void compile_all(std::string returnval, translate_context context, nodePtr program){
 	    program->compile(context);
 	    std::cout<<" "<<returnval<<"\n";
 };
-extern nodePtr parseAST();
+*/
+
+extern const nodePtr parseAST(FILE* src);
 
 #endif

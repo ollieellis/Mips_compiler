@@ -1,20 +1,29 @@
-#include <fstream>
 #include "abstsyntree.hpp"
 
+#include <cstdlib>
+#include <fstream>
+
 int main(int argc, char *argv[]){
-    if(argc < 2){
-      fprintf(stderr, "usage : compiler sourceCode\n");
-      exit(1);
+    if(argc<2){
+        fprintf(stderr, "no srccode.\n");
+        exit(1);
     }
-    std::ifstream src(argv[1]);
-    if(!src.is_open()){
-      fprintf(stderr, "Couldn't open '%s'\n", argv[1]);
-      exit(1);
-    }
+
+		FILE *src=freopen(argv[2], "r", stdin);
+		freopen(argv[4], "w", stdout);
+
+		const nodePtr ast=parseAST(src);
 		translate_context context;
-		std::string r;
-		//std::vector<uint32_t> regs;
-    nodePtr tree=Parse(src);
-    compile_all(r, context, tree);//compile all
+		if(std::string(argv[1]) == "--translate"){
+			std::cout<<"start translation"<<std::endl;
+			ast->translate(context);
+
+		}
+		else if(std::string(argv[1]) == "-S"){
+			std::cout<<"start compilation"<<std::endl;
+			ast->translate(context);
+			std::cout<<"start"<<std::endl;
+		}
+
     return 0;
 }
