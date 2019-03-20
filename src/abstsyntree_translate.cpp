@@ -7,11 +7,12 @@ void constant::translate(translate_context &context){//ostream printing?
   std::cout<<value;
 }
 void identifier::translate(translate_context &context){
-    std::cout<<context.symtab[value];
+  std::cout<<value;
 }
 void str_lit::translate(translate_context &context){
   std::cout<<value;
 }
+//binary
 //arithmetic
 void plus_expr::translate(translate_context &context){
 	L->translate(context);
@@ -38,33 +39,56 @@ void mod_expr::translate(translate_context &context){
 	std::cout<<'%';
 	R->translate(context);
 }
+void isequal_expr::translate(translate_context &context){
+	L->translate(context);
+	std::cout<<"==";
+	R->translate(context);
+}
+void notequal_expr::translate(translate_context &context){
+	L->translate(context);
+	std::cout<<"!=";
+	R->translate(context);
+}
+void member::translate(translate_context &context){
+	S->translate(context);
+	std::cout<<"."<<membval;
+}
+void lshift::translate(translate_context &context){
+	L->translate(context);
+	std::cout<<">>";
+	R->translate(context);
+}
+void rshift::translate(translate_context &context){
+	L->translate(context);
+	std::cout<<"<<";
+	R->translate(context);
+}
+//unary
+//postfix
+void increment::translate(translate_context &context){
+	std::cout<<"++";
+	S->translate(context);
+}
+void decrement::translate(translate_context &context){
+	std::cout<<"--";
+	S->translate(context);
+}
 void function_definition::translate(translate_context &context){
 	std::cout<<"def ";
-	std::cout<<name;
+	name->translate(context);
 	std::cout<<"(";
-	for(int i=0;i++;i<d_body.size()){
-		args[i]->translate(context);
-	}
+	args->translate(context);
 	std::cout<<"):"<<std::endl;
-	for(int i=0;i++;i<d_body.size()){
-		d_body[i]->translate(context);
-	}
+	d_body->translate(context);
 }
-
 void ifelse_stmt::translate(translate_context &context){
 	std::cout<<"if ";
-
 	std::cout<<"(";
 	condition->translate(context);
 	std::cout<<"):"<<std::endl;
-	for(int i=0;i++;i<stmts.size()){
-		stmts[i]->translate(context);
-	}
-	if(else_body.size()!=0){
-		std::cout<<"else: ";
-		for(int i=0;i++;i<else_body.size()){
-			else_body[i]->translate(context);
-		}
+	body->translate(context);
+	if(else_body!=NULL){
+		else_body->translate(context);
 	}
 }
 void while_stmt::translate(translate_context &context){
@@ -72,15 +96,11 @@ void while_stmt::translate(translate_context &context){
 	std::cout<<"(";
 	condition->translate(context);
 	std::cout<<"):"<<std::endl;
-	for(int i=0;i++;i<stmts.size()){
-		stmts[i]->translate(context);
-	}
+	body->translate(context);
 }
 void return_stmt::translate(translate_context &context){
 	std::cout<<"return ";
-	for(int i=0;i++;i<stmts.size()){
-		stmts[i]->translate(context);
-	}
+	body->translate(context);
 }
 void translate(nodePtr program, translate_context &context){
 	program->translate(context);

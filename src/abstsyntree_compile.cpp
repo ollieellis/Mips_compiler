@@ -48,11 +48,25 @@ void ifelse_stmt::compile(translate_context &context){
 void return_stmt::compile(translate_context &context){
 
 }
+void member::compile(translate_context &context){
 
+}
+void lshift::compile(translate_context &context){
+
+}
+void rshift::compile(translate_context &context){
+
+}
+void increment::compile(translate_context &context){
+
+}
+void decrement::compile(translate_context &context){
+
+}
+void notequal_expr::compile(translate_context&){}
+void isequal_expr::compile(translate_context&){}
 void function_definition::compile(translate_context &context){
 	std::cout<<name<<": ";
-	for(int i=0;i++;i<d_body.size()){
-		d_body[i]->compile(context);
-	}
+	d_body->compile(context);
   std::cout<<"jr $ra";
 };

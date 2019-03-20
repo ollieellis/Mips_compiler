@@ -1,17 +1,17 @@
 Date,Effort,Developers,Milestones
-,,,DefineInitialMilestones
+26/01/2019,,,DefineInitialMilestones
 ,,,Write Tests for test suite
-,,,Finish labs for preperation
-,,,basic lexer
-,,,basic parser
+26/02/2019,,,Finish labs for preperation
+06/03/2019,1 hour approx,,basic lexer
+16/03/2019,1 hour approx,,basic parser
 ,,,basic ast
 ,,,basic compiler codegen
-,,,intermediate lexer
-,,,intermediate parser
+06/03/2019,1 hour approx,,intermediate lexer
+16/03/2019,1 hour approx,,intermediate parser
 ,,,intermediate ast
 ,,,intermediate compiler codegen
-,,,advanced lexer
-,,,advanced parser
+06/03/2019,1 hour approx,,advanced lexer
+16/03/2019,1 hour approx,,advanced parser
 ,,,advanced ast
 ,,,advanced codegen for compiler
 ,,,translator

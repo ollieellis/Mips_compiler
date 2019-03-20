@@ -3,15 +3,15 @@ DefineInitialMilestones,N/A,1,Both,Yes,ÊCome up with initial milestones for gett
 Write Tests for test suite,N/A,3,Both,,Write test cases 1-10 and extras
 Finish labs for preperation,N/A,6,N/A,Yes,Do labs 2 and 3 and examine feedback
 basic lexer,N/A,1,Harriet,Yes,"create lex file to tokenise the ""basic"" compiler spec"
-basic parser,basic lexer,3,Ollie,,generate parser to use alongside ast 
+basic parser,basic lexer,3,Ollie,Yes,generate parser to use alongside ast 
 basic ast,basic parser,14,Harriet,,"along with parser generate tree for ""basic"" compiler spec"
 basic compiler codegen,basic ast,15,Both,,used to generate mips assembly from sytnax tree
-intermediate lexer,basic compiler codegen,2,Harriet,,"create intermediate lex file to tokenise the ""intermediate"" compiler spec"
-intermediate parser,intermediate lexer,2,Ollie,,generate intermediate parser to use alongside intermediate ast 
+intermediate lexer,basic compiler codegen,2,Harriet,Yes,"create intermediate lex file to tokenise the ""intermediate"" compiler spec"
+intermediate parser,intermediate lexer,2,Ollie,Yes,generate intermediate parser to use alongside intermediate ast 
 intermediate ast,intermediate parser,6,Both,,"along with parser generate tree for ""intermediate"" compiler spec"
 intermediate compiler codegen,intermediate ast,10,Both,,used to generate mips assembly from intermediate sytnax tree
-advanced lexer,intermediate compiler codegen,2,Harriet,,"create advanced lex file to tokenise the ""advanced"" compiler spec"
-advanced parser,intermediate lexer,5,Ollie,,generate advanced parser to use alongside advanced ast 
+advanced lexer,intermediate compiler codegen,2,Harriet,YES,"create advanced lex file to tokenise the ""advanced"" compiler spec"
+advanced parser,intermediate lexer,5,Ollie,Yes,generate advanced parser to use alongside advanced ast 
 advanced ast,intermediate parser,10,Both,,"along with parser generate tree for ""advanced"" compiler spec"
 advanced codegen for compiler,"basic ast, basic parser",20,Both,,used to generate mips assembly from advanced sytnax tree
 translator,basic ast,15,Both,,translate all required functions in the translater spec

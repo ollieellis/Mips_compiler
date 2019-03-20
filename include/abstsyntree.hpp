@@ -37,18 +37,20 @@ class expr_node: public node{
 };
 class stmt_node: public node{
 	protected:
+		nodePtr body;
 		std::vector<nodePtr> stmts;
 	public:
-		stmt_node(std::vector<nodePtr> body): stmts(body){}
+		stmt_node() {};
+		stmt_node(nodePtr in) {stmts.push_back(in);};
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
 class decl_node: public node{
 	protected:
 		nodePtr name;
-		std::vector<nodePtr> d_body;
+		nodePtr d_body;
 	public:
-		decl_node(nodePtr n_name, std::vector<nodePtr> n_body): name(n_name), d_body(n_body){};
+		decl_node(nodePtr n_name, nodePtr n_body): name(n_name), d_body(n_body){};
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
@@ -84,9 +86,9 @@ class binary_expr: public expr_node{
 };
 class unary_expr: public expr_node{
   protected:
-    nodePtr R;
+    nodePtr S;
   public:
-		unary_expr(nodePtr rval): R(rval) {};
+		unary_expr(nodePtr sideval): S(sideval) {};
 };
 //basic units----------------
 class identifier: public expr_node{
@@ -149,20 +151,56 @@ class mod_expr: public binary_expr{
 };
 
 //-----------------------
+/*
 class postfix_expr: public unary_expr{
 	protected:
-		nodePtr R;
+
 	public:
 		postfix_expr(nodePtr r): unary_expr(r) {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
+*/
+class increment: public unary_expr{
+	protected:
+	public:
+		increment(nodePtr r): unary_expr(r) {};
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
+};
+class decrement: public unary_expr{
+	protected:
+	public:
+		decrement(nodePtr r): unary_expr(r) {};
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
+};
+
+
+
+
+
 class iseq_expr: public binary_expr{
 	public:
 		iseq_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
+//relational expressions-----------------------
+class isequal_expr: public binary_expr{
+	public:
+		isequal_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
+class notequal_expr: public binary_expr{
+	public:
+		notequal_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
+
+
 
 class and_expr: public binary_expr{
 	public:
@@ -184,47 +222,63 @@ class or_expr: public binary_expr{
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
+class lshift: public binary_expr{
+	public:
+		lshift(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
+class rshift: public binary_expr{
+	public:
+		rshift(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
+class member: public unary_expr{
+	public:
+		std::string membval;
+	public:
+		member(nodePtr lval, std::string mv): unary_expr(lval), membval(mv){};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
+
+
 //statements---------------------------------------------------
 class while_stmt: public stmt_node{
 	protected:
 		nodePtr condition;
 	public:
-		while_stmt(std::vector<nodePtr> body): stmt_node(body) {};
+		while_stmt(nodePtr fact, nodePtr body): condition(fact),stmt_node(body) {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
 class ifelse_stmt: public stmt_node{
 	protected:
 		nodePtr condition;
-		std::vector<nodePtr> else_body;
+		nodePtr else_body;
 	public:
-		ifelse_stmt(nodePtr fact, std::vector<nodePtr> body, std::vector<nodePtr> other): condition(fact), else_body(other), stmt_node(body) {};//body - then
-		ifelse_stmt(nodePtr fact, std::vector<nodePtr> body): condition(fact), stmt_node(body) {};
+		ifelse_stmt(nodePtr fact, nodePtr body, nodePtr other): condition(fact), else_body(other), stmt_node(body) {};//body - then
+		ifelse_stmt(nodePtr fact, nodePtr body): condition(fact), stmt_node(body) {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
 class return_stmt: public stmt_node{
 	public:
-		return_stmt(std::vector<nodePtr> body): stmt_node(body) {};
+		return_stmt(nodePtr body): stmt_node(body) {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
 //declarations---------------------------------------------------
 class function_definition: public decl_node{
 	protected:
-		std::vector<nodePtr> args;
+		nodePtr args;
 	public:
-		function_definition(nodePtr name, std::vector<nodePtr> body): decl_node(name,body){};
+		function_definition(nodePtr name, nodePtr body): decl_node(name,body){};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
 //----------------
-/*
-void compile_all(std::string returnval, translate_context context, nodePtr program){
-	    program->compile(context);
-	    std::cout<<" "<<returnval<<"\n";
-};
-*/
 
 extern const nodePtr parseAST(FILE* src);
 

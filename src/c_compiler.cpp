@@ -8,16 +8,15 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "no srccode.\n");
         exit(1);
     }
-
 		FILE *src=freopen(argv[2], "r", stdin);
-		freopen(argv[4], "w", stdout);
 
+		freopen(argv[4], "w", stdout);
 		const nodePtr ast=parseAST(src);
+
 		translate_context context;
 		if(std::string(argv[1]) == "--translate"){
-			std::cout<<"start translation"<<std::endl;
+			std::cerr<<"start translation"<<std::endl;
 			ast->translate(context);
-
 		}
 		else if(std::string(argv[1]) == "-S"){
 			std::cout<<"start compilation"<<std::endl;
