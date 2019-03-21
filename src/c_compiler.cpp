@@ -14,6 +14,7 @@ int main(int argc, char *argv[]){
 		const nodePtr ast=parseAST(src);
 
 		translate_context context;
+
 		if(std::string(argv[1]) == "--translate"){
 			std::cerr<<"start translation"<<std::endl;
 			ast->translate(context);

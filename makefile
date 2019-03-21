@@ -4,12 +4,14 @@ CC =g++
 CXXFLAGS += -std=c++11 -w -Wall -g
 CXXFLAGS += -I include -I src
 
-HPPFILES = abstsyntree.hpp test_parser.tab.hpp
+HPPFILES = abstsyntree.hpp abstsyntree_expr.hpp abstsyntree_stmts.hpp abstsyntree_dcls.hpp test_parser.tab.hpp
 CPPFILES = $(wildcard src/*.cpp)
 OBJS = $(patsubst %.cpp, %.o, $(CPPFILES))
 
 all : $(LINK_TARGET)
 
+debug : $(LINK_TARGET)
+	gdb --args bin/c_compiler --translate empty.c -o out.py
 
 $(LINK_TARGET) : src/complete_lexer.yy.o src/test_parser.tab.o $(OBJS)
 								 $(CC) $(CPPFLAGS) $^ -o $@

@@ -1,8 +1,6 @@
 %code requires{
   #include "abstsyntree.hpp"
-  #include "abstsyntree_expr.hpp"
-	#include "abstsyntree_stmts.hpp"
-	#include "abstsyntree_dcls.hpp"
+
   #include <cassert>
 	#include <fstream>
 	#include <string>
@@ -54,11 +52,8 @@
 %type <expr> SELEC_STMT ITER_STMT JMP_STMT ROOT_NODE EXT_DECL FUNC_DEF
 
 %type <number> T_NUMBER
-%type <string> T_IDENTIFIER T_STRING T_INCR T_DECR T_LBRACKET T_RBRACKET T_MOD T_DIVIDE T_AND T_BWOR
-%type <string> T_WHILE T_IF T_ELSE T_ASSIGN T_EQMULT T_EQDIV T_EQMOD T_EQPLUS T_EQMINUS
-%type <string> T_EQLSHIFT T_EQRSHIFT T_EQBWAND T_EQEXPONENT T_EQBWOR T_DEFAULT T_CASE
-%type <string>  T_BWAND T_STAR T_PLUS T_MINUS T_BWNOT T_NOT T_QEND T_QSTART
-
+%type <string> T_IDENTIFIER T_STRING T_INCR T_DECR T_LBRACKET T_RBRACKET
+%type <string> T_WHILE T_IF T_ELSE
 
 %start ROOT_NODE
 
@@ -70,148 +65,148 @@ PRI_EXPR
 	: T_IDENTIFIER { $$ = new identifier(*$1);}
 	| T_NUMBER { $$ = new constant($1);}
 	| T_STRING { $$ = new str_lit(*$1);}
-	| T_LBRACKET EXPR T_RBRACKET { $$=$2;}
+	| T_LBRACKET EXPR T_RBRACKET { $$ = $2;}
 	;
 
 POSTFIX_EXPR
-	: PRI_EXPR {$$=$1;}
+	: PRI_EXPR ($$=$1;)
 	| POSTFIX_EXPR T_LSQBRACKET EXPR T_RSQBRACKET
 	| POSTFIX_EXPR T_LBRACKET T_RBRACKET
 	| POSTFIX_EXPR T_LBRACKET ARG_EXPR_LIST T_RBRACKET
 	| POSTFIX_EXPR T_DOT T_IDENTIFIER
 	| POSTFIX_EXPR T_POINT T_IDENTIFIER
-	| POSTFIX_EXPR T_INCR { $$ = new incr($1);}
-	| POSTFIX_EXPR T_DECR { $$ = new decr($1);}
+	| POSTFIX_EXPR T_INCR
+	| POSTFIX_EXPR T_DECR
 	;
 
 ARG_EXPR_LIST
-	: ASSIGN_EXPR {$$ = $1;}
-	| ARG_EXPR_LIST T_COMM ASSIGN_EXPR  {$$ = $1;}
+	: ASSIGN_EXPR
+	| ARG_EXPR_LIST T_COMM ASSIGN_EXPR
 	;
 
 UNARY_EXPR
-	: POSTFIX_EXPR {$$=$1;}
-	| T_INCR UNARY_EXPR
-	| T_DECR UNARY_EXPR
+	: POSTFIX_EXPR ($$=$1;)
+	| T_INCR UNARY_EXPR { $$ = new increment($2);}
+	| T_DECR UNARY_EXPR { $$ = new decrement($2);}
 	| UNARY_OP CAST_EXPR
 	| T_SIZEOF UNARY_EXPR
 	| T_SIZEOF T_LBRACKET TYPE_NAME T_RBRACKET
 	;
 
 UNARY_OP
-	: T_BWAND { $$ = new unary_op(*$1);}
-	| T_STAR {$$ = new unary_op(*$1); }
-	| T_PLUS {$$ = new unary_op(*$1); }
-	| T_MINUS {$$ = new unary_op(*$1); }
-	| T_BWNOT { $$ = new unary_op(*$1);}
-	| T_NOT {$$ = new unary_op(*$1);}
+	: T_BWAND
+	| T_STAR
+	| T_PLUS
+	| T_MINUS
+	| T_BWNOT
+	| T_NOT
 	;
 
 CAST_EXPR
-	: UNARY_EXPR {$$=$1;}
-	| T_LBRACKET TYPE_NAME T_RBRACKET CAST_EXPR
+	: UNARY_EXPR
+	| T_LBRACKET TYPE_NAME T_RBRACKET CAST_EXPR  {}
 	;
 
 MULTIPLICATIVE_EXPR
-	: CAST_EXPR {$$=$1;}
+	: CAST_EXPR
 	| MULTIPLICATIVE_EXPR T_STAR CAST_EXPR { $$ = new times_expr($1, $3);}
 	| MULTIPLICATIVE_EXPR T_DIVIDE CAST_EXPR { $$ = new div_expr($1, $3);}
 	| MULTIPLICATIVE_EXPR T_MOD CAST_EXPR { $$ = new mod_expr($1, $3);}
 	;
 
 ADDITIVE_EXPR
-	: MULTIPLICATIVE_EXPR {$$=$1;}
+	: MULTIPLICATIVE_EXPR
 	| ADDITIVE_EXPR T_PLUS MULTIPLICATIVE_EXPR { $$ = new times_expr($1, $3);}
 	| ADDITIVE_EXPR T_MINUS MULTIPLICATIVE_EXPR { $$ = new minus_expr($1, $3);}
 	;
 
 SHFT_EXPR
-	: ADDITIVE_EXPR {$$=$1;}
+	: ADDITIVE_EXPR
 	| SHFT_EXPR T_LSHIFT ADDITIVE_EXPR { $$ = new lshift($1, $3);}
 	| SHFT_EXPR T_RSHIFT ADDITIVE_EXPR { $$ = new rshift($1, $3);}
 	;
 
 REL_EXPR
-	: SHFT_EXPR {$$=$1;}
-	| REL_EXPR T_LT SHFT_EXPR { $$ = new lt($1, $3);}
-	| REL_EXPR T_GT SHFT_EXPR { $$ = new gt($1, $3);}
-	| REL_EXPR T_LTE SHFT_EXPR { $$ = new lte($1, $3);}
-	| REL_EXPR T_GTE SHFT_EXPR { $$ = new gte($1, $3);}
+	: SHFT_EXPR
+	| REL_EXPR T_LT SHFT_EXPR
+	| REL_EXPR T_GT SHFT_EXPR
+	| REL_EXPR T_LTE SHFT_EXPR
+	| REL_EXPR T_GTE SHFT_EXPR
 	;
 
 EQ_EXPR
-	: REL_EXPR {$$ = $1;}
+	: REL_EXPR
 	| EQ_EXPR T_EQ REL_EXPR { $$ = new isequal_expr($1, $3);}
 	| EQ_EXPR T_NEQ REL_EXPR { $$ = new notequal_expr($1, $3);}
 	;
 
 AND_EXPR
-	: EQ_EXPR {$$ = $1;}
-	| AND_EXPR T_BWAND EQ_EXPR {$$ = new and_expr($1,$3);}
+	: EQ_EXPR
+	| AND_EXPR T_BWAND EQ_EXPR
 	;
 
 EXCL_OR_EXPR
-	: AND_EXPR {$$ = $1;}
-	| EXCL_OR_EXPR T_BWXOR AND_EXPR  {$$ = new xor_expr($1,$3);}
+	: AND_EXPR
+	| EXCL_OR_EXPR T_BWXOR AND_EXPR
 	;
 
 INCL_OR_EXPR
-	: EXCL_OR_EXPR {$$ = $1;}
-	| INCL_OR_EXPR T_OR EXCL_OR_EXPR {$$ = new or_expr($1,$3);}
+	: EXCL_OR_EXPR
+	| INCL_OR_EXPR T_OR EXCL_OR_EXPR
 	;
 
 LOGI_AND_EXPR
-	: INCL_OR_EXPR {$$ = $1;}
-	| LOGI_AND_EXPR T_AND INCL_OR_EXPR {$$ = new and_expr($1,$3);}
+	: INCL_OR_EXPR
+	| LOGI_AND_EXPR T_AND INCL_OR_EXPR
 	;
 
 LOGI_OR_EXPR
-	: LOGI_AND_EXPR {$$ = $1;}
-	| LOGI_OR_EXPR T_BWOR LOGI_AND_EXPR {$$ = new and_expr($1,$3);}
+	: LOGI_AND_EXPR
+	| LOGI_OR_EXPR T_BWOR LOGI_AND_EXPR
 	;
 
 COND_EXPR
-	: LOGI_OR_EXPR {$$ = $1;}
-	| LOGI_OR_EXPR T_QBEGIN EXPR T_QEND COND_EXPR {$$ = new cond_expr($1,$3,$5);}
+	: LOGI_OR_EXPR
+	| LOGI_OR_EXPR T_QBEGIN EXPR T_QEND COND_EXPR
 	;
 
 ASSIGN_EXPR
-	: COND_EXPR {$$ = $1;}
-	| UNARY_EXPR ASSIGN_OP ASSIGN_EXPR {$$ = new assign_expr($1,$3);}
+	: COND_EXPR
+	| UNARY_EXPR ASSIGN_OP ASSIGN_EXPR
 	;
 
 ASSIGN_OP
-	: T_ASSIGN { $$ = new assign_op(*$1);}
-	| T_EQMULT { $$ = new assign_op(*$1);}
-	| T_EQDIV { $$ = new assign_op(*$1);}
-	| T_EQMOD { $$ = new assign_op(*$1);}
-	| T_EQPLUS { $$ = new assign_op(*$1);}
-	| T_EQMINUS { $$ = new assign_op(*$1);}
-	| T_EQLSHIFT { $$ = new assign_op(*$1);}
-	| T_EQRSHIFT { $$ = new assign_op(*$1);}
-	| T_EQBWAND { $$ = new assign_op(*$1);}
-	| T_EQEXPONENT { $$ = new assign_op(*$1);}
-	| T_EQBWOR { $$ = new assign_op(*$1);}
+	: T_ASSIGN //check
+	| T_EQMULT
+	| T_EQDIV
+	| T_EQMOD
+	| T_EQPLUS
+	| T_EQMINUS
+	| T_EQLSHIFT
+	| T_EQRSHIFT
+	| T_EQBWAND
+	| T_EQEXPONENT
+	| T_EQBWOR
 	;
 
 EXPR
-	: ASSIGN_EXPR {$$ = $1;}
+	: ASSIGN_EXPR
 	| EXPR T_COMM ASSIGN_EXPR
 	;
 
 CONST_EXPR
-	: COND_EXPR {$$ = $1;}
+	: COND_EXPR
 	;
 
 DECL
-	: DECL_SPECS T_SEMI {$$ = $1;}
+	: DECL_SPECS T_SEMI
 	| DECL_SPECS INIT_DECLARATOR_LIST T_SEMI
 	;
 
 DECL_SPECS
-	: STRGE_CLASS_SPEC {$$ = $1;}
+	: STRGE_CLASS_SPEC
 	| STRGE_CLASS_SPEC DECL_SPECS
-	| TYPE_SPEC {}
+	| TYPE_SPEC {std::cerr<<"TYPE_SPEC";}
 	| TYPE_SPEC DECL_SPECS
 	| TYPE_QUAL
 	| TYPE_QUAL DECL_SPECS
@@ -301,22 +296,22 @@ ENUM_LIST
 
 ENUM
 	: T_IDENTIFIER { $$ = new identifier(*$1);}
-	| T_IDENTIFIER T_ASSIGN CONST_EXPR {}
+	| T_IDENTIFIER T_ASSIGN CONST_EXPR
 	;
 
 TYPE_QUAL
-	: T_CONST {}
-	| T_VOLATILE {}
+	: T_CONST
+	| T_VOLATILE
 	;
 
 DECLARATOR
-	: POINTER DIREC_DECLARATOR {}
+	: POINTER DIREC_DECLARATOR
 	| DIREC_DECLARATOR {std::cerr<<"DIREC_DECLARATOR";}
 	;
 
 DIREC_DECLARATOR
-	: T_IDENTIFIER {$$ = new identifier(*$1);}
-	| T_LBRACKET DECLARATOR T_RBRACKET {$$ = $2;}
+	: T_IDENTIFIER { std::cerr<<"T_IDENTIFIER"; $$ = new identifier(*$1);}
+	| T_LBRACKET DECLARATOR T_RBRACKET
 	| DIREC_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET
 	| DIREC_DECLARATOR T_LSQBRACKET T_RSQBRACKET
 	| DIREC_DECLARATOR T_LBRACKET PARAM_TYPE_LIST T_RBRACKET
@@ -388,23 +383,23 @@ INIT
 	;
 
 INIT_LIST
-	: INIT {$$ = $1;}
+	: INIT
 	| INIT_LIST T_COMM INIT
 	;
 
 STMT
-	: LBL_STMT {$$ = $1;}
-	| COMP_STMT {$$ = $1;}
-	| EXPR_STMT {$$ = $1;}
-	| SELEC_STMT {$$ = $1;}
-	| ITER_STMT {$$ = $1;}
-	| JMP_STMT {$$ = $1;}
+	: LBL_STMT {}
+	| COMP_STMT {}
+	| EXPR_STMT {}
+	| SELEC_STMT {}
+	| ITER_STMT {}
+	| JMP_STMT {}
 	;
 
 LBL_STMT
-	: T_IDENTIFIER T_QEND STMT
-	| T_CASE CONST_EXPR T_QEND STMT {$$=new label_stmt(NULL,*$1,$2,$4);}
-	| T_DEFAULT T_QEND STMT {$$=new label_stmt(NULL,*$1,$3,NULL);}
+	: T_IDENTIFIER T_QEND STMT {}
+	| T_CASE CONST_EXPR T_QEND STMT {}
+	| T_DEFAULT T_QEND STMT {}
 	;
 
 COMP_STMT
@@ -430,9 +425,9 @@ EXPR_STMT
 	;
 
 SELEC_STMT
-	: T_IF T_LBRACKET EXPR T_RBRACKET STMT { $$ = new ifelse_stmt($3, $5, NULL);}
-	| T_IF T_LBRACKET EXPR T_RBRACKET STMT T_ELSE STMT{ $$ = new ifelse_stmt($3, $5, $7);}
-	| T_SWITCH T_LBRACKET EXPR T_RBRACKET STMT
+	: T_IF T_LBRACKET EXPR T_RBRACKET STMT { $$ = new ifelse_stmt($3, $5);}
+	| T_IF T_LBRACKET EXPR T_RBRACKET STMT T_ELSE STMT{}
+	| T_SWITCH T_LBRACKET EXPR T_RBRACKET STMT{}
 	;
 
 ITER_STMT

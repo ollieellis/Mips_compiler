@@ -1,0 +1,148 @@
+%code requires{
+  #include "abstsyntree.hpp"
+
+  #include <cassert>
+	#include <fstream>
+	#include <string>
+  extern nodePtr g_root; // A way of getting the AST out
+
+  //! This is to fix problems when generating C++
+  // We are declaring the functions provided by Flex, so
+  // that Bison generated code can call them.
+  int yylex(void);
+  void yyerror(const char *);
+}
+
+
+//The %union DECL specifies the entire collection of possible data types for
+//semantic values. The keyword %union is followed by braced code containing the same
+//thing that goes inside a union in C.
+
+%union{
+  nodePtr expr;
+  double number;
+  std::string *string;
+}
+
+%token T_NUMBER T_IDENTIFIER T_STRING T_CONST
+%token T_PLUS T_MINUS T_DIVIDE T_STAR T_MOD
+%token T_POINT T_INCR T_DECR T_LSHIFT T_RSHIFT T_EQ T_NEQ T_GT T_GTE T_LT T_LTE T_NOT
+%token T_AND T_OR T_BWXOR T_BWAND T_BWOR T_BWNOT
+%token  T_EQMULT T_EQDIV T_EQMOD T_EQPLUS T_EQMINUS T_EQLSHIFT T_EQRSHIFT T_ASSIGN T_EQEXPONENT T_EQBWOR T_EQBWAND
+%token  T_TYPE_NAME T_SIZEOF T_SEMI T_QBEGIN T_QEND T_DOT T_COMM
+
+%token T_TYPEDEF T_EXTERN T_STATIC T_AUTO T_REGISTER
+%token T_CHAR T_SHORT T_INT T_LONG T_SIGNED T_UNSIGNED T_FLOAT T_DOUBLE T_VOLATILE T_VOID
+%token T_STRUCT T_UNION T_ENUM T_ELL
+%token T_LBRACKET T_RBRACKET T_LSQBRACKET T_RSQBRACKET T_LCBRACKET T_RCBRACKET
+
+%token T_CASE T_DEFAULT T_IF T_ELSE T_SWITCH T_WHILE T_DO T_FOR T_GOTO T_CONTINUE T_BREAK T_RETURN
+
+
+
+%type <expr> PRI_EXPR POSTFIX_EXPR ARG_EXPR_LIST UNARY_EXPR UNARY_OP
+%type <expr> CAST_EXPR MULTIPLICATIVE_EXPR ADDITIVE_EXPR SHFT_EXPR REL_EXPR EQ_EXPR AND_EXPR
+
+%type <expr> EXCL_OR_EXPR INCL_OR_EXPR LOGI_AND_EXPR LOGI_OR_EXPR COND_EXPR ASSIGN_EXPR ASSIGN_OP EXPR CONST_EXPR
+%type <expr> DECL DECL_SPECS INIT_DECLARATOR_LIST INIT_DECLARATOR STRGE_CLASS_SPEC TYPE_SPEC STRUCT_OR_UNION_SPEC
+%type <expr> STRUCT_OR_UNION STRUCT_DECL_LIST STRUCT_DECL SPEC_QUAL_LIST STRUCT_DECLARATOR_LIST STRUCT_DECLARATOR
+%type <expr> ENUM_SPEC ENUM_LIST ENUM TYPE_QUAL DECLARATOR
+%type <expr> DIREC_DECLARATOR POINTER TYPE_QUAL_LIST PARAM_TYPE_LIST PARAM_LIST PARAM_DECL ID_LIST TYPE_NAME
+%type <expr> ABST_DECLARATOR DIR_ABST_DECLARATOR INIT INIT_LIST STMT LBL_STMT COMP_STMT DECL_LIST STMT_LIST EXPR_STMT
+%type <expr> SELEC_STMT ITER_STMT JMP_STMT ROOT_NODE
+
+%type <number> T_NUMBER
+%type <string> T_IDENTIFIER T_STRING T_INCR T_DECR T_LBRACKET T_RBRACKET
+%type <string> T_WHILE T_IF T_ELSE
+
+%start ROOT_NODE
+
+%%
+
+PRI_EXPR
+	: T_IDENTIFIER { $$ = new identifier(*$1);}
+	| T_NUMBER { $$ = new constant($1);}
+	| T_STRING { $$ = new str_lit(*$1);}
+	| T_LBRACKET EXPR T_RBRACKET
+	;
+
+POSTFIX_EXPR
+	: PRI_EXPR
+	| TYPE_SPEC POSTFIX_EXPR T_LSQBRACKET EXPR T_RSQBRACKET
+	| TYPE_SPEC POSTFIX_EXPR T_LBRACKET T_RBRACKET //FUNCTIONS//FUNCTIONS//FUNCTIONS
+	| TYPE_SPEC POSTFIX_EXPR T_LBRACKET T_RBRACKET
+	| TYPE_SPEC POSTFIX_EXPR T_DOT T_IDENTIFIER { $$ = new member($1,*$3);}
+	| TYPE_SPEC POSTFIX_EXPR T_POINT T_IDENTIFIER { $$ = new member($1,*$3);}
+	| TYPE_SPEC POSTFIX_EXPR T_INCR
+	| TYPE_SPEC POSTFIX_EXPR T_DECR
+	;
+
+
+UNARY_EXPR
+	: POSTFIX_EXPR
+	| T_INCR UNARY_EXPR { $$ = new increment($2);}
+	| T_DECR UNARY_EXPR { $$ = new decrement($2);}
+	| UNARY_OP CAST_EXPR
+	| T_SIZEOF UNARY_EXPR
+	| T_SIZEOF T_LBRACKET TYPE_NAME T_RBRACKET
+	;
+
+UNARY_OP
+	: T_BWAND
+	| T_STAR
+	| T_PLUS
+	| T_MINUS
+	| T_BWNOT
+	| T_NOT
+	;
+
+CAST_EXPR
+	: UNARY_EXPR
+	| T_LBRACKET T_RBRACKET CAST_EXPR  {}
+	;
+
+MULTIPLICATIVE_EXPR
+	: CAST_EXPR
+	| MULTIPLICATIVE_EXPR T_STAR CAST_EXPR { $$ = new times_expr($1, $3);}
+	| MULTIPLICATIVE_EXPR T_DIVIDE CAST_EXPR { $$ = new div_expr($1, $3);}
+	| MULTIPLICATIVE_EXPR T_MOD CAST_EXPR { $$ = new mod_expr($1, $3);}
+	;
+
+ADDITIVE_EXPR
+	: MULTIPLICATIVE_EXPR
+	| ADDITIVE_EXPR T_PLUS MULTIPLICATIVE_EXPR { $$ = new times_expr($1, $3);}
+	| ADDITIVE_EXPR T_MINUS MULTIPLICATIVE_EXPR { $$ = new minus_expr($1, $3);}
+	;
+
+
+TYPE_SPEC
+	: T_VOID
+	| T_CHAR
+	| T_SHORT
+	| T_INT
+	| T_LONG
+	| T_FLOAT
+	| T_DOUBLE
+	| T_SIGNED
+	| T_UNSIGNED
+	| STRUCT_OR_UNION_SPEC
+	| ENUM_SPEC
+	| T_TYPE_NAME
+	|
+	;
+
+	ROOT_NODE
+		: EXT_DECL {std::cerr<<"ROOT_NODE";}
+		| ROOT_NODE EXT_DECL
+	%%
+
+	nodePtr g_root;
+	extern FILE *yyin;
+	const nodePtr parseAST(FILE* src){
+	  g_root=0;
+		yyin=src;
+		std::cerr<<"parse in";
+	  yyparse();
+		std::cerr<<"parse out "<<g_root;
+	  return g_root;
+	}

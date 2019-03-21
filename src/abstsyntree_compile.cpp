@@ -1,4 +1,6 @@
-#include "abstsyntree.hpp"
+#include "abstsyntree_expr.hpp"//global variables create vector to add any pgloab faviables to ie functions etc?
+#include "abstsyntree_dcls.hpp"
+#include "abstsyntree_stmts.hpp"
 #include <string>
 #include <vector>
 //static int makeNameUnq=0;
@@ -48,25 +50,63 @@ void ifelse_stmt::compile(translate_context &context){
 void return_stmt::compile(translate_context &context){
 
 }
-void member::compile(translate_context &context){
 
-}
 void lshift::compile(translate_context &context){
 
 }
 void rshift::compile(translate_context &context){
 
 }
-void increment::compile(translate_context &context){
+void incr::compile(translate_context &context){
 
 }
-void decrement::compile(translate_context &context){
+void decr::compile(translate_context &context){
+
+}
+void cond_expr::compile(translate_context &context){
+
+}
+
+void assign_expr::compile(translate_context &context){
+
+}
+void unary_op::compile(translate_context &context){
+
+}
+void assign_op::compile(translate_context &context){
+
+}
+void and_expr::compile(translate_context &context){
+
+}
+void lt::compile(translate_context &context){
+
+}
+void gt::compile(translate_context &context){
+
+}
+void gte::compile(translate_context &context){
+
+}
+void lte::compile(translate_context &context){
+
+}
+void xor_expr::compile(translate_context &context){
+
+}
+void or_expr::compile(translate_context &context){
+
+}
+void stmt_node::compile(translate_context &context){
+
+}
+void label_stmt::compile(translate_context &context){
 
 }
 void notequal_expr::compile(translate_context&){}
 void isequal_expr::compile(translate_context&){}
 void function_definition::compile(translate_context &context){
 	std::cout<<name<<": ";
-	d_body->compile(context);
+	body->compile(context);
   std::cout<<"jr $ra";
 };

@@ -1,4 +1,6 @@
-#include "abstsyntree.hpp"//global variables create vector to add any pgloab faviables to ie functions etc?
+#include "abstsyntree_expr.hpp"//global variables create vector to add any pgloab faviables to ie functions etc?
+#include "abstsyntree_dcls.hpp"
+#include "abstsyntree_stmts.hpp"
 #include <string>
 #include <vector>
 std::vector<std::string> global_var;
@@ -49,10 +51,7 @@ void notequal_expr::translate(translate_context &context){
 	std::cout<<"!=";
 	R->translate(context);
 }
-void member::translate(translate_context &context){
-	S->translate(context);
-	std::cout<<"."<<membval;
-}
+
 void lshift::translate(translate_context &context){
 	L->translate(context);
 	std::cout<<">>";
@@ -65,21 +64,27 @@ void rshift::translate(translate_context &context){
 }
 //unary
 //postfix
-void increment::translate(translate_context &context){
+void incr::translate(translate_context &context){
 	std::cout<<"++";
-	S->translate(context);
+	subject->translate(context);
 }
-void decrement::translate(translate_context &context){
+void decr::translate(translate_context &context){
 	std::cout<<"--";
-	S->translate(context);
+	subject->translate(context);
 }
 void function_definition::translate(translate_context &context){
 	std::cout<<"def ";
-	name->translate(context);
+	if(name!=NULL){
+		name->translate(context);
+	}
 	std::cout<<"(";
-	args->translate(context);
+	if(params!=NULL){
+		params->translate(context);
+	}
 	std::cout<<"):"<<std::endl;
-	d_body->translate(context);
+	if(body!=NULL){
+		body->translate(context);
+	}
 }
 void ifelse_stmt::translate(translate_context &context){
 	std::cout<<"if ";
@@ -101,6 +106,46 @@ void while_stmt::translate(translate_context &context){
 void return_stmt::translate(translate_context &context){
 	std::cout<<"return ";
 	body->translate(context);
+}
+void cond_expr::translate(translate_context &context){
+
+}
+
+void assign_expr::translate(translate_context &context){
+
+}
+void unary_op::translate(translate_context &context){
+
+}
+void assign_op::translate(translate_context &context){
+
+}
+void and_expr::translate(translate_context &context){
+
+}
+void lt::translate(translate_context &context){
+
+}
+void gt::translate(translate_context &context){
+
+}
+void gte::translate(translate_context &context){
+
+}
+void lte::translate(translate_context &context){
+
+}
+void xor_expr::translate(translate_context &context){
+
+}
+void or_expr::translate(translate_context &context){
+
+}
+void stmt_node::translate(translate_context &context){
+
+}
+void label_stmt::translate(translate_context &context){
+
 }
 void translate(nodePtr program, translate_context &context){
 	program->translate(context);
