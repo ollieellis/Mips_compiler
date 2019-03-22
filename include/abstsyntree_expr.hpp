@@ -13,6 +13,7 @@ class expr_node: public node{
 		virtual void translate(translate_context &context) = 0;
 		virtual void compile(translate_context &context) = 0;
 };
+
 class argument_expression_list: public node{
 	public:
 		std::vector<node> list;
@@ -59,7 +60,12 @@ class mod_expr: public binary_expr{
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
-
+class seperator_expr: public binary_expr{
+	public:
+		seperator_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
+};
 //-----------------------
 
 class cond_expr: public expr_node{
@@ -77,14 +83,14 @@ class assign_expr: public binary_expr{
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
-/*`
-class shift_expr: public expr_node{
+
+class shift_expr: public binary_expr{
 	public:
-		void shift_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
+		shift_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval){};
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
-*/
+
 class unary_expr: public expr_node{
   public:
 		nodePtr op;
@@ -156,6 +162,12 @@ class and_expr: public binary_expr{
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
+class bwand_expr: public binary_expr{
+	public:
+		bwand_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
 class lt: public binary_expr{
 	public:
 		lt(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
@@ -182,13 +194,18 @@ class lte: public binary_expr{
 };
 
 
-class xor_expr: public binary_expr{
+class bwxor_expr: public binary_expr{
 	public:
-		xor_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		bwxor_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
-
+class bwor_expr: public binary_expr{
+	public:
+		bwor_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
 class or_expr: public binary_expr{
 	public:
 		or_expr(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
@@ -207,5 +224,14 @@ class rshift: public binary_expr{
 		void translate(translate_context &context);
 		void compile(translate_context &context);
 };
+
+class type_qual: public expr_node{
+	public:
+		std::string qual;
+		type_qual(std::string q): expr_node() {};
+		void translate(translate_context &context);
+		void compile(translate_context &context);
+};
+
 
 #endif

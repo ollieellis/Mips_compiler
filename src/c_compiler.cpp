@@ -8,9 +8,18 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "no srccode.\n");
         exit(1);
     }
-		FILE *src=freopen(argv[2], "r", stdin);
+		int i1=2;int i2=5;
+		if(*argv[5]=='d'){
+      i1=i1++;
+			i2=i2++;
+    }
+		if(argc<2){
+        fprintf(stderr, "no srccode.\n");
+        exit(1);
+    }
+		FILE *src=freopen(argv[i1], "r", stdin);
 
-		freopen(argv[4], "w", stdout);
+		freopen(argv[i2], "w", stdout);
 		const nodePtr ast=parseAST(src);
 
 		translate_context context;

@@ -5,7 +5,7 @@
 #include <vector>
 //static int makeNameUnq=0;
 //use r1 and r2 names each time
-
+//nodes need functions in translate and compile
 void  constant::compile(translate_context &context){//ostream printing?
 	std::cout<<value;
 }
@@ -15,6 +15,7 @@ void identifier::compile(translate_context &context){
 void str_lit::compile(translate_context &context){
   std::cout<<value;
 }
+
 void plus_expr::compile(translate_context &context){
 	L->compile(context);//act of compiling should return a value or load a variable from memory?
 	R->compile(context);
@@ -41,7 +42,14 @@ void times_expr::compile(translate_context &context){
 void mod_expr::compile(translate_context &context){
 
 }
+
+void seperator_expr::compile(translate_context &context){
+
+}
 void while_stmt::compile(translate_context &context){
+
+}
+void for_stmt::compile(translate_context &context){
 
 }
 void ifelse_stmt::compile(translate_context &context){
@@ -79,6 +87,12 @@ void assign_op::compile(translate_context &context){
 void and_expr::compile(translate_context &context){
 
 }
+void bwand_expr::compile(translate_context &context){
+
+}
+void bwxor_expr::compile(translate_context &context){
+
+}
 void lt::compile(translate_context &context){
 
 }
@@ -91,18 +105,49 @@ void gte::compile(translate_context &context){
 void lte::compile(translate_context &context){
 
 }
-void xor_expr::compile(translate_context &context){
+void or_expr::compile(translate_context &context){
 
 }
-void or_expr::compile(translate_context &context){
+void bwor_expr::compile(translate_context &context){
 
 }
 void stmt_node::compile(translate_context &context){
 
 }
+void switch_stmt::compile(translate_context &context){
+
+}
+void jump_stmt::compile(translate_context &context){
+
+}
+void comp_stmt::compile(translate_context &context){
+
+}
 void label_stmt::compile(translate_context &context){
 
 }
+void do_stmt::compile(translate_context &context){
+
+}
+
+void stmt_list::compile(translate_context &context){
+
+}
+void struct_decl::compile(translate_context &context){
+
+};
+void decl_list::compile(translate_context &context){
+
+};
+void struct_decl_list::compile(translate_context &context){
+
+};
+void p_declarator::compile(translate_context &context){
+
+};
+void type_qual::compile(translate_context &context){
+
+};
 void notequal_expr::compile(translate_context&){}
 void isequal_expr::compile(translate_context&){}
 void function_definition::compile(translate_context &context){

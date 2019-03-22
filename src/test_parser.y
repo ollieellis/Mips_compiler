@@ -57,20 +57,19 @@
 %type <string> T_IDENTIFIER T_STRING T_INCR T_DECR T_LBRACKET T_RBRACKET T_MOD T_DIVIDE T_AND T_BWOR
 %type <string> T_WHILE T_IF T_ELSE T_ASSIGN T_EQMULT T_EQDIV T_EQMOD T_EQPLUS T_EQMINUS
 %type <string> T_EQLSHIFT T_EQRSHIFT T_EQBWAND T_EQEXPONENT T_EQBWOR T_DEFAULT T_CASE
-%type <string>  T_BWAND T_STAR T_PLUS T_MINUS T_BWNOT T_NOT T_QEND T_QSTART
-
-
+%type <string>  T_BWAND T_STAR T_PLUS T_MINUS T_BWNOT T_NOT T_QEND T_QSTART T_RETURN
+%type <string> T_GOTO T_CONTINUE T_BREAK T_CONST T_VOLATILE
 %start ROOT_NODE
 
 %%
 
-ROOT_NODE: TRANSLATION_UNIT { g_root=$1;}
+ROOT_NODE: TRANSLATION_UNIT { std::cerr<<"root";g_root=$1;}
 
 PRI_EXPR
-	: T_IDENTIFIER { $$ = new identifier(*$1);}
-	| T_NUMBER { $$ = new constant($1);}
-	| T_STRING { $$ = new str_lit(*$1);}
-	| T_LBRACKET EXPR T_RBRACKET { $$=$2;}
+	: T_IDENTIFIER { $$ = new identifier(*$1);std::cerr<<"id";}
+	| T_NUMBER { $$ = new constant($1);std::cerr<<"const"<<$1;}
+	| T_STRING { $$ = new str_lit(*$1);std::cerr<<"str";}
+	| T_LBRACKET EXPR T_RBRACKET { $$=$2;std::cerr<<"primary";}
 	;
 
 POSTFIX_EXPR
@@ -86,16 +85,16 @@ POSTFIX_EXPR
 
 ARG_EXPR_LIST
 	: ASSIGN_EXPR {$$ = $1;}
-	| ARG_EXPR_LIST T_COMM ASSIGN_EXPR  {$$ = $1;}
+	| ARG_EXPR_LIST T_COMM ASSIGN_EXPR
 	;
 
 UNARY_EXPR
 	: POSTFIX_EXPR {$$=$1;}
-	| T_INCR UNARY_EXPR
-	| T_DECR UNARY_EXPR
-	| UNARY_OP CAST_EXPR
-	| T_SIZEOF UNARY_EXPR
-	| T_SIZEOF T_LBRACKET TYPE_NAME T_RBRACKET
+	| T_INCR UNARY_EXPR {}
+	| T_DECR UNARY_EXPR {}
+	| UNARY_OP CAST_EXPR {}
+	| T_SIZEOF UNARY_EXPR {}
+	| T_SIZEOF T_LBRACKET TYPE_NAME T_RBRACKET {}
 	;
 
 UNARY_OP
@@ -109,7 +108,7 @@ UNARY_OP
 
 CAST_EXPR
 	: UNARY_EXPR {$$=$1;}
-	| T_LBRACKET TYPE_NAME T_RBRACKET CAST_EXPR
+	| T_LBRACKET TYPE_NAME T_RBRACKET CAST_EXPR  {}
 	;
 
 MULTIPLICATIVE_EXPR
@@ -147,17 +146,17 @@ EQ_EXPR
 
 AND_EXPR
 	: EQ_EXPR {$$ = $1;}
-	| AND_EXPR T_BWAND EQ_EXPR {$$ = new and_expr($1,$3);}
+	| AND_EXPR T_BWAND EQ_EXPR {$$ = new bwand_expr($1,$3);}
 	;
 
 EXCL_OR_EXPR
 	: AND_EXPR {$$ = $1;}
-	| EXCL_OR_EXPR T_BWXOR AND_EXPR  {$$ = new xor_expr($1,$3);}
+	| EXCL_OR_EXPR T_BWXOR AND_EXPR  {$$ = new bwxor_expr($1,$3);}
 	;
 
 INCL_OR_EXPR
 	: EXCL_OR_EXPR {$$ = $1;}
-	| INCL_OR_EXPR T_OR EXCL_OR_EXPR {$$ = new or_expr($1,$3);}
+	| INCL_OR_EXPR T_OR EXCL_OR_EXPR {$$ = new bwor_expr($1,$3);}
 	;
 
 LOGI_AND_EXPR
@@ -196,7 +195,7 @@ ASSIGN_OP
 
 EXPR
 	: ASSIGN_EXPR {$$ = $1;}
-	| EXPR T_COMM ASSIGN_EXPR
+	| EXPR T_COMM ASSIGN_EXPR { $$ = new seperator_expr($1, $3);}
 	;
 
 CONST_EXPR
@@ -204,7 +203,7 @@ CONST_EXPR
 	;
 
 DECL
-	: DECL_SPECS T_SEMI {$$ = $1;}
+	: DECL_SPECS T_SEMI {$$ = $1;std::cerr<<"d";}
 	| DECL_SPECS INIT_DECLARATOR_LIST T_SEMI
 	;
 
@@ -223,51 +222,51 @@ INIT_DECLARATOR_LIST
 	;
 
 INIT_DECLARATOR
-	: DECLARATOR
-	| DECLARATOR T_ASSIGN INIT
+	: DECLARATOR {}
+	| DECLARATOR T_ASSIGN INIT {}
 	;
 
 STRGE_CLASS_SPEC
-	: T_TYPEDEF
-	| T_EXTERN
-	| T_STATIC
-	| T_AUTO
-	| T_REGISTER
+	: T_TYPEDEF {}
+	| T_EXTERN {}
+	| T_STATIC {}
+	| T_AUTO {}
+	| T_REGISTER {}
 	;
 
 TYPE_SPEC
-	: T_VOID
-	| T_CHAR
-	| T_SHORT
-	| T_INT
-	| T_LONG
-	| T_FLOAT
-	| T_DOUBLE
-	| T_SIGNED
-	| T_UNSIGNED
-	| STRUCT_OR_UNION_SPEC
-	| ENUM_SPEC
-	| T_TYPE_NAME
+	: T_VOID  {}
+	| T_CHAR  {}
+	| T_SHORT {}
+	| T_INT {std::cerr<<"int";}
+	| T_LONG  {}
+	| T_FLOAT  {}
+	| T_DOUBLE  {}
+	| T_SIGNED  {}
+	| T_UNSIGNED  {}
+	| STRUCT_OR_UNION_SPEC  {}
+	| ENUM_SPEC  {}
+	| T_TYPE_NAME  {}
 	;
 
 STRUCT_OR_UNION_SPEC
-	: STRUCT_OR_UNION T_IDENTIFIER T_LCBRACKET STRUCT_DECL_LIST T_RCBRACKET
-	| STRUCT_OR_UNION T_LCBRACKET STRUCT_DECL_LIST T_RCBRACKET
-	| STRUCT_OR_UNION T_IDENTIFIER
+	: STRUCT_OR_UNION T_IDENTIFIER T_LCBRACKET STRUCT_DECL_LIST T_RCBRACKET  {}
+	| STRUCT_OR_UNION T_LCBRACKET STRUCT_DECL_LIST T_RCBRACKET  {}
+	| STRUCT_OR_UNION T_IDENTIFIER  {}
 	;
 
 STRUCT_OR_UNION
-	: T_STRUCT
-	| T_UNION
+	: T_STRUCT {}
+	| T_UNION  {}
 	;
 
 STRUCT_DECL_LIST
-	: STRUCT_DECL
-	| STRUCT_DECL_LIST STRUCT_DECL
+	: STRUCT_DECL {std::cerr<<"sdl";}
+	| STRUCT_DECL_LIST STRUCT_DECL {std::cerr<<"sdl";}
 	;
 
 STRUCT_DECL
-	: SPEC_QUAL_LIST STRUCT_DECLARATOR_LIST T_SEMI
+	: SPEC_QUAL_LIST STRUCT_DECLARATOR_LIST T_SEMI {$$= new struct_decl($1,$2);}
 	;
 
 SPEC_QUAL_LIST
@@ -278,14 +277,14 @@ SPEC_QUAL_LIST
 	;
 
 STRUCT_DECLARATOR_LIST
-	: STRUCT_DECLARATOR
-	| STRUCT_DECLARATOR_LIST T_COMM STRUCT_DECLARATOR
+	: STRUCT_DECLARATOR {$$= new struct_decl_list($1);}
+	| STRUCT_DECLARATOR_LIST T_COMM STRUCT_DECLARATOR {$$= new struct_decl_list($3);}
 	;
 
 STRUCT_DECLARATOR
-	: DECLARATOR
-	| T_QEND CONST_EXPR
-	| DECLARATOR T_QEND CONST_EXPR
+	: DECLARATOR {$$= new struct_decl($1,NULL);}
+	| T_QEND CONST_EXPR {$$= new struct_decl(NULL,$2);}
+	| DECLARATOR T_QEND CONST_EXPR {$$= new struct_decl($1,$3);}
 	;
 
 ENUM_SPEC
@@ -305,23 +304,23 @@ ENUM
 	;
 
 TYPE_QUAL
-	: T_CONST {}
-	| T_VOLATILE {}
+	: T_CONST {$$ = new type_qual(*$1);}
+	| T_VOLATILE {$$ = new type_qual(*$1);}
 	;
 
 DECLARATOR
-	: POINTER DIREC_DECLARATOR {}
-	| DIREC_DECLARATOR {std::cerr<<"DIREC_DECLARATOR";}
+	: POINTER DIREC_DECLARATOR {$$ = new p_declarator($2);std::cerr<<"DECLARATOR->pointdirec";}
+	| DIREC_DECLARATOR {$$=$1; std::cerr<<"DECLARATOR->direc";}
 	;
 
 DIREC_DECLARATOR
-	: T_IDENTIFIER {$$ = new identifier(*$1);}
-	| T_LBRACKET DECLARATOR T_RBRACKET {$$ = $2;}
-	| DIREC_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET
+	: T_IDENTIFIER {std::cerr<<*$1;$$ = new identifier(*$1);}
+	| T_LBRACKET DECLARATOR T_RBRACKET
+	| DIREC_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET {}
 	| DIREC_DECLARATOR T_LSQBRACKET T_RSQBRACKET
 	| DIREC_DECLARATOR T_LBRACKET PARAM_TYPE_LIST T_RBRACKET
 	| DIREC_DECLARATOR T_LBRACKET ID_LIST T_RBRACKET
-	| DIREC_DECLARATOR T_LBRACKET T_RBRACKET
+	| DIREC_DECLARATOR T_LBRACKET T_RBRACKET {std::cerr<<"empty";}
 	;
 
 POINTER
@@ -354,116 +353,116 @@ PARAM_DECL
 	;
 
 ID_LIST
-	: T_IDENTIFIER
-	| ID_LIST T_COMM T_IDENTIFIER
+	: T_IDENTIFIER  {}
+	| ID_LIST T_COMM T_IDENTIFIER  {std::cerr<<"here7";}
 	;
 
 TYPE_NAME
-	: SPEC_QUAL_LIST
-	| SPEC_QUAL_LIST ABST_DECLARATOR
+	: SPEC_QUAL_LIST {std::cerr<<"here7";}
+	| SPEC_QUAL_LIST ABST_DECLARATOR {std::cerr<<"here7";}
 	;
 
 ABST_DECLARATOR
-	: POINTER
-	| DIR_ABST_DECLARATOR
-	| POINTER DIR_ABST_DECLARATOR
+	: POINTER {std::cerr<<"here7";}
+	| DIR_ABST_DECLARATOR {std::cerr<<"here7";}
+	| POINTER DIR_ABST_DECLARATOR {std::cerr<<"here7";}
 	;
 
 DIR_ABST_DECLARATOR
-	: T_LBRACKET ABST_DECLARATOR T_RBRACKET
-	| T_LSQBRACKET T_RSQBRACKET
-	| T_LSQBRACKET CONST_EXPR T_RSQBRACKET
-	| DIR_ABST_DECLARATOR T_LSQBRACKET T_RSQBRACKET
-	| DIR_ABST_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET
-	| T_LBRACKET T_RBRACKET
-	| T_LBRACKET PARAM_TYPE_LIST T_RBRACKET
-	| DIR_ABST_DECLARATOR T_LBRACKET T_RBRACKET
-	| DIR_ABST_DECLARATOR T_LBRACKET PARAM_TYPE_LIST T_RBRACKET
+	: T_LBRACKET ABST_DECLARATOR T_RBRACKET {std::cerr<<"here6";}
+	| T_LSQBRACKET T_RSQBRACKET {std::cerr<<"here6";}
+	| T_LSQBRACKET CONST_EXPR T_RSQBRACKET {std::cerr<<"here6";}
+	| DIR_ABST_DECLARATOR T_LSQBRACKET T_RSQBRACKET {std::cerr<<"here6";}
+	| DIR_ABST_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET {std::cerr<<"here6";}
+	| T_LBRACKET T_RBRACKET {std::cerr<<"here6";}
+	| T_LBRACKET PARAM_TYPE_LIST T_RBRACKET {std::cerr<<"here6";}
+	| DIR_ABST_DECLARATOR T_LBRACKET T_RBRACKET {std::cerr<<"here6";}
+	| DIR_ABST_DECLARATOR T_LBRACKET PARAM_TYPE_LIST T_RBRACKET {std::cerr<<"here6";}
 	;
 
 INIT
 	: ASSIGN_EXPR
-	| T_LCBRACKET INIT_LIST T_RCBRACKET
-	| T_LCBRACKET INIT_LIST T_COMM T_RCBRACKET
+	| T_LCBRACKET INIT_LIST T_RCBRACKET {std::cerr<<"here6";}
+	| T_LCBRACKET INIT_LIST T_COMM T_RCBRACKET {std::cerr<<"here6";}
 	;
 
 INIT_LIST
 	: INIT {$$ = $1;}
-	| INIT_LIST T_COMM INIT
+	| INIT_LIST T_COMM INIT {std::cerr<<"here";}
 	;
 
 STMT
-	: LBL_STMT {$$ = $1;}
-	| COMP_STMT {$$ = $1;}
-	| EXPR_STMT {$$ = $1;}
-	| SELEC_STMT {$$ = $1;}
-	| ITER_STMT {$$ = $1;}
-	| JMP_STMT {$$ = $1;}
+	: LBL_STMT {$$ = $1;std::cerr<<"here";}
+	| COMP_STMT {std::cerr<<"b";$$ = $1;std::cerr<<"here";}
+	| EXPR_STMT {$$ = $1;std::cerr<<"here";}
+	| SELEC_STMT {$$ = $1;std::cerr<<"here";}
+	| ITER_STMT {$$ = $1;std::cerr<<"here";}
+	| JMP_STMT {$$ = $1;std::cerr<<"here";}
 	;
 
 LBL_STMT
-	: T_IDENTIFIER T_QEND STMT
-	| T_CASE CONST_EXPR T_QEND STMT {$$=new label_stmt(NULL,*$1,$2,$4);}
-	| T_DEFAULT T_QEND STMT {$$=new label_stmt(NULL,*$1,$3,NULL);}
+	: T_IDENTIFIER T_QEND STMT {$$=new label_stmt(*$1,$3,NULL);}
+	| T_CASE CONST_EXPR T_QEND STMT {$$=new label_stmt(*$1,$2,$4);}
+	| T_DEFAULT T_QEND STMT {$$=new label_stmt(*$1,$3,NULL);}
 	;
 
 COMP_STMT
-	: T_LCBRACKET T_RCBRACKET {}
-	| T_LCBRACKET STMT_LIST T_RCBRACKET {}
-	| T_LCBRACKET DECL_LIST T_RCBRACKET {}
-	| T_LCBRACKET DECL_LIST STMT_LIST T_RCBRACKET {}
+	: T_LCBRACKET T_RCBRACKET {std::cerr<<"b";$$= new comp_stmt(NULL,NULL);}
+	| T_LCBRACKET STMT_LIST T_RCBRACKET {std::cerr<<"b";$$= new comp_stmt($2,NULL);}
+	| T_LCBRACKET DECL_LIST T_RCBRACKET {std::cerr<<"b";$$= new comp_stmt($2,NULL);}
+	| T_LCBRACKET DECL_LIST STMT_LIST T_RCBRACKET {std::cerr<<"b";$$= new comp_stmt($2,$3);}
 	;
 
 DECL_LIST
-	: DECL {$$ = $1;}
-	| DECL_LIST DECL {}
+	: DECL {$$ = new decl_list($1);}
+	| DECL_LIST DECL {$$ = new decl_list($1);}
 	;
 
 STMT_LIST
-	: STMT {$$ = $1;}
-	| STMT_LIST STMT {}
+	: STMT {$$ = new stmt_list($1);}
+	| STMT_LIST STMT {$$=new stmt_list($1);}
 	;
 
 EXPR_STMT
 	: T_SEMI {}
-	| EXPR T_SEMI {}
+	| EXPR T_SEMI {$$=$1;}
 	;
 
 SELEC_STMT
-	: T_IF T_LBRACKET EXPR T_RBRACKET STMT { $$ = new ifelse_stmt($3, $5, NULL);}
-	| T_IF T_LBRACKET EXPR T_RBRACKET STMT T_ELSE STMT{ $$ = new ifelse_stmt($3, $5, $7);}
-	| T_SWITCH T_LBRACKET EXPR T_RBRACKET STMT
+	: T_IF T_LBRACKET EXPR T_RBRACKET STMT {$$ = new ifelse_stmt($3, $5, NULL);}
+	| T_IF T_LBRACKET EXPR T_RBRACKET STMT T_ELSE STMT {$$ = new ifelse_stmt($3, $5, $7);}
+	| T_SWITCH T_LBRACKET EXPR T_RBRACKET STMT { $$ = new switch_stmt($3, $5);}
 	;
 
 ITER_STMT
 	: T_WHILE T_LBRACKET EXPR T_RBRACKET STMT  { $$ = new while_stmt($3, $5);}
-	| T_DO STMT T_WHILE T_LBRACKET EXPR T_RBRACKET T_SEMI
-	| T_FOR T_LBRACKET EXPR_STMT EXPR_STMT T_RBRACKET STMT
-	| T_FOR T_LBRACKET EXPR_STMT EXPR_STMT EXPR T_RBRACKET STMT
+	| T_DO STMT T_WHILE T_LBRACKET EXPR T_RBRACKET T_SEMI {$$ = new do_stmt($2, $5);std::cerr<<"here4";}
+	| T_FOR T_LBRACKET EXPR_STMT EXPR_STMT T_RBRACKET STMT {std::cerr<<"here4";}
+	| T_FOR T_LBRACKET EXPR_STMT EXPR_STMT EXPR T_RBRACKET STMT {std::cerr<<"here4";}
 	;
 
 JMP_STMT
-	: T_GOTO T_IDENTIFIER T_SEMI
-	| T_CONTINUE T_SEMI
-	| T_BREAK T_SEMI
-	| T_RETURN T_SEMI
-	| T_RETURN EXPR T_SEMI
+	: T_GOTO T_IDENTIFIER T_SEMI {$$==new jump_stmt(*$1,NULL);}
+	| T_CONTINUE T_SEMI {$$==new jump_stmt(*$1,NULL);}
+	| T_BREAK T_SEMI {$$==new jump_stmt(*$1,NULL);}
+	| T_RETURN T_SEMI {$$==new jump_stmt(*$1,NULL);}
+	| T_RETURN EXPR T_SEMI {$$==new jump_stmt(*$1,$2);}
 	;
 
 TRANSLATION_UNIT
-	: EXT_DECL {$$=$1;}
-	| ROOT_NODE EXT_DECL {$$=$2;}
+	: EXT_DECL {std::cerr<<"tu->e";$$=$1;}
+	| TRANSLATION_UNIT EXT_DECL {std::cerr<<"tu->t";$$=$2;}
 	;
 EXT_DECL
-	: FUNC_DEF {$$=$1;}
-	| DECL {$$=$1;}
+	: FUNC_DEF {$$=$1;std::cerr<<"FUNCDEF";}
+	| DECL {$$=$1;std::cerr<<"DECL";}
 	;
 
 FUNC_DEF
-	: DECL_SPECS DECLARATOR DECL_LIST COMP_STMT  {$$ = new function_definition($1, $2, $3, $4);}
-	| DECL_SPECS DECLARATOR COMP_STMT  {$$ = new function_definition($1, $2, NULL, $3);}
-	| DECLARATOR DECL_LIST COMP_STMT  {$$ = new function_definition(NULL, $1, $2, $3);}
-	| DECLARATOR COMP_STMT  {$$ = new function_definition(NULL, $1, NULL, $2);}
+	: DECL_SPECS DECLARATOR DECL_LIST COMP_STMT  {std::cerr<<"FUNC";$$ = new function_definition($1, $2, $3, $4);}
+	| DECL_SPECS DECLARATOR COMP_STMT  {std::cerr<<"FUNC";$$ = new function_definition($1, $2, NULL, $3);}
+	| DECLARATOR DECL_LIST COMP_STMT  {std::cerr<<"FUNC";$$ = new function_definition(NULL, $1, $2, $3);}
+	| DECLARATOR COMP_STMT  {std::cerr<<"FUNC";$$ = new function_definition(NULL, $1, NULL, $2);}
 	;
 
 	%%
