@@ -16,10 +16,9 @@ class decl_node: public node{
 			nodePtr body;
 			std::vector<nodePtr> decls;
 			decl_node(){};
-			decl_node(nodePtr in){decls.push_back(in);};
 			decl_node(nodePtr n_type, nodePtr n_name, nodePtr n_params,  nodePtr n_body): type(n_type), params(n_params), name(n_name), body(n_body){};
-			virtual void translate(translate_context &context) = 0;
-			virtual void compile(translate_context &context) = 0;
+			virtual void translate(translate_context &context);
+			virtual void compile(translate_context &context);
 };
 class declarator: public decl_node{
 	public:
@@ -62,9 +61,7 @@ class struct_decl: public decl_node{
 };
 class struct_decl_list: public decl_node{
 	public:
-		std::vector<nodePtr> list;
-		struct_decl_list(nodePtr input): decl_node(NULL, name, NULL, NULL){};
-		void push_back(nodePtr i){list.push_back(i);}
+		struct_decl_list(nodePtr type, nodePtr name,nodePtr params, nodePtr body): decl_node(type, name, params, body){};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
@@ -77,6 +74,18 @@ class init_decl: public decl_node{
 class init_decl_list: public decl_node{
 	public:
 		init_decl_list(nodePtr name, nodePtr body): decl_node(NULL, name, NULL, body){};
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
+};
+class transl_unit: public decl_node{
+	public:
+		transl_unit(nodePtr in): decl_node(in){};
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
+};
+class strorunion_spec: public decl_node{
+	public:
+		strorunion_spec(nodePtr n_type, nodePtr n_name, nodePtr n_params,  nodePtr n_body): decl_node(type, name, params, NULL){};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };

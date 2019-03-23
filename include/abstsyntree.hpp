@@ -24,8 +24,9 @@ class node{
 	public:
 		std::vector<nodePtr> vec;
 	 	nodePtr parseAST(FILE* src);
-		virtual void translate(translate_context &context) = 0;
-		virtual void compile(translate_context &context) = 0;
+		virtual void translate(translate_context &context){}
+		virtual void compile(translate_context &context){}
+		virtual void push(nodePtr in){}
 };
 //---------------- base nodes
 

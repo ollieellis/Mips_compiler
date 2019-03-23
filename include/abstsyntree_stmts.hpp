@@ -9,93 +9,82 @@
 #include <list>
 #include "abstsyntree.hpp"
 
-class stmt_node: public node{
-	protected:
-		std::vector<nodePtr> stmts;
-	public:
-		stmt_node(){};
-		stmt_node(nodePtr in){stmts.push_back(in);};
-		virtual void translate(translate_context &context) = 0;
-		virtual void compile(translate_context &context) = 0;
-};
-
 //statements---------------------------------------------------
-class stmt_list: public stmt_node{
+class stmt_list: public node{
 public:
-	stmt_list(nodePtr in): stmt_node(in){}
-	virtual void translate(translate_context &context);
-	virtual void compile(translate_context &context);
+	std::vector<nodePtr> stmts;
+	stmt_list(nodePtr in): node(in){}
+	void translate(translate_context &context);
+	void compile(translate_context &context);
 };
-class while_stmt: public stmt_node{
-	protected:
+class while_stmt: public node{
+	public:
 		nodePtr body;
 		nodePtr condition;
-	public:
-		while_stmt(nodePtr fact, nodePtr body): condition(fact), stmt_node(body) {};
+		while_stmt(nodePtr fact, nodePtr body): condition(fact), body(body) {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class do_stmt: public stmt_node{
+class do_stmt: public node{
 	protected:
 		nodePtr task;
 		nodePtr condition;
 	public:
-		do_stmt(nodePtr fact, nodePtr body): task(body),condition(fact), stmt_node() {};
+		do_stmt(nodePtr fact, nodePtr body): task(body),condition(fact){};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class ifelse_stmt: public stmt_node{
+class ifelse_stmt: public node{
 	protected:
 		nodePtr body;
 		nodePtr condition;
 		nodePtr else_body;
 	public:
-		ifelse_stmt(nodePtr fact, nodePtr body, nodePtr other): condition(fact), else_body(other), stmt_node(body) {};//body - then
-		ifelse_stmt(nodePtr fact, nodePtr body): condition(fact), stmt_node(body) {};
+		ifelse_stmt(nodePtr c, nodePtr b, nodePtr eb): condition(c), body(b), else_body(eb) {};//body - then
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class for_stmt: public stmt_node{
-	protected:
+class for_stmt: public node{
+	public:
 		nodePtr start;
 		nodePtr end;
 		nodePtr alter;
 		nodePtr task;
-	public:
-		for_stmt(nodePtr s, nodePtr e,nodePtr t,nodePtr a): start(s),end(e), task(t),alter(a), stmt_node() {};
+		for_stmt(nodePtr s, nodePtr e,nodePtr t,nodePtr a): start(s),end(e), task(t),alter(a), node() {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class switch_stmt: public stmt_node{
+class switch_stmt: public node{
 	nodePtr task;
-public:
-	switch_stmt(nodePtr e, nodePtr t): stmt_node(e), task(t) {};//body - then
-	virtual void translate(translate_context &context);
-	virtual void compile(translate_context &context);
+	public:
+		switch_stmt(nodePtr e, nodePtr t): node(e), task(t) {};
+		virtual void translate(translate_context &context);
+		virtual void compile(translate_context &context);
 };
-class return_stmt: public stmt_node{
+class return_stmt: public node{
 	public:
 		nodePtr body;
-		return_stmt(nodePtr body): stmt_node(body) {};
+		return_stmt(nodePtr body): node(body) {};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class jump_stmt: public stmt_node{
+class jump_stmt: public node{
 	public:
 		std::string what;
 		nodePtr body;
-		jump_stmt(std::string type, nodePtr body): what(type), stmt_node(body){};
+		jump_stmt(std::string type, nodePtr body): what(type), node(body){};
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class iter_stmt: public stmt_node{
+class iter_stmt: public node{
 	std::string what;
 	nodePtr body;
 	public:
+		//check
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class comp_stmt: public stmt_node{
+class comp_stmt: public node{
 	nodePtr extra;
 	nodePtr body;
 	public:
@@ -103,7 +92,7 @@ class comp_stmt: public stmt_node{
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class expr_stmt: public stmt_node{
+class expr_stmt: public node{
 	public:
 		std::string what;
 		nodePtr fact;
@@ -112,7 +101,7 @@ class expr_stmt: public stmt_node{
 		virtual void translate(translate_context &context);
 		virtual void compile(translate_context &context);
 };
-class label_stmt: public stmt_node{
+class label_stmt: public node{
 	public:
 		std::string label;
 		nodePtr fact;

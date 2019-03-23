@@ -148,10 +148,25 @@ void p_declarator::compile(translate_context &context){
 void type_qual::compile(translate_context &context){
 
 };
+void function_name::compile(translate_context &context){
+
+};
+void enum_spec::compile(translate_context &context){
+
+};
+void array::compile(translate_context &context){
+
+};
+void member::compile(translate_context &context){
+
+};
 void notequal_expr::compile(translate_context&){}
 void isequal_expr::compile(translate_context&){}
 void function_definition::compile(translate_context &context){
 	std::cout<<name<<": ";
 	body->compile(context);
   std::cout<<"jr $ra";
+};
+void transl_unit::compile(translate_context &context){
+
 };

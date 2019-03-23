@@ -77,70 +77,11 @@ void decr::translate(translate_context &context){
 	std::cout<<"--";
 	subject->translate(context);
 }
-void function_definition::translate(translate_context &context){
-	std::cout<<"def ";
-	if(name!=NULL){
-		name->translate(context);
-	}
-	std::cout<<"(";
-	if(params!=NULL){
-		params->translate(context);
-	}
-	std::cout<<"):"<<std::endl;
-	/*if(body!=NULL){
-		body->translate(context);
-	}*/
-}
-void struct_decl::translate(translate_context &context){
-
-};
-void struct_decl_list::translate(translate_context &context){
-
-};
-void decl_list::translate(translate_context &context){
-	for(int i=0;i<decls.size();i++){
-		decls[i]->translate(context);
-	}
-};
-void ifelse_stmt::translate(translate_context &context){
-	std::cout<<"if ";
-	std::cout<<"(";
-	condition->translate(context);
-	std::cout<<"):"<<std::endl;
-	body->translate(context);
-	if(else_body!=NULL){
-		else_body->translate(context);
-	}
-}
-void while_stmt::translate(translate_context &context){
-	std::cout<<"while ";
-	std::cout<<"(";
-	condition->translate(context);
-	std::cout<<"):"<<std::endl;
-	body->translate(context);
-}
-void return_stmt::translate(translate_context &context){
-	std::cout<<"return ";
-	body->translate(context);
-}
-void for_stmt::translate(translate_context &context){
-	std::cout<<"for ";
-	start->translate(context);
-	end->translate(context);
-
-	if(end!=NULL){
-		alter->translate(context);
-	}
-	task->translate(context);
-}
 
 void cond_expr::translate(translate_context &context){
 	 condition->translate(context);
 	 option1->translate(context);
 	 option2->translate(context);
-}
-void p_declarator::translate(translate_context &context){
-	std::cout<<"->";
 }
 
 void assign_expr::translate(translate_context &context){
@@ -202,9 +143,20 @@ void or_expr::translate(translate_context &context){
 void type_qual::translate(translate_context &context){
 	std::cout<<qual;
 }
-void stmt_node::translate(translate_context &context){
+void array::translate(translate_context &context){
 
+};
+void member::translate(translate_context &context){
+
+};
+void enum_spec::translate(translate_context &context){
+
+};
+void function_name::translate(translate_context &context){
+	L->translate(context);
+	R->translate(context);
 }
+//statements------------------
 void comp_stmt::translate(translate_context &context){
 	body->translate(context);
 	if(extra!=NULL){
@@ -232,6 +184,71 @@ void stmt_list::translate(translate_context &context){
 		(stmts[i])->translate(context);
 	}
 }
-void translate(nodePtr program, translate_context &context){
-	program->translate(context);
+
+void ifelse_stmt::translate(translate_context &context){
+	std::cout<<"if ";
+	std::cout<<"(";
+	condition->translate(context);
+	std::cout<<"):"<<std::endl;
+	body->translate(context);
+	if(else_body!=NULL){
+		else_body->translate(context);
+	}
+}
+void while_stmt::translate(translate_context &context){
+	std::cout<<"while ";
+	std::cout<<"(";
+	condition->translate(context);
+	std::cout<<"):"<<std::endl;
+	body->translate(context);
+}
+void return_stmt::translate(translate_context &context){
+	std::cout<<"return ";
+	body->translate(context);
+}
+void for_stmt::translate(translate_context &context){
+	std::cout<<"for ";
+	start->translate(context);
+	end->translate(context);
+
+	if(end!=NULL){
+		alter->translate(context);
+	}
+	task->translate(context);
+}
+
+//---------declarations
+void function_definition::translate(translate_context &context){
+	std::cout<<"def ";
+	if(name!=NULL){
+		name->translate(context);
+	}
+	std::cout<<"(";
+	if(params!=NULL){
+		params->translate(context);
+	}
+	std::cout<<"):"<<std::endl;
+	/*if(body!=NULL){
+		body->translate(context);
+	}*/
+}
+void struct_decl::translate(translate_context &context){
+
+};
+void struct_decl_list::translate(translate_context &context){
+
+};
+void decl_list::translate(translate_context &context){
+	for(int i=0;i<decls.size();i++){
+		decls[i]->translate(context);
+	}
+};
+void p_declarator::translate(translate_context &context){
+
+	std::cout<<"->";
+}
+void transl_unit::translate(translate_context &context){
+	for(int i=0;i<decls.size();i++){
+		decls[i]->translate(context);
+	}
 }
