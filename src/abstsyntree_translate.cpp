@@ -5,250 +5,233 @@
 #include <vector>
 std::vector<std::string> global_var;
 
-void constant::translate(translate_context &context){//ostream printing?
+void constant::translate(){//ostream printing?
   std::cout<<value;
 }
-void identifier::translate(translate_context &context){
+void identifier::translate(){
   std::cout<<value;
 }
-void str_lit::translate(translate_context &context){
+void str_lit::translate(){
   std::cout<<value;
-}
-//binary
-//arithmetic
-void plus_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<" + ";
-	R->translate(context);
-}
-void minus_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<" - ";
-	R->translate(context);
-}
-void times_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"*";
-	R->translate(context);
-}
-void div_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"/";
-	R->translate(context);
-}
-void mod_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<'%';
-	R->translate(context);
-}
-void isequal_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"==";
-	R->translate(context);
-}
-void notequal_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"!=";
-	R->translate(context);
 }
 
-void lshift::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<">>";
-	R->translate(context);
-}
-void rshift::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"<<";
-	R->translate(context);
-}
-void seperator_expr::translate(translate_context &context){
-	L->translate(context);
+//binary
+//arithmetic
+
+void seperator_expr::translate(){
+	L->translate();
 	std::cout<<",";
-	R->translate(context);
+	R->translate();
 }
 //unary
 //postfix
-void incr::translate(translate_context &context){
+void incr::translate(){
 	std::cout<<"++";
-	subject->translate(context);
+	S->translate();
 }
-void decr::translate(translate_context &context){
+void decr::translate(){
 	std::cout<<"--";
-	subject->translate(context);
+	S->translate();
 }
 
-void cond_expr::translate(translate_context &context){
-	 condition->translate(context);
-	 option1->translate(context);
-	 option2->translate(context);
+void cond_expr::translate(){
+	 condition->translate();
+	 option1->translate();
+	 option2->translate();
 }
 
-void assign_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"=";
-	R->translate(context);
-}
-void unary_op::translate(translate_context &context){
+void unary_op::translate(){
 	std::cout<<op;
 }
-void assign_op::translate(translate_context &context){
+void binary_expr::translate(){
+	L->translate();
 	std::cout<<op;
+	R->translate();
 }
-void and_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"&";
-	R->translate(context);
-}
-void bwand_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"&";
-	R->translate(context);
-}
-void lt::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"<";
-	R->translate(context);
-}
-void gt::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<">";
-	R->translate(context);
-}
-void gte::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"=>";
-	R->translate(context);
-}
-void lte::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"=<";
-	R->translate(context);
-}
-void bwxor_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"^";
-	R->translate(context);
-}
-void bwor_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"|";
-	R->translate(context);
-}
-void or_expr::translate(translate_context &context){
-	L->translate(context);
-	std::cout<<"or";
-	R->translate(context);
-}
-void type_qual::translate(translate_context &context){
+void type_qual::translate(){
+	std::cerr<<"qual"<<std::endl;
 	std::cout<<qual;
 }
-void array::translate(translate_context &context){
+void array::translate(){
 
 };
-void member::translate(translate_context &context){
+void member::translate(){
 
 };
-void enum_spec::translate(translate_context &context){
 
-};
-void function_name::translate(translate_context &context){
-	L->translate(context);
-	R->translate(context);
+void function_name::translate(){
+	if(name!=NULL){
+		name->translate();
+	}
+	if(args!=NULL){
+		args->translate();
+	}
+}
+void param_decl::translate(){
+
+}
+void type_name::translate(){
+std::cerr<<"typename"<<std::endl;
 }
 //statements------------------
-void comp_stmt::translate(translate_context &context){
-	body->translate(context);
+void comp_stmt::translate(){
+	std::cerr<<"comp: ";
+	if(body!=NULL){
+		std::cerr<<"comp_body: ";
+		body->translate();
+	}
 	if(extra!=NULL){
-		extra->translate(context);
+		std::cerr<<"comp_extra: ";
+		extra->translate();
 	}
 }
-void do_stmt::translate(translate_context &context){
+void do_stmt::translate(){
 	std::cout<<"do: ";
-	task->translate(context);
-	condition->translate(context);
+	task->translate();
+	condition->translate();
 }
-void label_stmt::translate(translate_context &context){
+void label_stmt::translate(){
+	std::cerr<<"label"<<std::endl;
 	std::cout<<label;
 }
-void jump_stmt::translate(translate_context &context){
-	std::cout<<what;
-	body->translate(context);
-}
-void switch_stmt::translate(translate_context &context){
-	//std::cout<<what;
-	task->translate(context);
-}
-void stmt_list::translate(translate_context &context){
-	for(int i=0;i++; i<stmts.size()){
-		(stmts[i])->translate(context);
+void jump_stmt::translate(){
+	std::cout<<what<<" ";
+	if(body!=NULL){
+
+		body->translate();
 	}
+
+}
+void unary_expr::translate(){}
+
+
+void size_of::translate(){
+	std::cout<<"sizeof(";
 }
 
-void ifelse_stmt::translate(translate_context &context){
+void dir_abst_declarator::translate(){
+	if(name!=NULL){
+		name->translate();
+	}
+	std::cout<<lb;
+	if(args!=NULL){
+		args->translate();
+	}
+	std::cout<<rb;
+}
+void switch_stmt::translate(){
+	//std::cout<<what;
+	task->translate();
+}
+
+void stmt_list::translate(){
+		std::cerr<<"stmtl: ";
+	for(int i=0; i<v.size();i++){
+	 if(v[i]!=NULL){
+		 std::cerr<<"stmtl vec: ";
+		(v[i])->translate();
+	 }
+	}
+}
+void expr_list::translate(){
+	for(int i=0;i<v.size();i++){
+		(v[i])->translate();
+	}
+}
+void string_list::translate(){
+	for(int i=0;i<v.size();i++){
+		std::cout<<*(v[i]);
+	}
+}
+void d_declarator::translate(){
+	if(dd!=NULL){
+		dd->translate();
+	}
+	std::cout<<lb;
+
+	if(args!=NULL){
+		args->translate();
+	}
+	std::cout<<rb;
+}
+void para_t_list::translate(){
+
+}
+void cast_expr::translate(){
+	if(L!=NULL){
+		L->translate();
+	}
+	std::cout<<"(";
+	if(R!=NULL){
+		R->translate();
+	}
+	std::cout<<")";
+}
+void init_list::translate(){
+
+}
+void init::translate(){
+
+}
+void ifelse_stmt::translate(){
 	std::cout<<"if ";
 	std::cout<<"(";
-	condition->translate(context);
+	condition->translate();
 	std::cout<<"):"<<std::endl;
-	body->translate(context);
+	body->translate();
 	if(else_body!=NULL){
-		else_body->translate(context);
+		else_body->translate();
 	}
 }
-void while_stmt::translate(translate_context &context){
+void while_stmt::translate(){
 	std::cout<<"while ";
 	std::cout<<"(";
-	condition->translate(context);
+	condition->translate();
 	std::cout<<"):"<<std::endl;
-	body->translate(context);
+	body->translate();
 }
-void return_stmt::translate(translate_context &context){
-	std::cout<<"return ";
-	body->translate(context);
-}
-void for_stmt::translate(translate_context &context){
+void for_stmt::translate(){
 	std::cout<<"for ";
-	start->translate(context);
-	end->translate(context);
+	start->translate();
+	end->translate();
 
 	if(end!=NULL){
-		alter->translate(context);
+		alter->translate();
 	}
-	task->translate(context);
+	task->translate();
+}
+void translation_unit::translate(){
 }
 
 //---------declarations
-void function_definition::translate(translate_context &context){
+void function_definition::translate(){
 	std::cout<<"def ";
 	if(name!=NULL){
-		name->translate(context);
+		name->translate();
 	}
-	std::cout<<"(";
+
 	if(params!=NULL){
-		params->translate(context);
+		params->translate();
 	}
-	std::cout<<"):"<<std::endl;
-	/*if(body!=NULL){
-		body->translate(context);
-	}*/
+	std::cout<<":"<<std::endl;
+	if(body!=NULL){
+		std::cerr<<"body"<<std::endl;
+		body->translate();
+	}
 }
-void struct_decl::translate(translate_context &context){
+/*
+void struct_decl::translate(){
 
 };
-void struct_decl_list::translate(translate_context &context){
+void struct_decl_list::translate(){
 
 };
-void decl_list::translate(translate_context &context){
-	for(int i=0;i<decls.size();i++){
-		decls[i]->translate(context);
+*/
+void decl_list::translate(){
+	for(int i=0;i<v.size();i++){
+		v[i]->translate();
 	}
 };
-void p_declarator::translate(translate_context &context){
-
+void p_declarator::translate(){
 	std::cout<<"->";
-}
-void transl_unit::translate(translate_context &context){
-	for(int i=0;i<decls.size();i++){
-		decls[i]->translate(context);
-	}
 }

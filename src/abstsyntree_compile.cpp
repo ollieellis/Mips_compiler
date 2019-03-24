@@ -15,158 +15,17 @@ void identifier::compile(translate_context &context){
 void str_lit::compile(translate_context &context){
   std::cout<<value;
 }
+void binary_expr::compile(translate_context &context){
+ if(op=="+"){
 
-void plus_expr::compile(translate_context &context){
-	L->compile(context);//act of compiling should return a value or load a variable from memory?
-	R->compile(context);
-	std::cout<<"addi t0, zero, "<<context.regs[0];
-	std::cout<<"addi t0, zero, "<<context.regs[1];
-	std::cout<<"add t0, t1, t0"<<std::endl;
-}
-void minus_expr::compile(translate_context &context){
-	L->compile(context);//act of compiling should return a value or load a variable from memory?
-	R->compile(context);
-	std::cout<<"addi t0, zero, "<<context.regs[0];
-	std::cout<<"addi t0, zero, "<<context.regs[1];
-	std::cout<<"sub t0, t1, t0"<<std::endl;
-}
-void div_expr::compile(translate_context &context){
-}
-void times_expr::compile(translate_context &context){
-	L->compile(context);
-	R->compile(context);
-	//std::cout<<"mult: "<<
+ }
+ if(op=="-"){
 
-	//std::cout<<"jr $ra";
-}
-void mod_expr::compile(translate_context &context){
-
+ }
 }
 
-void seperator_expr::compile(translate_context &context){
-
-}
-void while_stmt::compile(translate_context &context){
-
-}
-void for_stmt::compile(translate_context &context){
-
-}
-void ifelse_stmt::compile(translate_context &context){
-
-}
-void return_stmt::compile(translate_context &context){
-
-}
-
-void lshift::compile(translate_context &context){
-
-}
-void rshift::compile(translate_context &context){
-
-}
-void incr::compile(translate_context &context){
-
-}
-void decr::compile(translate_context &context){
-
-}
-void cond_expr::compile(translate_context &context){
-
-}
-
-void assign_expr::compile(translate_context &context){
-
-}
-void unary_op::compile(translate_context &context){
-
-}
-void assign_op::compile(translate_context &context){
-
-}
-void and_expr::compile(translate_context &context){
-
-}
-void bwand_expr::compile(translate_context &context){
-
-}
-void bwxor_expr::compile(translate_context &context){
-
-}
-void lt::compile(translate_context &context){
-
-}
-void gt::compile(translate_context &context){
-
-}
-void gte::compile(translate_context &context){
-
-}
-void lte::compile(translate_context &context){
-
-}
-void or_expr::compile(translate_context &context){
-
-}
-void bwor_expr::compile(translate_context &context){
-
-}
-void stmt_node::compile(translate_context &context){
-
-}
-void switch_stmt::compile(translate_context &context){
-
-}
-void jump_stmt::compile(translate_context &context){
-
-}
-void comp_stmt::compile(translate_context &context){
-
-}
-void label_stmt::compile(translate_context &context){
-
-}
-void do_stmt::compile(translate_context &context){
-
-}
-
-void stmt_list::compile(translate_context &context){
-
-}
-void struct_decl::compile(translate_context &context){
-
-};
-void decl_list::compile(translate_context &context){
-
-};
-void struct_decl_list::compile(translate_context &context){
-
-};
-void p_declarator::compile(translate_context &context){
-
-};
-void type_qual::compile(translate_context &context){
-
-};
-void function_name::compile(translate_context &context){
-
-};
-void enum_spec::compile(translate_context &context){
-
-};
-void array::compile(translate_context &context){
-
-};
-void member::compile(translate_context &context){
-
-};
-void notequal_expr::compile(translate_context&){}
-void isequal_expr::compile(translate_context&){}
 void function_definition::compile(translate_context &context){
 	std::cout<<name<<": ";
 	body->compile(context);
   std::cout<<"jr $ra";
-};
-void transl_unit::compile(translate_context &context){
-
 };

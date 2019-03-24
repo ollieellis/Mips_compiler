@@ -105,19 +105,16 @@ variable {nondigit}[a-zA-Z0-9_]*
 auto       {  yylval.string=new std::string(yytext);return T_AUTO;}
 double     {  yylval.string=new std::string(yytext);return T_DOUBLE;}
 int        {  yylval.string=new std::string(yytext); return T_INT;}
-struct     {  yylval.string=new std::string(yytext);return T_STRUCT;}
 break      {  yylval.string=new std::string(yytext);return T_BREAK;}
 else       {  yylval.string=new std::string(yytext);return T_ELSE;}
 long       {  yylval.string=new std::string(yytext);return T_LONG;}
 switch     { yylval.string=new std::string(yytext); return T_SWITCH;}
 case       {  yylval.string=new std::string(yytext); yylval.string=new std::string(yytext);return T_CASE;}
-enum       {  yylval.string=new std::string(yytext);return T_ENUM;}
 register   {  yylval.string=new std::string(yytext);return T_REGISTER;}
 typedef    {  yylval.string=new std::string(yytext);return T_TYPEDEF;}
 char       {  yylval.string=new std::string(yytext);return T_CHAR;}
 extern     {  yylval.string=new std::string(yytext);return T_EXTERN;}
 return     {  yylval.string=new std::string(yytext);return T_RETURN;}
-union      {  yylval.string=new std::string(yytext);return T_UNION;}
 const      { yylval.string=new std::string(yytext); return T_CONST;}
 float      {  yylval.string=new std::string(yytext);return T_FLOAT;}
 short      {  yylval.string=new std::string(yytext);return T_SHORT;}

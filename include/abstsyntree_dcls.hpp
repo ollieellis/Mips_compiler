@@ -8,86 +8,129 @@
 #include <memory>
 #include <list>
 
-class decl_node: public node{
-		public:
-			nodePtr type;
-			nodePtr name;
-			nodePtr params;
-			nodePtr body;
-			std::vector<nodePtr> decls;
-			decl_node(){};
-			decl_node(nodePtr n_type, nodePtr n_name, nodePtr n_params,  nodePtr n_body): type(n_type), params(n_params), name(n_name), body(n_body){};
-			virtual void translate(translate_context &context);
-			virtual void compile(translate_context &context);
-};
-class declarator: public decl_node{
+
+class declarator: public node{
 	public:
 			nodePtr q;
-			declarator(nodePtr in): q(in),decl_node(){};
-			virtual void translate(translate_context &context);
-			virtual void compile(translate_context &context);
+			declarator(nodePtr in): q(in){};
+			virtual void translate();
+			//void compile(translate_context &context);
+			void print(){std::cerr<<"declarator"<<std::endl;};
 };
-class p_declarator: public decl_node{
+class d_declarator: public node{
+	public:
+			nodePtr dd;
+			nodePtr args;
+			std::string lb;
+			std::string rb;
+			d_declarator(nodePtr d,nodePtr a,std::string l,std::string r): dd(d),args(a), lb(l),rb(r){};
+			void translate();
+			void print(){std::cerr<<"d_declarator"<<std::endl;};
+			//void compile(translate_context &context);
+};
+class p_declarator: public node{
 	public:
 			nodePtr q;
-			p_declarator(nodePtr in): q(in),decl_node(){};
-			virtual void translate(translate_context &context);
-			virtual void compile(translate_context &context);
+			p_declarator(nodePtr in): q(in){};
+			virtual void translate();
+			void print(){std::cerr<<"p_declarator"<<std::endl;};
+			//void compile(translate_context &context);
 };
-class decl_list: public decl_node{
+class decl_list: public node{
 	public:
-			decl_list(nodePtr in): decl_node(in){};
-			virtual void translate(translate_context &context);
-			virtual void compile(translate_context &context);
+			std::vector<nodePtr> v;
+			decl_list(nodePtr in){push(in);}
+			void push(nodePtr in){v.push_back(in);}
+			virtual void translate();
+			void print(){std::cerr<<"decl_list"<<std::endl;};
+			//void compile(translate_context &context);
 };
 //declarations---------------------------------------------------
-class function_definition: public decl_node{
+class function_definition: public node{
 	public:
-		function_definition(nodePtr type, nodePtr name, nodePtr params, nodePtr body): decl_node(type, name, params, body){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr type;
+		nodePtr name;
+		nodePtr params;
+		nodePtr body;
+		std::string l;
+		std::string r;
+		function_definition(nodePtr t, nodePtr n, nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
+		virtual void translate();
+	  void compile(translate_context &context);
+		void print(){std::cerr<<"funcdef"<<std::endl;};
 };
-class external_dec: public decl_node{
+class external_dec: public node{
 	public:
-		external_dec(nodePtr type, nodePtr name,nodePtr params, nodePtr body): decl_node(type, name, params, body){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr type;
+		nodePtr name;
+		nodePtr params;
+		nodePtr body;
+		external_dec(nodePtr t, nodePtr n,nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"external_dec"<<std::endl;};
 };
-class struct_decl: public decl_node{
+/*
+class struct_decl: public node{
 	public:
-		struct_decl(nodePtr name, nodePtr body): decl_node(NULL, name, NULL, body){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr name;
+		nodePtr body;
+		struct_decl(nodePtr n, nodePtr b): name(n), body(b){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"struct_decl"<<std::endl;};
 };
-class struct_decl_list: public decl_node{
+class struct_decl_list: public node{
 	public:
-		struct_decl_list(nodePtr type, nodePtr name,nodePtr params, nodePtr body): decl_node(type, name, params, body){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr type;
+		nodePtr name;
+		nodePtr params;
+		nodePtr body;
+		struct_decl_list(nodePtr t, nodePtr n,nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"struct_decl_list"<<std::endl;};
 };
-class init_decl: public decl_node{
+*/
+class init_decl: public node{
 	public:
-		init_decl(nodePtr name, nodePtr body): decl_node(NULL, name, NULL, body){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr name;
+		nodePtr body;
+		init_decl(nodePtr n, nodePtr b): name(n), body(b){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"init_decl"<<std::endl;};
 };
-class init_decl_list: public decl_node{
+
+class dir_abst_declarator: public node{
 	public:
-		init_decl_list(nodePtr name, nodePtr body): decl_node(NULL, name, NULL, body){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr name;
+		nodePtr args;
+		std::string lb;
+		std::string rb;
+		dir_abst_declarator(nodePtr n, nodePtr a, std::string l, std::string r): name(n), args(a), lb(l),rb(r){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"dir_abst_declarator"<<std::endl;};
 };
-class transl_unit: public decl_node{
+class init_decl_list: public node{
 	public:
-		transl_unit(nodePtr in): decl_node(in){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr name;
+		nodePtr body;
+		init_decl_list(nodePtr n, nodePtr b): name(n), body(b){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"init_decl_list"<<std::endl;};
 };
-class strorunion_spec: public decl_node{
+class decl_specs: public node{
 	public:
-		strorunion_spec(nodePtr n_type, nodePtr n_name, nodePtr n_params,  nodePtr n_body): decl_node(type, name, params, NULL){};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		nodePtr l;
+		nodePtr r;
+		decl_specs(nodePtr nl, nodePtr nr): l(nl), r(nr){};
+		virtual void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"decl_specs"<<std::endl;};
 };
+
 #endif
 //--------

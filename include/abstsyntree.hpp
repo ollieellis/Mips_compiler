@@ -7,7 +7,7 @@
 #include <map>
 #include <memory>
 #include <list>
-
+//have removed all struct and union, and enum from parser
 
 class translate_context{
 	public:
@@ -22,38 +22,14 @@ typedef node* nodePtr;//if sharered don't do cyclical references
 
 class node{
 	public:
-		std::vector<nodePtr> vec;
 	 	nodePtr parseAST(FILE* src);
-		virtual void translate(translate_context &context){}
+		virtual void translate(){}
 		virtual void compile(translate_context &context){}
 		virtual void push(nodePtr in){}
+		virtual void push(std::string* in){}
+		virtual void print(){}
 };
-//---------------- base nodes
 
-
-//types------------
-/*class type: public node{
-	protected:
-		std::string kind;
-	public:
-};
-class integer_type: public type{
-	protected:
-
-	public:
-};
-class float_type: public type{
-	protected:
-
-	public:
-};
-class pointer: public type{
-	protected:
-
-	public:
-};
-*/
-//extended base nodes----------
 
 //basic units----------------
 class identifier: public node{
@@ -61,7 +37,7 @@ class identifier: public node{
 		std::string value;
 	public:
 		identifier(std::string _value): value(_value) {};
-		void translate(translate_context &context);
+		void translate();
 		void compile(translate_context &context);
 };
 class constant: public node{//number, can be int_const or float_const or... etc?
@@ -69,7 +45,7 @@ class constant: public node{//number, can be int_const or float_const or... etc?
 		double value;
 	public:
 		constant(double _value): value(_value){};
-		void translate(translate_context &context);
+		void translate();
 		void compile(translate_context &context);
 };
 class str_lit: public node{
@@ -77,7 +53,7 @@ class str_lit: public node{
 		std::string value;
 	public:
 		str_lit(std::string _value): value(_value) {};
-		void  translate(translate_context &context);
+		void  translate();
 		void compile(translate_context &context);
 };
 

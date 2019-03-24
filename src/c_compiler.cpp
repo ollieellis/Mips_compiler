@@ -23,14 +23,14 @@ int main(int argc, char *argv[]){
 		const nodePtr ast=parseAST(src);
 
 		translate_context context;
-
+		ast->print();
 		if(std::string(argv[1]) == "--translate"){
 			std::cerr<<"start translation"<<std::endl;
-			ast->translate(context);
+			ast->translate();
 		}
 		else if(std::string(argv[1]) == "-S"){
 			std::cout<<"start compilation"<<std::endl;
-			ast->translate(context);
+			ast->compile(context);
 			std::cout<<"start"<<std::endl;
 		}
 

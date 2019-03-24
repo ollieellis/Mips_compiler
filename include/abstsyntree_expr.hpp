@@ -9,9 +9,29 @@
 #include <list>
 #include "abstsyntree.hpp"
 
-class argument_expression_list: public node{
+class expr_list: public node{
 	public:
-		std::vector<node> list;
+		std::vector<nodePtr> v;
+		expr_list(nodePtr in){ push(in);}
+		void push(nodePtr in){ v.push_back(in); };
+		void translate();
+		void print(){std::cerr<<"expr_list"<<std::endl;};
+};
+class string_list: public node{
+	public:
+		std::vector<std::string*> v;
+		string_list(std::string* in){ v.push_back(in);}
+		void push(std::string* in, std::vector<std::string*> a){ a.push_back(in); };
+		void translate();
+		void print(){std::cerr<<"string_list"<<std::endl;};
+};
+class init_list: public node{
+	public:
+		std::vector<nodePtr> v;
+		init_list(nodePtr in){ v.push_back(in);}
+		void push(nodePtr in, std::vector<nodePtr> a){ a.push_back(in); };
+		void translate();
+		void print(){std::cerr<<"init_list"<<std::endl;};
 };
 //-------- base node for similar exprs
 class binary_expr: public node{
@@ -20,7 +40,10 @@ class binary_expr: public node{
 		std::string op;
     nodePtr R;
   public:
-    binary_expr(nodePtr lval, std::string o ,nodePtr rval): L(lval), op(o), R(rval) {};
+    binary_expr(nodePtr lval, std::string o ,nodePtr rval): L(lval), op(o), R(rval) {}
+		void translate();
+		void compile(translate_context &context);
+		void print(){std::cerr<<"binary_expr"<<std::endl;};
 };
 //--------
 
@@ -28,9 +51,10 @@ class seperator_expr: public node{
 	public:
 		nodePtr L;
 		nodePtr R;
-		seperator_expr(nodePtr lval, nodePtr rval): L(lval), R(rval) {};
-		virtual void translate(translate_context &context);
-		virtual void compile(translate_context &context);
+		seperator_expr(nodePtr lval, nodePtr rval): L(lval), R(rval) {}
+		void translate();
+		void print(){std::cerr<<"seperator_expr"<<std::endl;};
+		////void compile(translate_context &context);
 };
 //-----------------------
 
@@ -39,98 +63,183 @@ class cond_expr: public node{
 		nodePtr condition;
 		nodePtr option1;
 		nodePtr option2;
-		cond_expr(nodePtr c, nodePtr o1,nodePtr o2): condition(c), option1(o1), option2(o2){};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		cond_expr(nodePtr c, nodePtr o1,nodePtr o2): condition(c), option1(o1), option2(o2){}
+		void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"cond_expr"<<std::endl;};
+};
+class cast_expr: public node{
+	public:
+		nodePtr L;
+		nodePtr R;
+		cast_expr(nodePtr lval, nodePtr rval): L(lval), R(rval){}
+		void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"cast_expr"<<std::endl;};
 };
 
 class unary_expr: public node{
   public:
 		nodePtr op;
     nodePtr S;
-		unary_expr(nodePtr oper, nodePtr sideval): op(oper),S(sideval) {};
+		unary_expr(nodePtr oper, nodePtr sideval): op(oper),S(sideval) {}
+		void translate();
+		void print(){std::cerr<<"unary_expr"<<std::endl;};
+};
+class incr: public node{
+  public:
+    nodePtr S;
+		incr(nodePtr sideval): S(sideval) {}
+		void translate();
+		void print(){std::cerr<<"incr"<<std::endl;};
+};
+class decr: public node{
+  public:
+    nodePtr S;
+		decr(nodePtr sideval): S(sideval) {}
+		void translate();
+		void print(){std::cerr<<"decr"<<std::endl;};
 };
 class member: public node{
 	public:
 		nodePtr object;
 		std::string subject;
-		member(nodePtr l, std::string r): object(l),subject(r){};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		member(nodePtr l, std::string r): object(l),subject(r){}
+		void translate();
+		void print(){std::cerr<<"member"<<std::endl;};
+		//void compile(translate_context &context);
 };
 //constant_expression? not sure if needed
 class function_name: public node{
 public:
 	nodePtr args;
 	nodePtr name;
-	function_name(nodePtr n, nodePtr a): name(n), args(a){};
-	void translate(translate_context &context);
-	void compile(translate_context &context);
+	function_name(nodePtr n, nodePtr a): name(n), args(a){}
+	void translate();
+	void print(){std::cerr<<"function_name"<<std::endl;};
+	//void compile(translate_context &context);
+};
+class type_name: public node{
+public:
+	nodePtr l;
+	nodePtr r;
+	type_name(nodePtr left, nodePtr right): l(left), r(right){}
+	void translate();
+	void print(){std::cerr<<"type_name"<<std::endl;};
+	//void compile(translate_context &context);
+};
+class param_decl: public node{
+public:
+	nodePtr l;
+	nodePtr r;
+	param_decl(nodePtr left, nodePtr right): l(left), r(right){}
+	void translate();
+	void print(){std::cerr<<"param_decl"<<std::endl;};
+	//void compile(translate_context &context);
 };
 //-----------------------operators
 
 class unary_op: public node{
 	public:
 		std::string op;
-		unary_op(std::string oper): op(oper){};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		unary_op(std::string oper): op(oper){}
+		void translate();
+		void print(){std::cerr<<"unary_op"<<std::endl;};
+		//void compile(translate_context &context);
+};
+class para_t_list: public node{
+	public:
+		nodePtr list;
+		std::string comma;
+		std::string ellipses;
+		para_t_list(nodePtr l): list(l), ellipses(""),comma(""){}
+		para_t_list(nodePtr l, std::string c,std::string e): list(l), comma(c),ellipses(e){}
+		void translate();
+		void print(){std::cerr<<"para_t_list"<<std::endl;};
+		//void compile(translate_context &context);
 };
 /*
 class assign_op: public node{
 	public:
 		std::string op;
 		assign_op(std::string oper): op(oper){};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		void translate();
+		//void compile(translate_context &context);
 };
 */
 class type_spec: public node{
 	public:
 		std::string type;
-
-		type_spec(std::string kind): type(kind){};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		type_spec(std::string kind): type(kind){}
+		void translate();
+		void print(){std::cerr<<"type_spec"<<std::endl;};
+		//void compile(translate_context &context);
 };
 //-----------------------
+/*
 class incr: public node{
 	nodePtr subject;
 	public:
-		incr(nodePtr lval): subject(lval) {};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		incr(nodePtr lval): subject(lval) {}
+		void translate();
+		//void compile(translate_context &context);
 };
 class decr: public node{
 	nodePtr subject;
 	public:
-		decr(nodePtr lval): subject(lval) {};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		decr(nodePtr lval): subject(lval) {}
+		void translate();
+		//void compile(translate_context &context);
 };
+*/
 //relational expressions-----------------------
 
 class type_qual: public node{
 	public:
 		std::string qual;
-		type_qual(std::string q): qual(q) {};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		type_qual(std::string q): qual(q) {}
+		void translate();
+		void print(){std::cerr<<"type_qual"<<std::endl;};
+		//void compile(translate_context &context);
 };
 class array: public node{
+	nodePtr name;
+	nodePtr args;
 	public:
-		array(nodePtr lval, nodePtr rval): binary_expr(lval, rval) {};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		array(nodePtr lval, nodePtr rval): name(lval), args(rval) {}
+		void translate();
+		void print(){std::cerr<<"array"<<std::endl;};
+		//void compile(translate_context &context);
 };
-class enum_spec: public node{
-	std::string e_n;
-	std::string name;
-	nodePtr params;
+class init: public node{
 	public:
-		enum_spec(std::string e, std::string n, nodePtr p): e_n(e),name(n),params(p){};
-		void translate(translate_context &context);
-		void compile(translate_context &context);
+		nodePtr n;
+		std::string comm;
+		init(nodePtr lval, std::string s): n(lval), comm(s) {}
+		void translate();
+		void print(){std::cerr<<"init"<<std::endl;}
+		//void compile(translate_context &context);
+};
+class size_of: public node{
+	public:
+		std::string so;
+		std::string lb;
+		std::string rb;
+		nodePtr n;
+		size_of(std::string s, nodePtr rval,std::string l,std::string r): so(s), n(rval),lb(l),rb(r) {}
+		void translate();
+		void print(){std::cerr<<"size_of"<<std::endl;};
+		//void compile(translate_context &context);
+};
+
+class translation_unit: public node{
+	nodePtr l;
+	nodePtr r;
+	public:
+		translation_unit(nodePtr lval, nodePtr rval): l(lval), r(rval) {}
+		void translate();
+		void print(){std::cerr<<"translation_unit"<<std::endl;};
+		//void compile(translate_context &context);
 };
 
 
