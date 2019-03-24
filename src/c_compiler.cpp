@@ -16,17 +16,18 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 		FILE *src=freopen(argv[i1], "r", stdin);
-
+		int tabc=-1;
 		freopen(argv[i2], "w", stdout);
 		const nodePtr ast=parseAST(src);
 		extern bool do_main;
 		translate_context context;
-		ast->print();
+		//ast->print();
 		if(std::string(argv[1]) == "--translate"){
 			std::cerr<<"start translation"<<std::endl;
 			ast->translate();
 		}
 		if(do_main){
+			std::cout<<std::endl;
 			std::cout<<"# Boilerplat"<<std::endl;
 			std::cout<<"if __name__ == "<<'"'<<"__main__"<<'"'<<":"<<std::endl;
 			std::cout<<"    import sys"<<std::endl;

@@ -1,6 +1,7 @@
 intdef f():
-x=x+1
-    return xdef main():
+x=x+1    return x
+
+def main():
     return f+f
 
 # Boilerplat

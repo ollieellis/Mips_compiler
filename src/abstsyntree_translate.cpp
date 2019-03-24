@@ -50,25 +50,47 @@ void binary_expr::translate(){
 }
 void type_qual::translate(){
 	std::cerr<<"qual"<<std::endl;
-	std::cout<<qual;
+	//std::cout<<qual;
 }
 void array::translate(){
+	if(name!=NULL){
+			name->translate();
+	}
+	std::cout<<"[";
+	if(args!=NULL){
+			args->translate();
+	}
+	std::cout<<"]";
 
 };
 void member::translate(){
 
 };
-
+void ideclarator::translate(){
+	if(var!=NULL){
+		var->translate();
+	}
+	std::cout<<"=0"<<std::endl;
+}
 void function_name::translate(){
 	if(name!=NULL){
-		name->translate();
+			name->translate();
 	}
+	std::cout<<lb;
 	if(args!=NULL){
+		std::cerr<<"args"<<std::endl;
 		args->translate();
 	}
+	std::cout<<rb;
 }
 void param_decl::translate(){
-
+	std::cerr<<"param_decl"<<std::endl;
+	if(l!=NULL){
+		l->translate();
+	}
+	if(r!=NULL){
+		r->translate();
+	}
 }
 void type_name::translate(){
 std::cerr<<"typename"<<std::endl;
@@ -122,6 +144,14 @@ void dir_abst_declarator::translate(){
 void switch_stmt::translate(){
 	//std::cout<<what;
 	task->translate();
+}
+void decl_specs::translate(){
+	if(l!=NULL){
+		l->translate();
+	}
+	if(r!=NULL){
+		r->translate();
+	}
 }
 
 void stmt_list::translate(){
@@ -207,7 +237,6 @@ void function_definition::translate(){
 	if(name!=NULL){
 		name->translate();
 	}
-
 	if(params!=NULL){
 		params->translate();
 	}

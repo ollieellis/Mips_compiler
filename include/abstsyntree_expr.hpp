@@ -8,6 +8,9 @@
 #include <memory>
 #include <list>
 #include "abstsyntree.hpp"
+//global x - use bool for not in a function?
+//trans and new lines
+//param lists
 
 class expr_list: public node{
 	public:
@@ -111,13 +114,15 @@ class member: public node{
 };
 //constant_expression? not sure if needed
 class function_name: public node{
-public:
-	nodePtr args;
-	nodePtr name;
-	function_name(nodePtr n, nodePtr a): name(n), args(a){}
-	void translate();
-	void print(){std::cerr<<"function_name"<<std::endl;};
-	//void compile(translate_context &context);
+	public:
+		nodePtr args;
+		nodePtr name;
+		std::string lb;
+		std::string rb;
+		function_name(nodePtr n, nodePtr a, std::string lval, std::string rval): name(n), args(a),lb(lval),rb(rval){}
+		void translate();
+		void print(){std::cerr<<"function_name"<<std::endl;};
+		//void compile(translate_context &context);
 };
 class type_name: public node{
 public:

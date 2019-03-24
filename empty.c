@@ -1,9 +1,14 @@
-int f(int x)
+int function(int a, int b)
 {
-    return 10;
-}
-
-int main()
-{
-    return f(11)+7;
+    if(a<b){
+        a=a-1;
+        if(b<a){
+            b=b+3;
+            if(a==b){
+                return a*b;
+            }
+        }
+        return b;
+    }
+    return 13;
 }

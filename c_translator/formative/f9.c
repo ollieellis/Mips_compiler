@@ -17,4 +17,3 @@ int main()
 {
     return function(0,0)+function(1,2)+function(4,3)+function(6,7);
 }
-

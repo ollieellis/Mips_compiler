@@ -71,28 +71,7 @@ class external_dec: public node{
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"external_dec"<<std::endl;};
 };
-/*
-class struct_decl: public node{
-	public:
-		nodePtr name;
-		nodePtr body;
-		struct_decl(nodePtr n, nodePtr b): name(n), body(b){};
-		virtual void translate();
-		//void compile(translate_context &context);
-		void print(){std::cerr<<"struct_decl"<<std::endl;};
-};
-class struct_decl_list: public node{
-	public:
-		nodePtr type;
-		nodePtr name;
-		nodePtr params;
-		nodePtr body;
-		struct_decl_list(nodePtr t, nodePtr n,nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
-		virtual void translate();
-		//void compile(translate_context &context);
-		void print(){std::cerr<<"struct_decl_list"<<std::endl;};
-};
-*/
+
 class init_decl: public node{
 	public:
 		nodePtr name;
@@ -101,6 +80,14 @@ class init_decl: public node{
 		virtual void translate();
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"init_decl"<<std::endl;};
+};
+class ideclarator: public node{
+	public:
+		nodePtr var;
+		ideclarator(nodePtr x): var(x){};
+		void translate();
+		//void compile(translate_context &context);
+		void print(){std::cerr<<"ideclarator"<<std::endl;};
 };
 
 class dir_abst_declarator: public node{

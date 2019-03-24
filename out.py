@@ -1,11 +1,5 @@
-def f():
-    return 10
-
-def main():
-    return f11+7
-
-# Boilerplat
-if __name__ == "__main__":
-    import sys
-    ret=main()
-    sys.exit(ret)
+def function(a):
+if (a<b):
+a=a-1if (b<a):
+b=b+3if (a==b):
+    return a*b    return b    return 13
