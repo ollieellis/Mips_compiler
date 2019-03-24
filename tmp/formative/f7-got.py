@@ -1,4 +1,6 @@
-
+intdef main():
+x=1
+    return x
 
 # Boilerplat
 if __name__ == "__main__":

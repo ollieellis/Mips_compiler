@@ -1,5 +1,6 @@
 def main():
-intx=5x=x*x    return x
+intx=5
+x=x*x    return x
 
 # Boilerplat
 if __name__ == "__main__":

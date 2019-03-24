@@ -2732,13 +2732,13 @@ yyreduce:
 
   case 175:
 #line 402 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr)=(yyvsp[0].expr);}
+    {(yyval.expr)=new stmt_list((yyvsp[0].expr));}
 #line 2737 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 176:
 #line 403 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr)=new translation_unit((yyvsp[-1].expr),(yyvsp[0].expr));}
+    {(yyval.expr)=(yyvsp[-1].expr);(yyvsp[-1].expr)->push((yyvsp[0].expr));}
 #line 2743 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 

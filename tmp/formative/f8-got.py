@@ -1,4 +1,7 @@
-
+intdef f():
+x=x+1
+    return xdef main():
+    return f+f
 
 # Boilerplat
 if __name__ == "__main__":

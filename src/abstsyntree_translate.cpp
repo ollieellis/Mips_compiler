@@ -200,8 +200,6 @@ void for_stmt::translate(){
 	}
 	task->translate();
 }
-void translation_unit::translate(){
-}
 
 //---------declarations
 void function_definition::translate(){
@@ -217,6 +215,8 @@ void function_definition::translate(){
 	if(body!=NULL){
 		std::cerr<<"body"<<std::endl;
 		body->translate();
+		std::cout<<std::endl;
+		std::cout<<std::endl;
 	}
 }
 /*

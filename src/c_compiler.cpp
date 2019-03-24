@@ -27,8 +27,6 @@ int main(int argc, char *argv[]){
 			ast->translate();
 		}
 		if(do_main){
-			std::cout<<std::endl;
-			std::cout<<std::endl;
 			std::cout<<"# Boilerplat"<<std::endl;
 			std::cout<<"if __name__ == "<<'"'<<"__main__"<<'"'<<":"<<std::endl;
 			std::cout<<"    import sys"<<std::endl;

@@ -399,8 +399,8 @@ JMP_STMT
 	;
 
 TRANSLATION_UNIT
-	: EXT_DECL {$$=$1;}
-	| TRANSLATION_UNIT EXT_DECL {$$=new translation_unit($1,$2);}
+	: EXT_DECL {$$=new stmt_list($1);}
+	| TRANSLATION_UNIT EXT_DECL {$$=$1;$1->push($2);}
 	;
 EXT_DECL
 	: FUNC_DEF {$$=$1;}
