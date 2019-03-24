@@ -11,7 +11,7 @@ OBJS = $(patsubst %.cpp, %.o, $(CPPFILES))
 all : $(LINK_TARGET)
 
 run : $(LINK_TARGET)
-	bin/c_compiler --translate empty.c r -o out.py
+	bin/c_compiler --translate empty.c -o out.py
 
 debug : $(LINK_TARGET)
 	gdb --args bin/c_compiler --translate empty.c d -o out.py
@@ -39,7 +39,7 @@ lexer: src/complete_lexer.yy.cpp
 
 parser: src/test_parser.tab.cpp src/test_parser.tab.hpp
 
-bin/compiler : src/c_compiler.output
+bin/compiler : run
 
 .PHONY : clean
 

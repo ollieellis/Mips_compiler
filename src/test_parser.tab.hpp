@@ -50,7 +50,7 @@ extern int yydebug;
 	#include <fstream>
 	#include <string>
   extern nodePtr g_root; // A way of getting the AST out
-
+	extern bool do_main;
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
   // that Bison generated code can call them.

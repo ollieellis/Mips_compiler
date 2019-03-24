@@ -54,7 +54,8 @@ class function_definition: public node{
 		nodePtr body;
 		std::string l;
 		std::string r;
-		function_definition(nodePtr t, nodePtr n, nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
+		bool fact;
+		function_definition(nodePtr t, nodePtr n, nodePtr p, nodePtr b, bool f): type(t),name(n), params(p), body(b), fact(f){};
 		virtual void translate();
 	  void compile(translate_context &context);
 		void print(){std::cerr<<"funcdef"<<std::endl;};

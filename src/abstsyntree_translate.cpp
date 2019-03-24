@@ -95,7 +95,7 @@ void label_stmt::translate(){
 	std::cout<<label;
 }
 void jump_stmt::translate(){
-	std::cout<<what<<" ";
+	std::cout<<"    "<<what<<" ";
 	if(body!=NULL){
 
 		body->translate();

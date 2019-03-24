@@ -7,7 +7,7 @@
 	#include <fstream>
 	#include <string>
   extern nodePtr g_root; // A way of getting the AST out
-
+	extern bool do_main;
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
   // that Bison generated code can call them.
@@ -70,11 +70,11 @@
 
 %%
 
-ROOT_NODE: TRANSLATION_UNIT { g_root=$1; }
+ROOT_NODE: TRANSLATION_UNIT { g_root=$1; std::cerr<<"fact"<<do_main;}
 
 
 PRI_EXPR
-	: T_IDENTIFIER { $$ = new identifier(*$1);;}
+	: T_IDENTIFIER { $$ = new identifier(*$1);}
 	| T_NUMBER { $$ = new constant($1);std::cerr<<$1;}
 	| T_STRING { $$ = new str_lit(*$1);}
 	| T_LBRACKET EXPR T_RBRACKET { $$=$2;}
@@ -272,7 +272,7 @@ DECLARATOR
 	;
 
 DIREC_DECLARATOR
-	: T_IDENTIFIER {std::cerr<<*$1;$$ = new identifier(*$1);}
+	: T_IDENTIFIER {$$ = new identifier(*$1); if(*$1=="main"){std::cerr<<"fasds";do_main=true;}}
 	| T_LBRACKET DECLARATOR T_RBRACKET {$$=$2;}
 	| DIREC_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET {$$ = new d_declarator($1,$3,*$2,*$4);}
 	| DIREC_DECLARATOR T_LSQBRACKET T_RSQBRACKET {$$ = new d_declarator($1,NULL,*$2,*$3);}
@@ -408,19 +408,21 @@ EXT_DECL
 	;
 
 FUNC_DEF
-	: DECL_SPECS DECLARATOR DECL_LIST COMP_STMT  {std::cerr<<"FUNC1";$$ = new function_definition($1, $2, $3, $4);}
-	| DECL_SPECS DECLARATOR COMP_STMT  {std::cerr<<"FUNC2";$$ = new function_definition($1, $2, NULL, $3);}
-	| DECLARATOR DECL_LIST COMP_STMT  {std::cerr<<"FUNC3";$$ = new function_definition(NULL, $1, $2, $3);}
-	| DECLARATOR COMP_STMT  {std::cerr<<"FUNC4";$$ = new function_definition(NULL, $1, NULL, $2);}
+	: DECL_SPECS DECLARATOR DECL_LIST COMP_STMT  {std::cerr<<"FUNC1";$$ = new function_definition($1, $2, $3, $4, do_main);}
+	| DECL_SPECS DECLARATOR COMP_STMT  {std::cerr<<"FUNC2";$$ = new function_definition($1, $2, NULL, $3,do_main);}
+	| DECLARATOR DECL_LIST COMP_STMT  {std::cerr<<"FUNC3";$$ = new function_definition(NULL, $1, $2, $3,do_main);}
+	| DECLARATOR COMP_STMT  {std::cerr<<"FUNC4";$$ = new function_definition(NULL, $1, NULL, $2,do_main);}
 	;
 
 	%%
 
 	nodePtr g_root;
+	bool do_main;
 	extern FILE *yyin;
 	const nodePtr parseAST(FILE* src){
 	  g_root=0;
 		yyin=src;
+		do_main=false;
 		std::cerr<<"parse in";
 	  yyparse();
 		std::cerr<<"parse out "<<g_root;

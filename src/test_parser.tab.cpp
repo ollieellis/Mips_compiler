@@ -103,7 +103,7 @@ extern int yydebug;
 	#include <fstream>
 	#include <string>
   extern nodePtr g_root; // A way of getting the AST out
-
+	extern bool do_main;
   //! This is to fix problems when generating C++
   // We are declaring the functions provided by Flex, so
   // that Bison generated code can call them.
@@ -1706,13 +1706,13 @@ yyreduce:
     {
         case 2:
 #line 73 "src/test_parser.y" /* yacc.c:1646  */
-    { g_root=(yyvsp[0].expr); }
+    { g_root=(yyvsp[0].expr); std::cerr<<"fact"<<do_main;}
 #line 1711 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 77 "src/test_parser.y" /* yacc.c:1646  */
-    { (yyval.expr) = new identifier(*(yyvsp[0].string));;}
+    { (yyval.expr) = new identifier(*(yyvsp[0].string));}
 #line 1717 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -2348,7 +2348,7 @@ yyreduce:
 
   case 111:
 #line 275 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<*(yyvsp[0].string);(yyval.expr) = new identifier(*(yyvsp[0].string));}
+    {(yyval.expr) = new identifier(*(yyvsp[0].string)); if(*(yyvsp[0].string)=="main"){std::cerr<<"fasds";do_main=true;}}
 #line 2353 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -2756,25 +2756,25 @@ yyreduce:
 
   case 179:
 #line 411 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<"FUNC1";(yyval.expr) = new function_definition((yyvsp[-3].expr), (yyvsp[-2].expr), (yyvsp[-1].expr), (yyvsp[0].expr));}
+    {std::cerr<<"FUNC1";(yyval.expr) = new function_definition((yyvsp[-3].expr), (yyvsp[-2].expr), (yyvsp[-1].expr), (yyvsp[0].expr), do_main);}
 #line 2761 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 180:
 #line 412 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<"FUNC2";(yyval.expr) = new function_definition((yyvsp[-2].expr), (yyvsp[-1].expr), NULL, (yyvsp[0].expr));}
+    {std::cerr<<"FUNC2";(yyval.expr) = new function_definition((yyvsp[-2].expr), (yyvsp[-1].expr), NULL, (yyvsp[0].expr),do_main);}
 #line 2767 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 181:
 #line 413 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<"FUNC3";(yyval.expr) = new function_definition(NULL, (yyvsp[-2].expr), (yyvsp[-1].expr), (yyvsp[0].expr));}
+    {std::cerr<<"FUNC3";(yyval.expr) = new function_definition(NULL, (yyvsp[-2].expr), (yyvsp[-1].expr), (yyvsp[0].expr),do_main);}
 #line 2773 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 182:
 #line 414 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<"FUNC4";(yyval.expr) = new function_definition(NULL, (yyvsp[-1].expr), NULL, (yyvsp[0].expr));}
+    {std::cerr<<"FUNC4";(yyval.expr) = new function_definition(NULL, (yyvsp[-1].expr), NULL, (yyvsp[0].expr),do_main);}
 #line 2779 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -3011,10 +3011,12 @@ yyreturn:
 
 
 	nodePtr g_root;
+	bool do_main;
 	extern FILE *yyin;
 	const nodePtr parseAST(FILE* src){
 	  g_root=0;
 		yyin=src;
+		do_main=false;
 		std::cerr<<"parse in";
 	  yyparse();
 		std::cerr<<"parse out "<<g_root;

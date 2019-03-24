@@ -4,15 +4,13 @@
 #include <fstream>
 
 int main(int argc, char *argv[]){
+				std::cerr<<"here translation"<<std::endl;
     if(argc<2){
         fprintf(stderr, "no srccode.\n");
         exit(1);
     }
-		int i1=2;int i2=5;
-		if(*argv[5]=='d'){
-      i1=i1++;
-			i2=i2++;
-    }
+		int i1=2;int i2=4;
+
 		if(argc<2){
         fprintf(stderr, "no srccode.\n");
         exit(1);
@@ -21,12 +19,21 @@ int main(int argc, char *argv[]){
 
 		freopen(argv[i2], "w", stdout);
 		const nodePtr ast=parseAST(src);
-
+		extern bool do_main;
 		translate_context context;
 		ast->print();
 		if(std::string(argv[1]) == "--translate"){
 			std::cerr<<"start translation"<<std::endl;
 			ast->translate();
+		}
+		if(do_main){
+			std::cout<<std::endl;
+			std::cout<<std::endl;
+			std::cout<<"# Boilerplat"<<std::endl;
+			std::cout<<"if __name__ == "<<'"'<<"__main__"<<'"'<<":"<<std::endl;
+			std::cout<<"    import sys"<<std::endl;
+			std::cout<<"    ret=main()"<<std::endl;
+			std::cout<<"    sys.exit(ret)";
 		}
 		else if(std::string(argv[1]) == "-S"){
 			std::cout<<"start compilation"<<std::endl;
