@@ -23,7 +23,7 @@ typedef node* nodePtr;//if sharered don't do cyclical references
 class node{
 	public:
 	 	nodePtr parseAST(FILE* src);
-		virtual void translate(){}
+		virtual void translate(int& tc){}
 		virtual void compile(translate_context &context){}
 		virtual void push(nodePtr in){}
 		virtual void push(std::string* in){}
@@ -37,7 +37,7 @@ class identifier: public node{
 		std::string value;
 	public:
 		identifier(std::string _value): value(_value) {};
-		void translate();
+		void translate(int& tc);
 		void compile(translate_context &context);
 };
 class constant: public node{//number, can be int_const or float_const or... etc?
@@ -45,7 +45,7 @@ class constant: public node{//number, can be int_const or float_const or... etc?
 		double value;
 	public:
 		constant(double _value): value(_value){};
-		void translate();
+		void translate(int& tc);
 		void compile(translate_context &context);
 };
 class str_lit: public node{
@@ -53,7 +53,7 @@ class str_lit: public node{
 		std::string value;
 	public:
 		str_lit(std::string _value): value(_value) {};
-		void  translate();
+		void translate(int& tc);
 		void compile(translate_context &context);
 };
 

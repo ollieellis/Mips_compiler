@@ -4,4 +4,3 @@ int main()
     z=7;
     return z;
 }
-

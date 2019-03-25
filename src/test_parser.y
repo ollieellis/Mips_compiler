@@ -84,7 +84,7 @@ POSTFIX_EXPR
 	: PRI_EXPR { $$=$1; }
 	| POSTFIX_EXPR T_LSQBRACKET EXPR T_RSQBRACKET { $$ = new array($1,$3); }
 	| POSTFIX_EXPR T_LBRACKET T_RBRACKET { $$ = new function_name($1,NULL,*$2,*$3); }
-	| POSTFIX_EXPR T_LBRACKET ARG_EXPR_LIST T_RBRACKET { $$ = new function_name($1,$3,*$2,*$4); }
+	| POSTFIX_EXPR T_LBRACKET ARG_EXPR_LIST T_RBRACKET { std::cerr<<"postf3";$$ = new function_name($1,$3,*$2,*$4); }
 	| POSTFIX_EXPR T_DOT T_IDENTIFIER { $$ = new member($1,*$3); }
 	| POSTFIX_EXPR T_POINT T_IDENTIFIER { $$ = new member($1,*$3); }
 	| POSTFIX_EXPR T_INCR { $$=new incr($1);}
@@ -92,8 +92,8 @@ POSTFIX_EXPR
 	;
 
 ARG_EXPR_LIST
-	: ASSIGN_EXPR {$$=new expr_list($1);}
-	| ARG_EXPR_LIST T_COMM ASSIGN_EXPR {$$=$1;$1->push($3);}
+	: ASSIGN_EXPR {std::cerr<<"arg1";$$=new expr_list($1);}
+	| ARG_EXPR_LIST T_COMM ASSIGN_EXPR {std::cerr<<"arg2";$$=$1;$1->push($3);}
 	;
 
 UNARY_EXPR
@@ -272,29 +272,29 @@ DECLARATOR
 	;
 
 DIREC_DECLARATOR
-	: T_IDENTIFIER {std::cerr<<*$1<<std::endl;$$ = new identifier(*$1); if(*$1=="main"){std::cerr<<"fasds";do_main=true;}}
-	| T_LBRACKET DECLARATOR T_RBRACKET {$$=$2;}
-	| DIREC_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET {$$ = new d_declarator($1,$3,*$2,*$4);}
-	| DIREC_DECLARATOR T_LSQBRACKET T_RSQBRACKET {$$ = new d_declarator($1,NULL,*$2,*$3);}
-	| DIREC_DECLARATOR T_LBRACKET PARAM_TYPE_LIST T_RBRACKET  {std::cerr<<"PTL";$$ = new d_declarator($1,$3,*$2,*$4);}
-	| DIREC_DECLARATOR T_LBRACKET ID_LIST T_RBRACKET  {$$ = new d_declarator($1,$3,*$2,*$4);}
-	| DIREC_DECLARATOR T_LBRACKET T_RBRACKET  {$$ = new d_declarator($1,NULL,*$2,*$3);}
+	: T_IDENTIFIER {std::cerr<<"postdd0";std::cerr<<*$1<<std::endl;$$ = new identifier(*$1); if(*$1=="main"){std::cerr<<"fasds";do_main=true;}}
+	| T_LBRACKET DECLARATOR T_RBRACKET {std::cerr<<"dd1";$$=$2;}
+	| DIREC_DECLARATOR T_LSQBRACKET CONST_EXPR T_RSQBRACKET {std::cerr<<"dd2";$$ = new d_declarator($1,$3,*$2,*$4);}
+	| DIREC_DECLARATOR T_LSQBRACKET T_RSQBRACKET {std::cerr<<"dd3";$$ = new d_declarator($1,NULL,*$2,*$3);}
+	| DIREC_DECLARATOR T_LBRACKET PARAM_TYPE_LIST T_RBRACKET  {std::cerr<<"dd4";$$ = new d_declarator($1,$3,*$2,*$4);}
+	| DIREC_DECLARATOR T_LBRACKET ID_LIST T_RBRACKET  {std::cerr<<"dd5";$$ = new d_declarator($1,$3,*$2,*$4);}
+	| DIREC_DECLARATOR T_LBRACKET T_RBRACKET  {std::cerr<<"dd6";$$ = new d_declarator($1,NULL,*$2,*$3);}
 	;
 
 TYPE_QUAL_LIST
-	: TYPE_QUAL  { $$= new expr_list($1);}
+	: TYPE_QUAL  { $$= new type_list($1);}
 	| TYPE_QUAL_LIST TYPE_QUAL {$1->push($2);$$=$1;}
 	;
 
 
 PARAM_TYPE_LIST
-	: PARAM_LIST {$$= $1;}
+	: PARAM_LIST {$$= $1;std::cerr<<"paramlist";}
 	| PARAM_LIST T_COMM T_ELL {$$= new para_t_list($1,*$2,*$3);}
 	;
 
 PARAM_LIST
 	: PARAM_DECL {$$= new expr_list($1);}
-	| PARAM_LIST T_COMM PARAM_DECL {$1->push($2);$$=$1;}
+	| PARAM_LIST T_COMM PARAM_DECL {$1->push($3);$$=$1;}
 	;
 
 PARAM_DECL

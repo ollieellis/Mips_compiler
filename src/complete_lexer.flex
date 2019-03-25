@@ -22,7 +22,7 @@ escapeseq {hexescape}|{octescape}
 
 
 
-dec                 [1-9]{digit}*
+dec                 ([1-9]{digit}*)|0
 decsigned           {dec}[uU]
 declong             {dec}[lL]
 decunsignedlong     {declong}[uU][lL]
@@ -40,8 +40,9 @@ nondigit [a-zA-z_^"]
 
 newline [\r\n]+
 comment1 "//"[.]*{newline}
-white					[.]|{newline}|[ \t]|{comment1}
-real					{dec}|{hex}|{oct}|{decsigned}
+comment2 "/*"([^*]|(\*+[^*/]))*\*+\/
+white					[.]|{newline}|[ \t]|{comment1}|{comment2}
+real					{dec}|{hex}|{oct}|{decsigned}|{declong}|{decunsignedlong}|{octunsignedlong}|{octlong}|{hexlong}|{hexunsignedlong}
 
 L?\"[^"\n]*["\n] {return T_STR;}//check strings can't cross line boundaries
 variable {nondigit}[a-zA-Z0-9_]*

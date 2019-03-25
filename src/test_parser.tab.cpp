@@ -1754,7 +1754,7 @@ yyreduce:
 
   case 10:
 #line 87 "src/test_parser.y" /* yacc.c:1646  */
-    { (yyval.expr) = new function_name((yyvsp[-3].expr),(yyvsp[-1].exprlist),*(yyvsp[-2].string),*(yyvsp[0].string)); }
+    { std::cerr<<"postf3";(yyval.expr) = new function_name((yyvsp[-3].expr),(yyvsp[-1].exprlist),*(yyvsp[-2].string),*(yyvsp[0].string)); }
 #line 1759 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -1784,13 +1784,13 @@ yyreduce:
 
   case 15:
 #line 95 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.exprlist)=new expr_list((yyvsp[0].expr));}
+    {std::cerr<<"arg1";(yyval.exprlist)=new expr_list((yyvsp[0].expr));}
 #line 1789 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 96 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.exprlist)=(yyvsp[-2].exprlist);(yyvsp[-2].exprlist)->push((yyvsp[0].expr));}
+    {std::cerr<<"arg2";(yyval.exprlist)=(yyvsp[-2].exprlist);(yyvsp[-2].exprlist)->push((yyvsp[0].expr));}
 #line 1795 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -2354,49 +2354,49 @@ yyreduce:
 
   case 111:
 #line 275 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<*(yyvsp[0].string)<<std::endl;(yyval.expr) = new identifier(*(yyvsp[0].string)); if(*(yyvsp[0].string)=="main"){std::cerr<<"fasds";do_main=true;}}
+    {std::cerr<<"postdd0";std::cerr<<*(yyvsp[0].string)<<std::endl;(yyval.expr) = new identifier(*(yyvsp[0].string)); if(*(yyvsp[0].string)=="main"){std::cerr<<"fasds";do_main=true;}}
 #line 2359 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 112:
 #line 276 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr)=(yyvsp[-1].expr);}
+    {std::cerr<<"dd1";(yyval.expr)=(yyvsp[-1].expr);}
 #line 2365 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 113:
 #line 277 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr) = new d_declarator((yyvsp[-3].expr),(yyvsp[-1].expr),*(yyvsp[-2].string),*(yyvsp[0].string));}
+    {std::cerr<<"dd2";(yyval.expr) = new d_declarator((yyvsp[-3].expr),(yyvsp[-1].expr),*(yyvsp[-2].string),*(yyvsp[0].string));}
 #line 2371 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 114:
 #line 278 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr) = new d_declarator((yyvsp[-2].expr),NULL,*(yyvsp[-1].string),*(yyvsp[0].string));}
+    {std::cerr<<"dd3";(yyval.expr) = new d_declarator((yyvsp[-2].expr),NULL,*(yyvsp[-1].string),*(yyvsp[0].string));}
 #line 2377 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 115:
 #line 279 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<"PTL";(yyval.expr) = new d_declarator((yyvsp[-3].expr),(yyvsp[-1].expr),*(yyvsp[-2].string),*(yyvsp[0].string));}
+    {std::cerr<<"dd4";(yyval.expr) = new d_declarator((yyvsp[-3].expr),(yyvsp[-1].expr),*(yyvsp[-2].string),*(yyvsp[0].string));}
 #line 2383 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 116:
 #line 280 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr) = new d_declarator((yyvsp[-3].expr),(yyvsp[-1].expr),*(yyvsp[-2].string),*(yyvsp[0].string));}
+    {std::cerr<<"dd5";(yyval.expr) = new d_declarator((yyvsp[-3].expr),(yyvsp[-1].expr),*(yyvsp[-2].string),*(yyvsp[0].string));}
 #line 2389 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 117:
 #line 281 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr) = new d_declarator((yyvsp[-2].expr),NULL,*(yyvsp[-1].string),*(yyvsp[0].string));}
+    {std::cerr<<"dd6";(yyval.expr) = new d_declarator((yyvsp[-2].expr),NULL,*(yyvsp[-1].string),*(yyvsp[0].string));}
 #line 2395 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
   case 118:
 #line 291 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr)= (yyvsp[0].expr);}
+    {(yyval.expr)= (yyvsp[0].expr);std::cerr<<"paramlist";}
 #line 2401 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 
@@ -2414,7 +2414,7 @@ yyreduce:
 
   case 121:
 #line 297 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyvsp[-2].expr)->push((yyvsp[-1].string));(yyval.expr)=(yyvsp[-2].expr);}
+    {(yyvsp[-2].expr)->push((yyvsp[0].expr));(yyval.expr)=(yyvsp[-2].expr);}
 #line 2419 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 

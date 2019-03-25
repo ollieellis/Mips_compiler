@@ -13,7 +13,7 @@ class declarator: public node{
 	public:
 			nodePtr q;
 			declarator(nodePtr in): q(in){};
-			virtual void translate();
+			virtual void translate(int& tc);
 			//void compile(translate_context &context);
 			void print(){std::cerr<<"declarator"<<std::endl;};
 };
@@ -24,7 +24,7 @@ class d_declarator: public node{
 			std::string lb;
 			std::string rb;
 			d_declarator(nodePtr d,nodePtr a,std::string l,std::string r): dd(d),args(a), lb(l),rb(r){};
-			void translate();
+			void translate(int& tc);
 			void print(){std::cerr<<"d_declarator"<<std::endl;};
 			//void compile(translate_context &context);
 };
@@ -32,7 +32,7 @@ class p_declarator: public node{
 	public:
 			nodePtr q;
 			p_declarator(nodePtr in): q(in){};
-			virtual void translate();
+			virtual void translate(int& tc);
 			void print(){std::cerr<<"p_declarator"<<std::endl;};
 			//void compile(translate_context &context);
 };
@@ -41,7 +41,7 @@ class decl_list: public node{
 			std::vector<nodePtr> v;
 			decl_list(nodePtr in){push(in);}
 			void push(nodePtr in){v.push_back(in);}
-			virtual void translate();
+			virtual void translate(int& tc);
 			void print(){std::cerr<<"decl_list"<<std::endl;};
 			//void compile(translate_context &context);
 };
@@ -56,7 +56,7 @@ class function_definition: public node{
 		std::string r;
 		bool fact;
 		function_definition(nodePtr t, nodePtr n, nodePtr p, nodePtr b, bool f): type(t),name(n), params(p), body(b), fact(f){};
-		virtual void translate();
+		virtual void translate(int& tc);
 	  void compile(translate_context &context);
 		void print(){std::cerr<<"funcdef"<<std::endl;};
 };
@@ -67,7 +67,7 @@ class external_dec: public node{
 		nodePtr params;
 		nodePtr body;
 		external_dec(nodePtr t, nodePtr n,nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"external_dec"<<std::endl;};
 };
@@ -77,7 +77,7 @@ class init_decl: public node{
 		nodePtr name;
 		nodePtr body;
 		init_decl(nodePtr n, nodePtr b): name(n), body(b){};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"init_decl"<<std::endl;};
 };
@@ -85,7 +85,7 @@ class ideclarator: public node{
 	public:
 		nodePtr var;
 		ideclarator(nodePtr x): var(x){};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"ideclarator"<<std::endl;};
 };
@@ -97,7 +97,7 @@ class dir_abst_declarator: public node{
 		std::string lb;
 		std::string rb;
 		dir_abst_declarator(nodePtr n, nodePtr a, std::string l, std::string r): name(n), args(a), lb(l),rb(r){};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"dir_abst_declarator"<<std::endl;};
 };
@@ -106,7 +106,7 @@ class init_decl_list: public node{
 		nodePtr name;
 		nodePtr body;
 		init_decl_list(nodePtr n, nodePtr b): name(n), body(b){};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"init_decl_list"<<std::endl;};
 };
@@ -115,7 +115,7 @@ class decl_specs: public node{
 		nodePtr l;
 		nodePtr r;
 		decl_specs(nodePtr nl, nodePtr nr): l(nl), r(nr){};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"decl_specs"<<std::endl;};
 };

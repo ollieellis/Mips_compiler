@@ -15,7 +15,7 @@ class stmt_list: public node{
 		std::vector<nodePtr> v;
 		stmt_list(nodePtr in){ push(in);}
 		void push(nodePtr in){ v.push_back(in); };
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"stmt_list"<<std::endl;};
 };
@@ -24,7 +24,7 @@ class while_stmt: public node{
 		nodePtr body;
 		nodePtr condition;
 		while_stmt(nodePtr fact, nodePtr body): condition(fact), body(body) {};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"while"<<std::endl;};
 };
@@ -34,7 +34,7 @@ class do_stmt: public node{
 		nodePtr condition;
 	public:
 		do_stmt(nodePtr fact, nodePtr body): task(body),condition(fact){};
-		virtual void translate();
+		virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"do"<<std::endl;};
 };
@@ -45,7 +45,7 @@ class ifelse_stmt: public node{
 		nodePtr else_body;
 	public:
 		ifelse_stmt(nodePtr c, nodePtr b, nodePtr eb): condition(c), body(b), else_body(eb) {};//body - then
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"ifelse"<<std::endl;};
 };
@@ -56,7 +56,7 @@ class for_stmt: public node{
 		nodePtr alter;
 		nodePtr task;
 		for_stmt(nodePtr s, nodePtr e,nodePtr t,nodePtr a): start(s),end(e), task(t),alter(a), node() {};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"for"<<std::endl;};
 };
@@ -65,7 +65,7 @@ class switch_stmt: public node{
 	nodePtr extra;
 	public:
 		switch_stmt(nodePtr e, nodePtr t): task(t), extra(t) {};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"switch"<<std::endl;};
 };
@@ -74,7 +74,7 @@ class jump_stmt: public node{
 		std::string what;
 		nodePtr body;
 		jump_stmt(std::string type, nodePtr b): what(type), body(b){};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"jump"<<std::endl;};
 };
@@ -83,7 +83,7 @@ class iter_stmt: public node{
 	nodePtr body;
 	public:
 		//check
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"iter"<<std::endl;};
 };
@@ -92,7 +92,7 @@ class comp_stmt: public node{
 	nodePtr body;
 	public:
 		comp_stmt(nodePtr b, nodePtr e): extra(e), body(b){};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"comp_s"<<std::endl;};
 };
@@ -102,7 +102,7 @@ class expr_stmt: public node{
 		nodePtr fact;
 		nodePtr task;
 		expr_stmt(std::string type, nodePtr f, nodePtr t): what(type), fact(f), task(t){};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"expr_s"<<std::endl;};
 };
@@ -112,7 +112,7 @@ class label_stmt: public node{
 		nodePtr fact;
 		nodePtr option;
 		label_stmt(std::string l, nodePtr f, nodePtr o): label(l), fact(f), option(o){};
-		void translate();
+		void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"label_s"<<std::endl;};
 };
