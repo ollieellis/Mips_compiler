@@ -39,8 +39,6 @@ lexer: src/complete_lexer.yy.cpp
 
 parser: src/test_parser.tab.cpp src/test_parser.tab.hpp
 
-bin/compiler : run
-
 .PHONY : clean
 
 clean :

@@ -168,14 +168,15 @@ void label_stmt::translate(int& tc){
 }
 void jump_stmt::translate(int& tc){
 	std::cerr<<"jmpstmt"<<std::endl;
+	tc++;
 	std::cout<<std::endl;
 	print_tab(tc);std::cout<<what<<" ";
 	if(body!=NULL){
 		std::cerr<<"tabcf"<<tc<<std::endl;
 		body->translate(tc);
-		tc--;
 	}
 	std::cout<<std::endl;
+	tc--;
 }
 void unary_expr::translate(int& tc){
 	std::cerr<<"unaryexpr"<<std::endl;
@@ -227,7 +228,7 @@ void stmt_list::translate(int& tc){
 	for(int i=0; i<v.size();i++){
 	 if(v[i]!=NULL){
 		 std::cerr<<"stmtl vec: ";
-		print_tab(tc);(v[i])->translate(tc);
+		(v[i])->translate(tc);
 
 	 }
 	 std::cout<<std::endl;
@@ -305,15 +306,18 @@ void init::translate(int& tc){
 }
 void ifelse_stmt::translate(int& tc){
 	std::cerr<<"ifelsestmt"<<std::endl;
-	tc++;
 	print_tab(tc);std::cout<<"if ";
 	std::cout<<"(";
 	condition->translate(tc);
 	std::cout<<"):"<<std::endl;
+		tc++;
 	print_tab(tc);body->translate(tc);
+	tc--;
 	if(else_body!=NULL){
 		print_tab(tc);std::cout<<"else ";
+		tc++;
 		else_body->translate(tc);
+		tc--;
 	}
 }
 void while_stmt::translate(int& tc){
@@ -330,6 +334,7 @@ void while_stmt::translate(int& tc){
 void for_stmt::translate(int& tc){
 	std::cerr<<"forstmt"<<std::endl;
 	std::cout<<"for ";
+	tc++;
 	if(start!=NULL){
 		start->translate(tc);
 	}
@@ -342,22 +347,20 @@ void for_stmt::translate(int& tc){
 	if(task!=NULL){
 		task->translate(tc);
 	}
+	tc--;
 }
 
 //---------declarations
 void function_definition::translate(int& tc){
 	std::cerr<<"funcdef"<<std::endl;
-
-	std::cout<<"def ";
+	print_tab(tc);std::cout<<"def ";
 	if(name!=NULL){
-		print_tab(tc);
 		name->translate(tc);
 	}
 	if(params!=NULL){
 		params->translate(tc);
 	}
 	std::cout<<":"<<std::endl;
-	tc++;
 	if(body!=NULL){
 		body->translate(tc);
 		std::cout<<std::endl;
