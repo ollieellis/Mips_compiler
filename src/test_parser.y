@@ -374,7 +374,7 @@ STMT_LIST
 
 EXPR_STMT
 	: T_SEMI {}
-	| EXPR T_SEMI {$$=$1;}
+	| EXPR T_SEMI {$$=new expr_stmt($1);}
 	;
 
 SELEC_STMT

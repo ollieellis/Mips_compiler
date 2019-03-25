@@ -2660,7 +2660,7 @@ yyreduce:
 
   case 162:
 #line 377 "src/test_parser.y" /* yacc.c:1646  */
-    {(yyval.expr)=(yyvsp[-1].expr);}
+    {(yyval.expr)=new expr_stmt((yyvsp[-1].expr));}
 #line 2665 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 

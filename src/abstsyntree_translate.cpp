@@ -184,6 +184,12 @@ void jump_stmt::translate(int& tc){
 	tc--;
 	std::cout<<std::endl;
 }
+void expr_stmt::translate(int& tc){
+		std::cerr<<"exprstmt"<<std::endl;
+	if(E!=NULL){
+		print_tab(tc);E->translate(tc);
+	}
+}
 void unary_expr::translate(int& tc){
 	std::cerr<<"unaryexpr"<<std::endl;
 	if(op!=NULL){
@@ -242,7 +248,7 @@ void expr_list::translate(int& tc){
 	std::cerr<<"exprlist"<<std::endl;
 	for(int i=0;i<v.size();i++){
 		if(v[i]!=NULL){
-			print_tab(tc);(v[i])->translate(tc);
+			(v[i])->translate(tc);
 		}
 		if((v.size()>1)&&(i!=(v.size()-1))){
 			std::cout<<",";
@@ -263,7 +269,6 @@ void string_list::translate(int& tc){
 }
 void d_declarator::translate(int& tc){
 	std::cerr<<"ddec"<<std::endl;
-	print_tab(tc);
 	if(dd!=NULL){
 		dd->translate(tc);
 	}
@@ -315,7 +320,7 @@ void ifelse_stmt::translate(int& tc){
 	condition->translate(tc);
 	std::cout<<"):"<<std::endl;
 	tc++;
-	print_tab(tc);body->translate(tc);
+	body->translate(tc);
 	tc--;
 	if(else_body!=NULL){
 		print_tab(tc);std::cout<<"else ";

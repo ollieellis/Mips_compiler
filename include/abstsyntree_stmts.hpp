@@ -98,13 +98,10 @@ class comp_stmt: public node{
 };
 class expr_stmt: public node{
 	public:
-		std::string what;
-		nodePtr fact;
-		nodePtr task;
-		expr_stmt(std::string type, nodePtr f, nodePtr t): what(type), fact(f), task(t){};
+		nodePtr E;
+		expr_stmt(nodePtr in): E(in){}
 		void translate(int& tc);
-		//void compile(translate_context &context);
-		void print(){std::cerr<<"expr_s"<<std::endl;};
+		void print(){std::cerr<<"expr_list"<<std::endl;};
 };
 class label_stmt: public node{
 	public:
