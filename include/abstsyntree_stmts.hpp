@@ -34,7 +34,7 @@ class do_stmt: public node{
 		nodePtr condition;
 	public:
 		do_stmt(nodePtr fact, nodePtr body): task(body),condition(fact){};
-		virtual void translate(int& tc);
+		//virtual void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"do"<<std::endl;};
 };
@@ -56,7 +56,7 @@ class for_stmt: public node{
 		nodePtr alter;
 		nodePtr task;
 		for_stmt(nodePtr s, nodePtr e,nodePtr t,nodePtr a): start(s),end(e), task(t),alter(a), node() {};
-		void translate(int& tc);
+		//void translate(int& tc);
 		//void compile(translate_context &context);
 		void print(){std::cerr<<"for"<<std::endl;};
 };

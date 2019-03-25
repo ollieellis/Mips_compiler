@@ -303,7 +303,7 @@ PARAM_DECL
 	| DECL_SPECS {$$=$1;}
 	;
 
-ID_LIST//list of strings
+ID_LIST
 	: T_IDENTIFIER { std::cerr<<"IDLIST";$$ = new string_list($1);}
 	| ID_LIST T_COMM T_IDENTIFIER {std::cerr<<"IDLISTC";$$=$1;$1->push($3);}
 	;

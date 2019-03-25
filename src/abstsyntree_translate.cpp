@@ -11,6 +11,9 @@ void constant::translate(int& tc){//ostream printing?
 }
 void identifier::translate(int& tc){
 	std::cerr<<"id"<<value<<std::endl;
+	if(tc==0){
+		global_var.push_back(value);
+	}
   std::cout<<value;
 }
 void str_lit::translate(int& tc){
@@ -71,6 +74,12 @@ void binary_expr::translate(int& tc){
 	std::cerr<<"binaryexpr"<<op<<std::endl;
 	if(L!=NULL){
 		L->translate(tc);
+	}
+	if(op=="&&"){
+		op="and";
+	}
+	if(op=="||"){
+		op="or";
 	}
 	std::cout<<op;
 	if(R!=NULL){
@@ -144,18 +153,7 @@ void comp_stmt::translate(int& tc){
 	}
 	std::cout<<std::endl;
 }
-void do_stmt::translate(int& tc){
-	std::cerr<<"dostmt"<<std::endl;
-	std::cout<<"do: ";
-	tc++;
-	if(task!=NULL){
-		task->translate(tc);
-	}
-	if(condition!=NULL){
-		condition->translate(tc);
-	}
-	tc--;
-}
+
 void label_stmt::translate(int& tc){
 	std::cerr<<"lblstmt"<<std::endl;
 	std::cout<<label<<":"<<std::endl;
@@ -168,15 +166,15 @@ void label_stmt::translate(int& tc){
 }
 void jump_stmt::translate(int& tc){
 	std::cerr<<"jmpstmt"<<std::endl;
-	tc++;
 	std::cout<<std::endl;
 	print_tab(tc);std::cout<<what<<" ";
+	tc++;
 	if(body!=NULL){
 		std::cerr<<"tabcf"<<tc<<std::endl;
 		body->translate(tc);
 	}
-	std::cout<<std::endl;
 	tc--;
+	std::cout<<std::endl;
 }
 void unary_expr::translate(int& tc){
 	std::cerr<<"unaryexpr"<<std::endl;
@@ -208,9 +206,9 @@ void dir_abst_declarator::translate(int& tc){
 }
 void switch_stmt::translate(int& tc){
 	std::cerr<<"switchstmt"<<std::endl;
-	//std::cout<<what;
-	std::cout<<"switch:";
-	task->translate(tc);
+	if(task!=NULL){
+		task->translate(tc);
+	}
 }
 void decl_specs::translate(int& tc){
 	std::cerr<<"declspecs"<<std::endl;
@@ -227,13 +225,10 @@ void stmt_list::translate(int& tc){
 	std::cerr<<"stmtlist"<<std::endl;
 	for(int i=0; i<v.size();i++){
 	 if(v[i]!=NULL){
-		 std::cerr<<"stmtl vec: ";
 		(v[i])->translate(tc);
-
 	 }
 	 std::cout<<std::endl;
 	}
-
 }
 void expr_list::translate(int& tc){
 	std::cerr<<"exprlist"<<std::endl;
@@ -249,7 +244,7 @@ void expr_list::translate(int& tc){
 void type_list::translate(int& tc){
 	std::cerr<<"typelist"<<std::endl;
 	for(int i=0;i<v.size();i++){
-		(v[i])->translate(tc);
+		print_tab(tc);(v[i])->translate(tc);
 	}
 }
 void string_list::translate(int& tc){
@@ -260,6 +255,7 @@ void string_list::translate(int& tc){
 }
 void d_declarator::translate(int& tc){
 	std::cerr<<"ddec"<<std::endl;
+	print_tab(tc);
 	if(dd!=NULL){
 		dd->translate(tc);
 	}
@@ -273,7 +269,7 @@ void d_declarator::translate(int& tc){
 void para_t_list::translate(int& tc){
 	std::cerr<<"p_t_list"<<std::endl;
 	if(list!=NULL){
-		list->translate(tc);
+		print_tab(tc);list->translate(tc);
 	}
 	std::cout<<comma<<ellipses;
 }
@@ -310,7 +306,7 @@ void ifelse_stmt::translate(int& tc){
 	std::cout<<"(";
 	condition->translate(tc);
 	std::cout<<"):"<<std::endl;
-		tc++;
+	tc++;
 	print_tab(tc);body->translate(tc);
 	tc--;
 	if(else_body!=NULL){
@@ -322,32 +318,14 @@ void ifelse_stmt::translate(int& tc){
 }
 void while_stmt::translate(int& tc){
 	std::cerr<<"whilestmt"<<std::endl;
-	std::cout<<"while ";
 	std::cout<<"(";
 	condition->translate(tc);
-	std::cout<<"):"<<std::endl;
+	tc++;
 	if(body!=NULL){
 		body->translate(tc);
 	}
-	std::cout<<std::endl;
-}
-void for_stmt::translate(int& tc){
-	std::cerr<<"forstmt"<<std::endl;
-	std::cout<<"for ";
-	tc++;
-	if(start!=NULL){
-		start->translate(tc);
-	}
-	if(end!=NULL){
-		end->translate(tc);
-	}
-	if(alter!=NULL){
-		alter->translate(tc);
-	}
-	if(task!=NULL){
-		task->translate(tc);
-	}
 	tc--;
+	std::cout<<std::endl;
 }
 
 //---------declarations
@@ -361,23 +339,26 @@ void function_definition::translate(int& tc){
 		params->translate(tc);
 	}
 	std::cout<<":"<<std::endl;
+	for(int i=0;i++;i<global_var.size()){
+		std::cout<<"global "<<global_var[i]<<std::endl;
+	}
+	tc++;
 	if(body!=NULL){
 		body->translate(tc);
 		std::cout<<std::endl;
 	}
+	tc--;
 }
 
 void decl_list::translate(int& tc){
 	std::cerr<<"decllist"<<std::endl;
-
 	for(int i=0;i<v.size();i++){
-		if(tc==0){
-			std::cout<<"global ";
-		}
+		print_tab(tc);
 		if(v[i]!=NULL){
 			v[i]->translate(tc);
 		}
 	}
+	std::cout<<std::endl;
 };
 void p_declarator::translate(int& tc){
 	std::cerr<<"pdeclarator"<<std::endl;
@@ -385,6 +366,7 @@ void p_declarator::translate(int& tc){
 	std::cout<<"pdec: ->";
 }
 void print_tab(int x){
+	std::cerr<<"			current tab="<<x<<std::endl;
 	for(int i=0;i<x;i++){
 		std::cout<<"	";
 	}

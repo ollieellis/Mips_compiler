@@ -1,10 +1,10 @@
 def function(a,b):
-if (a<b):
-	a=a-1
-	if (b<a):
-		b=b+3
-		if (a==b):
-			
+	if (a<b):
+		a=a-1
+		if (b<a):
+			b=b+3
+			if (a==b):
+				
 				return a*b
 
 
