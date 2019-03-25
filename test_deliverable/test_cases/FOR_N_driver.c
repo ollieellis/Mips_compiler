@@ -1,4 +1,4 @@
-int fn();
+int for_loop();
 int main(){
-	return fn();
+	return for_loop();
 }

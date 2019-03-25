@@ -1,4 +1,7 @@
-int rec();
+int recursion(int a);
+
 int main(){
-	return rec(2,1);
+	int a=2;
+	a = recursion(a);
+	return a;
 }

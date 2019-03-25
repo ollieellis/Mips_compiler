@@ -1,4 +1,4 @@
-int ief();
+int if_else_fasle();
 int main(){
-	return ief();
+	return if_else_fasle();
 }

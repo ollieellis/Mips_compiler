@@ -1,9 +1,10 @@
 int iet(){
+	int x=1;
 	if(1){
-		return 0;
+		x=0;
 	}
 	else{
-		return -1;
+		return -1; //fine as we cannot enter this branch
 	}
-	return 1;
+	return x;
 }

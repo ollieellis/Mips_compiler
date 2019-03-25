@@ -1,9 +1,10 @@
-int ief(){
+int if_else_fasle(){
+	int x=-1; //again assignment
 	if(0){
-		return -1;
+		return -1; //fine entering this branhc is an imediate fail
 	}
 	else{
-		return 0;
+		x=0;
 	}
-	return 1;
+	return x; //oof 
 }

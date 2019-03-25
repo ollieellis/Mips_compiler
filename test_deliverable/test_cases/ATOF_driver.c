@@ -1,4 +1,4 @@
-int atf();
+int atof();
 int main(){
-	return atf();
+	return atof();
 }

@@ -1,4 +1,4 @@
-int ift();
+int if_true();
 int main(){
-	return ift();
+	return if_true();
 }

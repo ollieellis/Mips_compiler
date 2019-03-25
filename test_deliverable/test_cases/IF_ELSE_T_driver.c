@@ -1,4 +1,4 @@
-int iet();
+int if_else_true();
 int main(){
-	return iet();
+	return if_else_true();
 }

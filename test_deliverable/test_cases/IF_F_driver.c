@@ -1,4 +1,4 @@
-int iff();
+int if_false();
 int main(){
-	return iff();
+	return if_false();
 }

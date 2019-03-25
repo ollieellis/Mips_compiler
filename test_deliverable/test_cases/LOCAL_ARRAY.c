@@ -1,10 +1,10 @@
-int la(){
-	int array[2]={1,2};
-	a=array[0];
-	b=array[1];
-	a=b-a;
-	a=b-a;
-	array[0]=a;
-	b=array[0];
-	return b;
+int local_array(){
+	int array[2]; //length 3 so the two elements are not adjacent
+	array[0] = 1;
+	array[2] = 2;
+
+	int x;
+	int x = array[2] - array[0]; //not assigned to decrease the symtab
+	x = x-1;
+	return x;
 }

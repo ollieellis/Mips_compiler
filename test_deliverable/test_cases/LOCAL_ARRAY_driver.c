@@ -1,4 +1,4 @@
-int la();
+int local_array();
 int main(){
 	return la();
 }
