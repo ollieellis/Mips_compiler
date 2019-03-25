@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 std::vector<std::string> global_var;
+static bool globalf=false;
 void print_tab(int x);
 void constant::translate(int& tc){//ostream printing?
 	std::cerr<<"const"<<value<<std::endl;
@@ -11,8 +12,9 @@ void constant::translate(int& tc){//ostream printing?
 }
 void identifier::translate(int& tc){
 	std::cerr<<"id"<<value<<std::endl;
-	if(tc==0){
+	if(globalf){
 		global_var.push_back(value);
+		globalf=false;
 	}
   std::cout<<value;
 }
@@ -102,12 +104,18 @@ void array::translate(int& tc){
 	std::cout<<"]";
 };
 void member::translate(int& tc){
-		std::cerr<<"member"<<std::endl;
+	std::cerr<<"member"<<std::endl;
 	std::cout<<"member trans";
 };
 void ideclarator::translate(int& tc){
 	std::cerr<<"ideclarator"<<std::endl;
 	print_tab(tc);
+	if(tc==0){
+		globalf=true;
+	}
+	else{
+		globalf=false;
+	}
 	if(var!=NULL){
 		var->translate(tc);
 	}
@@ -142,13 +150,13 @@ std::cerr<<"typename"<<std::endl;
 }
 //statements------------------
 void comp_stmt::translate(int& tc){
-	std::cerr<<"compstmt";
+	std::cerr<<"compstmt"<<std::endl;
 	if(body!=NULL){
 		std::cerr<<"comp_body: ";
 		body->translate(tc);
 	}
 	if(extra!=NULL){
-		std::cerr<<"comp_extra: ";
+		std::cerr<<"comp_extra: "<<std::endl;
 		extra->translate(tc);
 	}
 	std::cout<<std::endl;
@@ -234,7 +242,7 @@ void expr_list::translate(int& tc){
 	std::cerr<<"exprlist"<<std::endl;
 	for(int i=0;i<v.size();i++){
 		if(v[i]!=NULL){
-			(v[i])->translate(tc);
+			print_tab(tc);(v[i])->translate(tc);
 		}
 		if((v.size()>1)&&(i!=(v.size()-1))){
 			std::cout<<",";
@@ -339,8 +347,9 @@ void function_definition::translate(int& tc){
 		params->translate(tc);
 	}
 	std::cout<<":"<<std::endl;
-	for(int i=0;i++;i<global_var.size()){
-		std::cout<<"global "<<global_var[i]<<std::endl;
+	std::cerr<<"GsizeG"<<global_var.size()<<std::endl;
+	for(int i=0;i<global_var.size();i++){
+		std::cout<<"	global "<<global_var[i]<<std::endl;
 	}
 	tc++;
 	if(body!=NULL){
@@ -353,7 +362,6 @@ void function_definition::translate(int& tc){
 void decl_list::translate(int& tc){
 	std::cerr<<"decllist"<<std::endl;
 	for(int i=0;i<v.size();i++){
-		print_tab(tc);
 		if(v[i]!=NULL){
 			v[i]->translate(tc);
 		}
