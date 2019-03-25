@@ -1,9 +1,11 @@
-int f()
-{
-    return 10;
-}
-
 int main()
 {
-    return f();
+		int x;
+		if(0){
+			x=x+1;
+		}
+		else{
+			x=3;
+		}
+    return 0;
 }

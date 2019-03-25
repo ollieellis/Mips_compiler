@@ -1,13 +1,16 @@
-def f():
-
-	return 10
-
-
-
-
 def main():
+	x=0
 
-	return f()
+
+	if (0):
+		x=x+1
+
+	else 
+		x=3
+
+
+
+	return 0
 
 
 

@@ -323,7 +323,7 @@ void ifelse_stmt::translate(int& tc){
 	body->translate(tc);
 	tc--;
 	if(else_body!=NULL){
-		print_tab(tc);std::cout<<"else ";
+		print_tab(tc);std::cout<<"else "<<std::endl;
 		tc++;
 		else_body->translate(tc);
 		tc--;
@@ -331,8 +331,10 @@ void ifelse_stmt::translate(int& tc){
 }
 void while_stmt::translate(int& tc){
 	std::cerr<<"whilestmt"<<std::endl;
+	print_tab(tc);std::cout<<"while ";
 	std::cout<<"(";
 	condition->translate(tc);
+	std::cout<<"):"<<std::endl;
 	tc++;
 	if(body!=NULL){
 		body->translate(tc);

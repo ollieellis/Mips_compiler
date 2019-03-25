@@ -4,7 +4,7 @@ Date,Effort,Developers,Milestones
 26/02/2019,,,Finish labs for preperation
 06/03/2019,1 hour approx,,basic lexer
 16/03/2019,1 hour approx,,basic parser
-,,,basic ast
+25/03/2019,100 hours approx,,basic ast
 ,,,basic compiler codegen
 06/03/2019,1 hour approx,,intermediate lexer
 16/03/2019,1 hour approx,,intermediate parser
@@ -14,4 +14,4 @@ Date,Effort,Developers,Milestones
 16/03/2019,1 hour approx,,advanced parser
 ,,,advanced ast
 ,,,advanced codegen for compiler
-,,,translator
+25/03/2019,10 hours approx,,translator
