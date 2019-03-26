@@ -78,10 +78,10 @@ void binary_expr::translate(int& tc){
 		L->translate(tc);
 	}
 	if(op=="&&"){
-		op="and";
+		op=" and ";
 	}
 	if(op=="||"){
-		op="or";
+		op=" or ";
 	}
 	std::cout<<op;
 	if(R!=NULL){

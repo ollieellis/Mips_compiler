@@ -95,12 +95,12 @@ variable {nondigit}[a-zA-Z0-9_]*
 "<="    { yylval.string=new std::string(yytext);return T_LTE;}
 [!][^=] { yylval.string=new std::string(yytext);return T_NOT;}
 
-[&]    { return T_BWAND; }
-[\^]    { return T_BWXOR; }
-[|]    { return T_BWOR;  }
-[~]    { return T_BWNOT; }
-"<<"   { return T_LSHIFT;}
-">>"   { return T_RSHIFT;}
+[&]    { yylval.string=new std::string(yytext);return T_BWAND; }
+[\^]    { yylval.string=new std::string(yytext);return T_BWXOR; }
+[\|]    { yylval.string=new std::string(yytext);return T_BWOR;  }
+[~]    { yylval.string=new std::string(yytext);return T_BWNOT; }
+"<<"   { yylval.string=new std::string(yytext);return T_LSHIFT;}
+">>"   { yylval.string=new std::string(yytext);return T_RSHIFT;}
 
 
 auto       {  yylval.string=new std::string(yytext);return T_AUTO;}

@@ -13,6 +13,9 @@ all : $(LINK_TARGET)
 run : $(LINK_TARGET)
 	bin/c_compiler --translate empty.c -o out.py
 
+go : $(LINK_TARGET)
+	bin/c_compiler -S empty.c -o result.s
+
 debug : $(LINK_TARGET)
 	gdb --args bin/c_compiler --translate empty.c d -o out.py
 

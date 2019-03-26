@@ -1,7 +1,12 @@
 def main():
-    return 10
 
-# Boilerplat
+	return 10
+
+
+
+
+
+# Boilerplate
 if __name__ == "__main__":
     import sys
     ret=main()

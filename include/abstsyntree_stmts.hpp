@@ -16,7 +16,7 @@ class stmt_list: public node{
 		stmt_list(nodePtr in){ push(in);}
 		void push(nodePtr in){ v.push_back(in); };
 		void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"stmt_list"<<std::endl;};
 };
 class while_stmt: public node{
@@ -25,7 +25,7 @@ class while_stmt: public node{
 		nodePtr condition;
 		while_stmt(nodePtr fact, nodePtr body): condition(fact), body(body) {};
 		virtual void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"while"<<std::endl;};
 };
 class do_stmt: public node{
@@ -66,7 +66,7 @@ class switch_stmt: public node{
 	public:
 		switch_stmt(nodePtr e, nodePtr t): task(t), extra(t) {};
 		void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"switch"<<std::endl;};
 };
 class jump_stmt: public node{
@@ -75,7 +75,7 @@ class jump_stmt: public node{
 		nodePtr body;
 		jump_stmt(std::string type, nodePtr b): what(type), body(b){};
 		void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"jump"<<std::endl;};
 };
 class iter_stmt: public node{
@@ -93,7 +93,7 @@ class comp_stmt: public node{
 	public:
 		comp_stmt(nodePtr b, nodePtr e): extra(e), body(b){};
 		void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"comp_s"<<std::endl;};
 };
 class expr_stmt: public node{
@@ -110,7 +110,7 @@ class label_stmt: public node{
 		nodePtr option;
 		label_stmt(std::string l, nodePtr f, nodePtr o): label(l), fact(f), option(o){};
 		void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"label_s"<<std::endl;};
 };
 //----------------

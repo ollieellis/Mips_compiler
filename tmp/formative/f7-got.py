@@ -1,7 +1,17 @@
-intdef main():
-x=1    return x
+x=0
 
-# Boilerplat
+
+def main():
+	global x
+	x=1
+
+	return x
+
+
+
+
+
+# Boilerplate
 if __name__ == "__main__":
     import sys
     ret=main()

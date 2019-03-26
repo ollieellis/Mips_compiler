@@ -1,7 +1,16 @@
 def main():
-intz=7    return z
+	z=0
 
-# Boilerplat
+
+	z=7
+
+	return z
+
+
+
+
+
+# Boilerplate
 if __name__ == "__main__":
     import sys
     ret=main()

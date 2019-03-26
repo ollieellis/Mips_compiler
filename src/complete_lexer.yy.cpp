@@ -1113,32 +1113,32 @@ YY_RULE_SETUP
 case 41:
 YY_RULE_SETUP
 #line 98 "src/complete_lexer.flex"
-{ return T_BWAND; }
+{ yylval.string=new std::string(yytext);return T_BWAND; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 99 "src/complete_lexer.flex"
-{ return T_BWXOR; }
+{ yylval.string=new std::string(yytext);return T_BWXOR; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 100 "src/complete_lexer.flex"
-{ return T_BWOR;  }
+{ yylval.string=new std::string(yytext);return T_BWOR;  }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 101 "src/complete_lexer.flex"
-{ return T_BWNOT; }
+{ yylval.string=new std::string(yytext);return T_BWNOT; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
 #line 102 "src/complete_lexer.flex"
-{ return T_LSHIFT;}
+{ yylval.string=new std::string(yytext);return T_LSHIFT;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 103 "src/complete_lexer.flex"
-{ return T_RSHIFT;}
+{ yylval.string=new std::string(yytext);return T_RSHIFT;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP

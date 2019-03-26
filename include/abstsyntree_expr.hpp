@@ -65,7 +65,7 @@ class seperator_expr: public node{
 		seperator_expr(nodePtr lval, nodePtr rval): L(lval), R(rval) {}
 		void translate(int& tc);
 		void print(){std::cerr<<"seperator_expr"<<std::endl;};
-		////void compile(translate_context &context);
+		void compile(translate_context &context);
 };
 //-----------------------
 
@@ -95,6 +95,7 @@ class unary_expr: public node{
     nodePtr S;
 		unary_expr(nodePtr oper, nodePtr sideval): op(oper),S(sideval) {}
 		void translate(int& tc);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"unary_expr"<<std::endl;};
 };
 class incr: public node{
@@ -102,6 +103,7 @@ class incr: public node{
     nodePtr S;
 		incr(nodePtr sideval): S(sideval) {}
 		void translate(int& tc);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"incr"<<std::endl;};
 };
 class decr: public node{
@@ -109,6 +111,7 @@ class decr: public node{
     nodePtr S;
 		decr(nodePtr sideval): S(sideval) {}
 		void translate(int& tc);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"decr"<<std::endl;};
 };
 class member: public node{
@@ -118,7 +121,7 @@ class member: public node{
 		member(nodePtr l, std::string r): object(l),subject(r){}
 		void translate(int& tc);
 		void print(){std::cerr<<"member"<<std::endl;};
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 };
 //constant_expression? not sure if needed
 class function_name: public node{
@@ -130,7 +133,7 @@ class function_name: public node{
 		function_name(nodePtr n, nodePtr a, std::string lval, std::string rval): name(n), args(a),lb(lval),rb(rval){}
 		void translate(int& tc);
 		void print(){std::cerr<<"function_name"<<std::endl;};
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 };
 class type_name: public node{
 public:
@@ -139,7 +142,7 @@ public:
 	type_name(nodePtr left, nodePtr right): l(left), r(right){}
 	void translate(int& tc);
 	void print(){std::cerr<<"type_name"<<std::endl;};
-	//void compile(translate_context &context);
+	void compile(translate_context &context);
 };
 class param_decl: public node{
 public:
@@ -148,7 +151,7 @@ public:
 	param_decl(nodePtr left, nodePtr right): l(left), r(right){}
 	void translate(int& tc);
 	void print(){std::cerr<<"param_decl"<<std::endl;};
-	//void compile(translate_context &context);
+	void compile(translate_context &context);
 };
 //-----------------------operators
 
@@ -158,7 +161,7 @@ class unary_op: public node{
 		unary_op(std::string oper): op(oper){}
 		void translate(int& tc);
 		void print(){std::cerr<<"unary_op"<<std::endl;};
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 };
 class para_t_list: public node{
 	public:
@@ -213,7 +216,7 @@ class type_qual: public node{
 		type_qual(std::string q): qual(q) {}
 		void translate(int& tc);
 		void print(){std::cerr<<"type_qual"<<std::endl;};
-		//void compile(translate_context &context);
+	  void compile(translate_context &context);
 };
 class array: public node{
 	nodePtr name;
@@ -222,7 +225,7 @@ class array: public node{
 		array(nodePtr lval, nodePtr rval): name(lval), args(rval) {}
 		void translate(int& tc);
 		void print(){std::cerr<<"array"<<std::endl;};
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 };
 class init: public node{
 	public:
@@ -252,7 +255,7 @@ class translation_unit: public node{
 		translation_unit(nodePtr lval, nodePtr rval): l(lval), r(rval) {}
 		void translate(int& tc);
 		void print(){std::cerr<<"translation_unit"<<std::endl;};
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 };
 
 

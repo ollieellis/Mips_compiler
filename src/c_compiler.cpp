@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <stack>
 
 int main(int argc, char *argv[]){
 
@@ -22,13 +23,27 @@ int main(int argc, char *argv[]){
 		const nodePtr ast=parseAST(src);
 		extern bool do_main;
 		translate_context context;
+
 		//ast->print();
-		std::cerr<<"here translation"<<std::endl;
+		//for (int i=0; i<5; ++i) stack.push(i);
+		std::vector<int> fill(100, 0);
+		context.label_no=0;
+		context.label_no=0;
+		context.reg_no=0;
+		context.current_scope_index=0;
+		context.current_scope=fill;//100 scope levels
+		context.is_label=false;
+		context.get_condition=false;
+
 		if(std::string(argv[1]) == "--translate"){
 			std::cerr<<"start translation"<<std::endl;
 			ast->translate(tabc);
 		}
-		if(do_main){
+		else if(std::string(argv[1]) == "-S"){
+			std::cerr<<"start compilation"<<std::endl;
+			ast->compile(context);
+		}
+		if(do_main&&(std::string(argv[1]) == "--translate")){
 			std::cout<<std::endl;
 			std::cout<<"# Boilerplate"<<std::endl;
 			std::cout<<"if __name__ == "<<'"'<<"__main__"<<'"'<<":"<<std::endl;
@@ -36,11 +51,7 @@ int main(int argc, char *argv[]){
 			std::cout<<"    ret=main()"<<std::endl;
 			std::cout<<"    sys.exit(ret)";
 		}
-		else if(std::string(argv[1]) == "-S"){
-			std::cout<<"start compilation"<<std::endl;
-			ast->compile(context);
-			std::cout<<"start"<<std::endl;
-		}
+
 
     return 0;
 }

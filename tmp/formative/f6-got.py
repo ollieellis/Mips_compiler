@@ -1,7 +1,17 @@
 def main():
-intx=5x=x*x    return x
+	x=0
 
-# Boilerplat
+
+	x=5
+	x=x*x
+
+	return x
+
+
+
+
+
+# Boilerplate
 if __name__ == "__main__":
     import sys
     ret=main()

@@ -4,16 +4,27 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <list>
+
 //have removed all struct and union, and enum from parser
 
-class translate_context{
+class translate_context{//just use unchangeable registers pluse two
 	public:
     std::vector<int32_t> params;
-    std::map<std::string,int32_t> symtab;
-		std::vector<uint32_t> regs;//just use unchangeable registers pluse two
+    std::unordered_map< int, std::unordered_map< std::string, std::vector<int> > > symtab;
+		//symtab outer map key = scope
+		//symtab inner map key = scope
+		//inner vectorindex/ 0:scope_no 1: storage offset
+		bool is_label;
+		int label_no;
+		bool get_condition;
+		int current_offset;
+		std::vector<int> current_scope;
+		int current_scope_index;
+		std::string condition;
+		int reg_no;
 };
 
 class node;

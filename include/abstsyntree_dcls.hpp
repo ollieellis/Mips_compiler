@@ -14,7 +14,7 @@ class declarator: public node{
 			nodePtr q;
 			declarator(nodePtr in): q(in){};
 			virtual void translate(int& tc);
-			//void compile(translate_context &context);
+			void compile(translate_context &context);
 			void print(){std::cerr<<"declarator"<<std::endl;};
 };
 class d_declarator: public node{
@@ -26,7 +26,7 @@ class d_declarator: public node{
 			d_declarator(nodePtr d,nodePtr a,std::string l,std::string r): dd(d),args(a), lb(l),rb(r){};
 			void translate(int& tc);
 			void print(){std::cerr<<"d_declarator"<<std::endl;};
-			//void compile(translate_context &context);
+			void compile(translate_context &context);
 };
 class p_declarator: public node{
 	public:
@@ -34,7 +34,7 @@ class p_declarator: public node{
 			p_declarator(nodePtr in): q(in){};
 			virtual void translate(int& tc);
 			void print(){std::cerr<<"p_declarator"<<std::endl;};
-			//void compile(translate_context &context);
+			void compile(translate_context &context);
 };
 class decl_list: public node{
 	public:
@@ -43,7 +43,7 @@ class decl_list: public node{
 			void push(nodePtr in){v.push_back(in);}
 			virtual void translate(int& tc);
 			void print(){std::cerr<<"decl_list"<<std::endl;};
-			//void compile(translate_context &context);
+			void compile(translate_context &context);
 };
 //declarations---------------------------------------------------
 class function_definition: public node{
@@ -57,7 +57,7 @@ class function_definition: public node{
 		bool fact;
 		function_definition(nodePtr t, nodePtr n, nodePtr p, nodePtr b, bool f): type(t),name(n), params(p), body(b), fact(f){};
 		virtual void translate(int& tc);
-	  void compile(translate_context &context);
+	  virtual void compile(translate_context &context);
 		void print(){std::cerr<<"funcdef"<<std::endl;};
 };
 class external_dec: public node{
@@ -68,7 +68,7 @@ class external_dec: public node{
 		nodePtr body;
 		external_dec(nodePtr t, nodePtr n,nodePtr p, nodePtr b): type(t),name(n), params(p), body(b){};
 		virtual void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"external_dec"<<std::endl;};
 };
 
@@ -78,7 +78,7 @@ class init_decl: public node{
 		nodePtr body;
 		init_decl(nodePtr n, nodePtr b): name(n), body(b){};
 		virtual void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"init_decl"<<std::endl;};
 };
 class ideclarator: public node{
@@ -86,7 +86,7 @@ class ideclarator: public node{
 		nodePtr var;
 		ideclarator(nodePtr x): var(x){};
 		void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"ideclarator"<<std::endl;};
 };
 
@@ -107,7 +107,7 @@ class init_decl_list: public node{
 		nodePtr body;
 		init_decl_list(nodePtr n, nodePtr b): name(n), body(b){};
 		virtual void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"init_decl_list"<<std::endl;};
 };
 class decl_specs: public node{
@@ -116,7 +116,7 @@ class decl_specs: public node{
 		nodePtr r;
 		decl_specs(nodePtr nl, nodePtr nr): l(nl), r(nr){};
 		virtual void translate(int& tc);
-		//void compile(translate_context &context);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"decl_specs"<<std::endl;};
 };
 
