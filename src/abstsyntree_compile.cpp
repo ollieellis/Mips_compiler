@@ -4,16 +4,21 @@
 #include "abstsyntree.hpp"
 #include <string>
 #include <vector>
+
+void GetTempReg(int& r);
+void ReplaceTempReg(int& r);
 //static int makeNameUnq=0;
 //use r1 and r2 names each time
 //nodes need functions in translate and compile
 void  constant::compile(translate_context& context){//ostream printing?
-
-	std::cout<<"li      "<<", "<<value;
+	std::cout<<"li      "<<context.t_reg_no<<", "<<value;
 }
 void identifier::compile(translate_context& context){
 	if(context.is_label){
   	std::cout<<value;
+	}
+	else if(value=="return"){
+		context.get_returnval=true;
 	}
 	else{
 		//get variable offset
@@ -35,24 +40,27 @@ void stmt_list::compile(translate_context& context){
 void binary_expr::compile(translate_context& context){
 	L->compile(context);
 	R->compile(context);
+	std::cout<<"\tnop     "<<std::endl;
 
- if(op=="+"){
-	 std::cout<<"lw      "<<std::endl;//$3,8($fp)
-	 std::cout<<"lw      "<<std::endl;//$2,8($fp)
-	 std::cout<<"nop     "<<std::endl;
-	 std::cout<<"addu    "<<std::endl;
-
+ if(op=="+"){//addu or addiu?
+	 std::cout<<"\taddu    "<<context.t_reg_no<<" "<<context.t_reg_no<<std::endl;
+	  std::cout<<"\tsw      $2,24($fp)"<<" "<<context.t_reg_no<<std::endl;
  }
  if(op=="-"){
-	 std::cout<<"lw      "<<std::endl;
-	 std::cout<<"lw      "<<std::endl;
-	 std::cout<<"nop     "<<std::endl;
-	 std::cout<<"addu    "<<std::endl;
+	 std::cout<<"\tsubu    "<<context.t_reg_no<<" "<<context.t_reg_no<<std::endl;
  }
  if(op=="*"){
-
+	 std::cout<<"\tmult    $3,$2"<<std::endl;
+	 std::cout<<"\tsw      "<<"context.getOffset()"<<"($30)"<<std::endl;
  }
  if(op=="/"){
+	 GetTempReg(context.t_reg_no);
+	 int under = context.t_reg_no;
+
+
+	  std::cout<<"\tbne    "<<under<<",$0"<<std::endl;
+		std::cout<<"\tbne    "<<under<<",$0"<<std::endl;
+		std::cout<<"\tbreak   7"<<std::endl;
 
  }
  /*
@@ -102,10 +110,14 @@ void binary_expr::compile(translate_context& context){
 
  }
  if(op=="<<"){
-
+	 std::cout<<"\tlw      "<<"$2,28($fp)"<<std::endl;
+	 std::cout<<"\tnop"<<std::endl;
+	 std::cout<<"\tsll     "<<"$2,$2,1"<<std::endl;
+	 std::cout<<"\tsw      "<<"$2,24($fp)"<<std::endl;
  }
  if(op==">>"){
-
+	 std::cout<<"\tsra     "<<"$2,$2,1"<<std::endl;
+	 std::cout<<"\tsw      "<<"$2,24($fp)"<<std::endl;
  }
 }
 void seperator_expr::compile(translate_context &context){
@@ -124,7 +136,19 @@ void unary_expr::compile(translate_context &context){
 
 }
 void jump_stmt::compile(translate_context &context){
+	std::cerr<<"jmpstmt"<<std::endl;
+	std::cout<<std::endl;
+	//std::cout<<what<<": "<<std::endl;
+	if(body!=NULL){
 		body->compile(context);
+	}
+	if(what=="return"){
+		std::cout<<"\tli      $2,"<<context.returnval<<std::endl;
+		std::cout<<"\tmove    $sp,$fp"<<std::endl;
+		std::cout<<"\tlw      $fp,4($sp)"<<std::endl;
+		std::cout<<"\taddiu   $sp,$sp,8"<<std::endl;
+	}
+	std::cout<<std::endl;
 }
 void while_stmt::compile(translate_context &context){
 	int current_ln = context.label_no;//current label number
@@ -136,13 +160,14 @@ void while_stmt::compile(translate_context &context){
 	std::cout<<"lw ";//get free reg
 	condition->compile(context);std::cout<<","<<"right variable offset"<<"($30)"<<std::endl;
 	body->compile(context);std::cout<<"($30)"<<std::endl;
-	std::cout<<"b       $L"<<current_ln<<std::endl;
-	std::cout<<"nop"<<std::endl;
+	std::cout<<"\tb       $L"<<current_ln<<std::endl;
+	std::cout<<"\tnop"<<std::endl;
 }
 void type_qual::compile(translate_context& context){
 
 
 }
+
 void array::compile(translate_context& context){
 
 }
@@ -165,7 +190,7 @@ void type_name::compile(translate_context& context){
 void comp_stmt::compile(translate_context& context){
 	std::cerr<<"compstmt"<<std::endl;
 	if(body!=NULL){
-		std::cerr<<"comp_body: ";
+		std::cerr<<"comp_body: "<<std::endl;
 		body->compile(context);
 	}
 	if(extra!=NULL){
@@ -178,7 +203,8 @@ void comp_stmt::compile(translate_context& context){
 }
 
 void label_stmt::compile(translate_context& context){
-
+	context.is_label=true;
+	context.is_label=false;
 }
 void switch_stmt::compile(translate_context& context){
 
@@ -199,9 +225,11 @@ void declarator::compile(translate_context& context){
 
 }
 void d_declarator::compile(translate_context& context){
+	std::cerr<<"ddec"<<std::endl;
 	if(dd!=NULL){
 		dd->compile(context);
 	}
+
 	if(args!=NULL){
 		args->compile(context);
 	}
@@ -213,55 +241,43 @@ void external_dec::compile(translate_context& context){
 
 }
 void translation_unit::compile(translate_context& context){
-
 }
 void function_definition::compile(translate_context &context){
+	std::cout<<".align  2"<<std::endl;
+	std::cout<<".globl"<<std::endl;
+
 	std::cerr<<"funcdef"<<std::endl;
 	if(name!=NULL){
 		context.is_label=true;
-		name->compile(context);
+		std::cout<<".type"<<std::endl;name->compile(context);
 	}
 
 	std::cout<<":"<<std::endl;
-
-
+	std::cout<<"\taddiu   $sp,$sp,"<<-256<<std::endl;//hardcoded, adjust number somehow?
+	std::cout<<"\tsw      $fp,252($sp)"<<std::endl;//why?
+	std::cout<<"\tmove    $fp,$sp"<<std::endl;
 	if(params!=NULL){
 		params->compile(context);
+		for(int i=1;i<=context.para_no;i++){//to mult w/4
+			std::cout<<"\tsw      "<<context.t_reg_no<<","<<4*i<<"($fp)"<<std::endl;//for ints?
+		}
+		std::cout<<"\tmove    $sp,$fp"<<std::endl;
 	}
-	std::cout<<"\taddiu   $sp,$sp,-"<<8<<std::endl;
-	std::cout<<"\tsw      $fp,4($sp)"<<std::endl;
-	std::cout<<"\tmove    $fp,$sp"<<std::endl;
-
-	/*
-	std::cout<<"\tsw      $4,8($fp)"<<std::endl;
-	std::cout<<"\tsw      $5,12($fp)"<<std::endl;
-	std::cout<<"\tsw      $6,16($fp)"<<std::endl;
-	*/
 	if(body!=NULL){
 			body->compile(context);
 	}
-	std::cout<<"j $31"<<std::endl;
-	std::cout<<"nop";
+	std::cout<<"\tmove    $sp,$fp"<<std::endl;
+	std::cout<<"\tlw      $fp,252($sp)"<<std::endl;
+	std::cout<<"\taddiu   $sp,$sp,256"<<std::endl;
+	std::cout<<"\tj $31"<<std::endl;
+	std::cout<<"\tnop";
 }
 void GetTempReg(int& r){
 	r++;
-	if(r>29){
+	if((r>15)|(r<8)){
 		std::exit(-1);
 	}
 }
 void ReplaceTempReg(int& r){
-	if(r){
-		std::exit(-1);
-	}
-}
-void GetSavedReg(int& r){
-	r++;
-	if(r>29){
-		std::exit(-1);
-	}
-}
-void ReplaceSavedReg(int& r){
-	if(r){
-		std::exit(-1);
-	}
+	r--;
 }

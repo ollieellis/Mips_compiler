@@ -1,11 +1,4 @@
-int main(int a, int b){
+int main(){
 
-	int one;
-	{
-		int two;
-	}
-	{
-		int three;
-	}
-	return 0;
+	return 1;
 }

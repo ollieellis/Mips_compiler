@@ -2312,7 +2312,7 @@ void yyfree (void * ptr )
 
 void yyerror (char const *s)
 {
-  fprintf (stderr, "Parse error : %s\n", s);
+  fprintf (stderr, "flex error : %s\n", s);
   exit(1);
 }
 

@@ -140,6 +140,6 @@ while      {  yylval.string=new std::string(yytext);return T_WHILE;}
 %%
 void yyerror (char const *s)
 {
-  fprintf (stderr, "Parse error : %s\n", s);
+  fprintf (stderr, "flex error : %s\n", s);
   exit(1);
 }

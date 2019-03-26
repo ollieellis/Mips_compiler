@@ -53,3 +53,4 @@ clean :
 	-rm -f src/*.yy.cpp
 	-rm -f src/*.output
 	-rm -f *.py
+	-rm -f *.s

@@ -21,10 +21,18 @@ class translate_context{//just use unchangeable registers pluse two
 		int label_no;
 		bool get_condition;
 		int current_offset;
+		int para_no;
 		std::vector<int> current_scope;
 		int current_scope_index;
 		std::string condition;
 		int reg_no;
+		int r_reg_no;//return
+		int t_reg_no;//temp
+		int s_reg_no;//saved
+		int a_reg_no;//arg
+
+		bool get_returnval;
+		int returnval;
 };
 
 class node;
