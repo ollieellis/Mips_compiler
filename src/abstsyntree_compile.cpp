@@ -144,9 +144,7 @@ void jump_stmt::compile(translate_context &context){
 	}
 	if(what=="return"){
 		std::cout<<"\tli      $2,"<<context.returnval<<std::endl;
-		std::cout<<"\tmove    $sp,$fp"<<std::endl;
-		std::cout<<"\tlw      $fp,4($sp)"<<std::endl;
-		std::cout<<"\taddiu   $sp,$sp,8"<<std::endl;
+		std::cout<<"\tb       $L0"<<std::endl;
 	}
 	std::cout<<std::endl;
 }
@@ -243,13 +241,19 @@ void external_dec::compile(translate_context& context){
 void translation_unit::compile(translate_context& context){
 }
 void function_definition::compile(translate_context &context){
+	context.is_label=true;
+	//value to jump to on return context.current_ln
 	std::cout<<".align  2"<<std::endl;
-	std::cout<<".globl"<<std::endl;
-
+	std::cout<<".globl  ";
+	name->compile(context);std::cout<<std::endl;
+	std::cout<<".ent    ";
+	name->compile(context);std::cout<<std::endl;
+	std::cout<<".type   ";
+	name->compile(context);std::cout<<", @function"<<std::endl;
 	std::cerr<<"funcdef"<<std::endl;
 	if(name!=NULL){
 		context.is_label=true;
-		std::cout<<".type"<<std::endl;name->compile(context);
+		name->compile(context);
 	}
 
 	std::cout<<":"<<std::endl;
@@ -266,11 +270,12 @@ void function_definition::compile(translate_context &context){
 	if(body!=NULL){
 			body->compile(context);
 	}
+	std::cout<<"$L0:"<<std::endl;//to deal with multiple returns, automate their jump to here if they are executed
 	std::cout<<"\tmove    $sp,$fp"<<std::endl;
 	std::cout<<"\tlw      $fp,252($sp)"<<std::endl;
 	std::cout<<"\taddiu   $sp,$sp,256"<<std::endl;
 	std::cout<<"\tj $31"<<std::endl;
-	std::cout<<"\tnop";
+	std::cout<<"\tnop"<<std::endl;
 }
 void GetTempReg(int& r){
 	r++;

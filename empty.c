@@ -1,4 +1,3 @@
-int main(){
-
+int main(x){
 	return 1;
 }

@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 		//ast->print();
 		//for (int i=0; i<5; ++i) stack.push(i);
 		std::vector<int> fill(100, 0);
-		context.label_no=0;
+		context.label_no=1;//$L0 is for all returns jump to end
 		context.reg_no=2;
 		context.t_reg_no=8;
 		context.s_reg_no=16;

@@ -30,7 +30,6 @@ class translate_context{//just use unchangeable registers pluse two
 		int t_reg_no;//temp
 		int s_reg_no;//saved
 		int a_reg_no;//arg
-
 		bool get_returnval;
 		int returnval;
 };
