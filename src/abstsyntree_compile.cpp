@@ -13,7 +13,6 @@ void ReplaceTempReg(int& r);
 void  constant::compile(translate_context& context){//ostream printing?
 	std::cerr<<"const"<<context.get_returnval;
 	if(context.get_returnval){
-		std::cerr<<"ANDHERE";
 		context.returnval=value;
 	}
 	else{
@@ -22,13 +21,19 @@ void  constant::compile(translate_context& context){//ostream printing?
 }
 void identifier::compile(translate_context& context){
 	if(context.is_label){
-  	std::cout<<value;
+  	std::cout<<value;std::cout<<":"<<std::endl;
+		context.is_label=false;
 	}
-	else{
-		//get variable offset
-		if(context.get_returnval){
+	else if(context.get_symbol){
 
-		}
+		//search current_scope for right inner map
+		//search inner map for current variable
+		//get/create variable offset
+		//context.symtab;
+		std::vector<std::string> vattributes;
+	}
+	else if(context.get_returnval){
+		//get variable offset
 		std::vector<std::string> vattributes;
 	}
 }
@@ -48,6 +53,10 @@ void binary_expr::compile(translate_context& context){
 	L->compile(context);
 	R->compile(context);
 	std::cout<<"\tnop     "<<std::endl;
+	if(op=="="){//addu or addiu?
+ 	 std::cout<<"\taddu    "<<context.t_reg_no<<" "<<context.t_reg_no<<std::endl;
+ 	  std::cout<<"\tsw      $2,24($fp)"<<" "<<context.t_reg_no<<std::endl;
+  }
 
  if(op=="+"){//addu or addiu?
 	 std::cout<<"\taddu    "<<context.t_reg_no<<" "<<context.t_reg_no<<std::endl;
@@ -63,7 +72,6 @@ void binary_expr::compile(translate_context& context){
  if(op=="/"){
 	 GetTempReg(context.t_reg_no);
 	 int under = context.t_reg_no;
-
 
 	  std::cout<<"\tbne    "<<under<<",$0"<<std::endl;
 		std::cout<<"\tbne    "<<under<<",$0"<<std::endl;
@@ -148,6 +156,17 @@ void unary_op::compile(translate_context &context){
 void unary_expr::compile(translate_context &context){
 
 }
+void expr_list::compile(translate_context &context){
+	std::cerr<<"exprlist"<<std::endl;
+	for(int i=0;i<v.size();i++){
+		if(v[i]!=NULL){
+			(v[i])->compile(context);
+		}
+		if((v.size()>1)&&(i!=(v.size()-1))){
+			//std::cout<<",";
+		}
+	}
+}
 void jump_stmt::compile(translate_context &context){
 	std::cerr<<"jmpstmt"<<std::endl;
 	std::cout<<std::endl;
@@ -157,6 +176,7 @@ void jump_stmt::compile(translate_context &context){
 	}
 	//std::cout<<what<<": "<<std::endl;
 	if(body!=NULL){
+		std::cerr<<"NULLBODY";
 		body->compile(context);
 	}
 	if(what=="return"){
@@ -167,8 +187,8 @@ void jump_stmt::compile(translate_context &context){
 	std::cout<<std::endl;
 }
 void while_stmt::compile(translate_context &context){
-	int current_ln = context.label_no;//current label number
 	context.label_no = context.label_no+1;
+	int current_ln = context.label_no;//current label number
 	std::cout<<"$L"<<current_ln<<":";
 
 	//find branch condition
@@ -201,7 +221,14 @@ void function_name::compile(translate_context& context){
 
 }
 void param_decl::compile(translate_context& context){
-
+	context.para_no++;
+	context.get_symbol=true;
+	if(r!=NULL){
+		std::cerr<<"r"<<std::endl;
+		r->compile(context);
+	}
+	GetTempReg(context.t_reg_no);
+	std::cout<<"sw      "<<context.t_reg_no<<","<<context.offset_base+context.para_no*4<<"($fp)"<<std::endl;
 }
 void type_name::compile(translate_context& context){
 
@@ -263,7 +290,11 @@ void external_dec::compile(translate_context& context){
 void translation_unit::compile(translate_context& context){
 }
 void function_definition::compile(translate_context &context){
+	context.current_scope_index++;
+	context.para_no=0;
+	context.current_scope[0]=context.current_scope[0]+1;
 	context.is_label=true;
+	context.offset_base=252;
 	//value to jump to on return context.current_ln
 	std::cout<<".align  2"<<std::endl;
 	std::cout<<".globl  ";
@@ -277,10 +308,9 @@ void function_definition::compile(translate_context &context){
 		context.is_label=true;
 		name->compile(context);
 	}
-
-	std::cout<<":"<<std::endl;
-	std::cout<<"\taddiu   $sp,$sp,"<<-256<<std::endl;//hardcoded, adjust number somehow?
-	std::cout<<"\tsw      $fp,252($sp)"<<std::endl;//why?
+	//colon printed in variable
+	std::cout<<"\taddiu   $sp,$sp,"<<"-"<<context.offset_base+4<<std::endl;//hardcoded, adjust number somehow?
+	std::cout<<"\tsw      $fp,"<<context.offset_base<<"($sp)"<<std::endl;//why?
 	std::cout<<"\tmove    $fp,$sp"<<std::endl;
 	if(params!=NULL){
 		params->compile(context);

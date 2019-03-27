@@ -17,6 +17,7 @@ class expr_list: public node{
 		expr_list(nodePtr in){ push(in);}
 		void push(nodePtr in){ v.push_back(in); };
 		void translate(int& tc);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"expr_list"<<std::endl;};
 };
 
