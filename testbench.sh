@@ -27,7 +27,7 @@ for i in ${input_dir}/*.c ; do
 	test_s_extension=$input_dir$"/"$test_no_extension$".s"
 	driver_c_extension=$input_dir$"/"$driver_no_extension$".c"
 
-	test_no_extension=$input_dir$"/"$test_no_extension #be careful with this this is a redifinition
+	test_no_extension=$input_dir$"/"$test_no_extension$"bin" #be careful with this this is a redifinition
 
 	#bin/c_compiler -S test_c_extension -o test_s_extension
 	mips-linux-gnu-gcc -S $(echo $test_c_extension) -o $(echo $test_s_extension) #testing tests using gcc
