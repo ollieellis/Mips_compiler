@@ -1,9 +1,13 @@
 def main():
-	x=x-5
-	if (0):
+	x=-5
 
-	else 
+	if (0):
+		pass
+
+	else: 
+		pass
 		if (1):
+			pass
 			x=x-5
 
 

@@ -1,9 +1,12 @@
 def main():
 	x=5
 	while (x==5):
+		pass
 		if (0):
+			pass
 
-		else 
+		else: 
+			pass
 			x=x-5
 
 

@@ -1,9 +1,12 @@
 def function(a,b):
 	if (a<b):
+		pass
 		a=a-1
 		if (b<a):
+			pass
 			b=b+3
 			if (a==b):
+				pass
 
 				return a*b
 
