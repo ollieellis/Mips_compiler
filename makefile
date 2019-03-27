@@ -55,8 +55,8 @@ clean :
 	-rm -f *.py
 	-rm -f *.s
 	-rm -f test_deliverable/test_cases/*.s
-    -rm -f *.s
-    -rm -f test_deliverable/test_cases/*.o
-    -rm -f test_deliverable/test_cases/*. 
+	-rm -f *.s
+	-rm -f test_deliverable/test_cases/*.o
+	-rm -f test_deliverable/test_cases/*. 
 
 
