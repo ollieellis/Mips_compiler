@@ -11,13 +11,13 @@ OBJS = $(patsubst %.cpp, %.o, $(CPPFILES))
 all : $(LINK_TARGET)
 
 run : $(LINK_TARGET)
-	bin/c_compiler --translate empty.c -o out.py
+	bin/c_compiler --translate test_program.c -o out.py
 
 go : $(LINK_TARGET)
-	bin/c_compiler -S empty.c -o result.s
+	bin/c_compiler -S test_program.c -o test_program.s
 
 debug : $(LINK_TARGET)
-	gdb --args bin/c_compiler --translate empty.c d -o out.py
+	gdb --args bin/c_compiler --translate test_program.c d -o out.py
 
 $(LINK_TARGET) : src/complete_lexer.yy.o src/test_parser.tab.o $(OBJS)
 								 $(CC) $(CPPFLAGS) $^ -o $@

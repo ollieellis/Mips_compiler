@@ -1730,7 +1730,7 @@ yyreduce:
 
   case 6:
 #line 80 "src/test_parser.y" /* yacc.c:1646  */
-    { (yyval.expr)=(yyvsp[-1].expr);}
+    { std::cerr<<"BRACKETED"<<std::endl;(yyval.expr)= new bracketed_expr(*(yyvsp[-2].string), *(yyvsp[0].string), (yyvsp[-1].expr));}
 #line 1735 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 

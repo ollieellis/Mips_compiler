@@ -77,7 +77,7 @@ PRI_EXPR
 	: T_IDENTIFIER { std::cerr<<"PRIM"<<*$1;$$ = new identifier(*$1);}
 	| T_NUMBER { $$ = new constant($1);std::cerr<<$1;}
 	| T_STRING { $$ = new str_lit(*$1);}
-	| T_LBRACKET EXPR T_RBRACKET { $$=$2;}
+	| T_LBRACKET EXPR T_RBRACKET { std::cerr<<"BRACKETED"<<std::endl;$$= new bracketed_expr(*$1, *$3, $2);}
 	;
 
 POSTFIX_EXPR

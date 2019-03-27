@@ -45,6 +45,17 @@ class type_list: public node{
 		void print(){std::cerr<<"expr_list"<<std::endl;};
 };
 //-------- base node for similar exprs
+class bracketed_expr: public node{
+  protected:
+    std::string LB;
+		nodePtr E;
+    std::string RB;
+  public:
+    bracketed_expr(std::string lb, std::string rb,nodePtr e): LB(lb), E(e), RB(rb) {}
+		void translate(int& tc);
+		void compile(translate_context &context);
+		void print(){std::cerr<<"br_expr"<<std::endl;};
+};
 class binary_expr: public node{
   protected:
     nodePtr L;

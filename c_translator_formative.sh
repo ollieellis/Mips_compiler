@@ -37,7 +37,7 @@ for i in ${input_dir}/*.c ; do
         $compiler --translate $i -o ${working}/$base-got.py
 
         # Run the DUT python version
-        python ${working}/$base-got.py
+        python3 ${working}/$base-got.py
         GOT_P_OUT=$?
     fi
 

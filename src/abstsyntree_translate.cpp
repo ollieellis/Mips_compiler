@@ -36,8 +36,18 @@ void seperator_expr::translate(int& tc){
 		R->translate(tc);
 	}
 }
+void bracketed_expr::translate(int& tc){
+	std::cerr<<"b_expr"<<std::endl;
+	if(E!=NULL){
+		std::cout<<LB;
+		E->translate(tc);
+		std::cout<<RB;
+		std::cout<<std::endl;
+	}
+}
 //unary
 //postfix
+
 void incr::translate(int& tc){
 		std::cerr<<"incr"<<std::endl;
 	print_tab(tc);std::cout<<"+=1";

@@ -11,17 +11,24 @@ void ReplaceTempReg(int& r);
 //use r1 and r2 names each time
 //nodes need functions in translate and compile
 void  constant::compile(translate_context& context){//ostream printing?
-	std::cout<<"li      "<<context.t_reg_no<<", "<<value;
+	std::cerr<<"const"<<context.get_returnval;
+	if(context.get_returnval){
+		std::cerr<<"ANDHERE";
+		context.returnval=value;
+	}
+	else{
+		std::cout<<"li      "<<context.t_reg_no<<", "<<value;
+	}
 }
 void identifier::compile(translate_context& context){
 	if(context.is_label){
   	std::cout<<value;
 	}
-	else if(value=="return"){
-		context.get_returnval=true;
-	}
 	else{
 		//get variable offset
+		if(context.get_returnval){
+
+		}
 		std::vector<std::string> vattributes;
 	}
 }
@@ -123,6 +130,12 @@ void binary_expr::compile(translate_context& context){
 void seperator_expr::compile(translate_context &context){
 
 }
+void bracketed_expr::compile(translate_context &context){
+	if(E!=NULL){
+		E->compile(context);
+		std::cout<<std::endl;
+	}
+}
 void incr::compile(translate_context &context){
 
 }
@@ -138,11 +151,16 @@ void unary_expr::compile(translate_context &context){
 void jump_stmt::compile(translate_context &context){
 	std::cerr<<"jmpstmt"<<std::endl;
 	std::cout<<std::endl;
+	if(what=="return"){
+		std::cerr<<"TRUE";
+		context.get_returnval=true;
+	}
 	//std::cout<<what<<": "<<std::endl;
 	if(body!=NULL){
 		body->compile(context);
 	}
 	if(what=="return"){
+		std::cerr<<"HERE"<<context.returnval;
 		std::cout<<"\tli      $2,"<<context.returnval<<std::endl;
 		std::cout<<"\tb       $L0"<<std::endl;
 	}
