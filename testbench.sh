@@ -33,10 +33,10 @@ for i in ${input_dir}/*.c ; do
 	mips-linux-gnu-gcc -S $(echo $test_c_extension) -o $(echo $test_s_extension) #testing tests using gcc
 	#mips-linux-gnu-gcc -S $(echo $test_c_extension) -o $"out.s" #testing tests using gcc
 
-	echo $mips_gcc -o $(echo $test_o_extension) -c $(echo $test_s_extension)
+	$mips_gcc -o $(echo $test_o_extension) -c $(echo $test_s_extension)
 	#echo $mips_gcc -o $(echo $test_o_extension) -c $"out.s"
 
-	echo $mips_gcc -static -o $(echo $test_no_extension) $(echo $test_o_extension) $(echo $driver_c_extension)
+	$mips_gcc -static -o $(echo $test_no_extension) $(echo $test_o_extension) $(echo $driver_c_extension)
 
 	qemu-mips $(echo $test_no_extension)
 
