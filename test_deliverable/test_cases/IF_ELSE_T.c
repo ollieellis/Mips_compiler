@@ -4,7 +4,7 @@ int iet(){
 		x=0;
 	}
 	else{
-		return -1; //fine as we cannot enter this branch
+		return -1;
 	}
 	return x;
 }

@@ -2162,7 +2162,7 @@ yyreduce:
 
   case 78:
 #line 215 "src/test_parser.y" /* yacc.c:1646  */
-    {std::cerr<<" D2 ";(yyvsp[-1].expr)->push((yyvsp[-2].expr));(yyval.expr)=(yyvsp[-1].expr);}
+    {std::cerr<<" D2 ";(yyval.expr)=(yyvsp[-1].expr);(yyvsp[-1].expr)->push((yyvsp[-2].expr));}
 #line 2167 "src/test_parser.tab.cpp" /* yacc.c:1646  */
     break;
 

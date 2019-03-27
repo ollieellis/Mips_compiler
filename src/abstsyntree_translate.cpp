@@ -119,7 +119,7 @@ void member::translate(int& tc){
 };
 void ideclarator::translate(int& tc){
 	std::cerr<<"ideclarator"<<std::endl;
-	print_tab(tc);
+	//print_tab(tc);
 	if(tc==0){
 		globalf=true;
 	}
@@ -162,7 +162,7 @@ std::cerr<<"typename"<<std::endl;
 void comp_stmt::translate(int& tc){
 	std::cerr<<"compstmt"<<std::endl;
 	if(body!=NULL){
-		std::cerr<<"comp_body: ";
+		std::cerr<<"comp_body: "<<std::endl;
 		body->translate(tc);
 	}
 	if(extra!=NULL){
@@ -380,7 +380,7 @@ void decl_list::translate(int& tc){
 	std::cerr<<"decllist"<<std::endl;
 	for(int i=0;i<v.size();i++){
 		if(v[i]!=NULL){
-			v[i]->translate(tc);
+			print_tab(tc);v[i]->translate(tc);
 		}
 	}
 	std::cout<<std::endl;

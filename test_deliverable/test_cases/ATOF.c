@@ -1,8 +1,8 @@
 #include <stdlib.h>
-int atof(){
+double atof(){
 	double b=2;
 	double c = atof("2");
 	int x;
-	x = b - c; //as simpler than an if statement
+	x = b - c;
 	return x;
 }

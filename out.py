@@ -1,7 +1,12 @@
 def main():
+		x=0
+	
+		b=0
+	
+		c=1	
 
-	return (6*2-3)
 
+	return 5+6
 
 
 

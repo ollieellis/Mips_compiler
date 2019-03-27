@@ -212,7 +212,7 @@ CONST_EXPR
 
 DECL
 	: DECL_SPECS T_SEMI {std::cerr<<" D1 ";std::cout<<$1;$$ = new decl_list($1);}
-	| DECL_SPECS INIT_DECLARATOR_LIST T_SEMI {std::cerr<<" D2 ";$2->push($1);$$=$2;}
+	| DECL_SPECS INIT_DECLARATOR_LIST T_SEMI {std::cerr<<" D2 ";$$=$2;$2->push($1);}
 	;
 
 DECL_SPECS

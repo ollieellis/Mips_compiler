@@ -1,10 +1,10 @@
 int if_else_fasle(){
-	int x=-1; //again assignment
+	int x=-1;
 	if(0){
-		return -1; //fine entering this branhc is an imediate fail
+		return -1;
 	}
 	else{
 		x=0;
 	}
-	return x; //oof 
+	return x;
 }
