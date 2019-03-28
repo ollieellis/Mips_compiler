@@ -32,6 +32,9 @@ int main(int argc, char *argv[]){
 		context.current_scope_index=0;
 		context.current_scope=fill;//100 scope levels
 		context.is_label=false;
+		context.store_symbol=false;
+		context.load_symbol=false;
+		context.get_returnval=false;
 		context.get_condition=false;
 
 		if(std::string(argv[1]) == "--translate"){

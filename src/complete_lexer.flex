@@ -36,18 +36,20 @@ hex                 {hexdigit}+[eE][+-]?{hexdigit}?
 hexlong             {hex}[lL]
 hexunsignedlong     {hexlong}[uU][lL]
 
-nondigit [a-zA-z_^"]
+nondigit [a-zA-Z_]
 
 newline [\r\n]+
-comment1 "//"[.]*{newline}
+comment1 "//"(.)*{newline}
 comment2 "/*"([^*]|(\*+[^*/]))*\*+\/
-white					[.]|{newline}|[ \t]|{comment1}|{comment2}
+white					{newline}|[ \t]|{comment1}|{comment2}
 real					{dec}|{hex}|{oct}|{decsigned}|{declong}|{decunsignedlong}|{octunsignedlong}|{octlong}|{hexlong}|{hexunsignedlong}
 
-L?\"[^"\n]*["\n] {return T_STR;}//check strings can't cross line boundaries
+
 variable {nondigit}[a-zA-Z0-9_]*
 
 %%
+
+(\"([^\\\"]|\\.)*\") {yylval.string = new std::string(yytext);return T_STR;}
 
 "."             { yylval.string=new std::string(yytext);return T_DOT;}
 [*]             { yylval.string=new std::string(yytext);return T_STAR; }
@@ -136,7 +138,8 @@ while      {  yylval.string=new std::string(yytext);return T_WHILE;}
 {white} {}
 {real} { yylval.number=strtod(yytext, 0); return T_NUMBER; }
 {variable} { yylval.string=new std::string(yytext); return T_IDENTIFIER; }
-
+[ \t\v\n\f]		{ }
+. {}
 %%
 void yyerror (char const *s)
 {

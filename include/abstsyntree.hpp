@@ -25,7 +25,7 @@ class translate_context{//just use unchangeable registers pluse two
 		bool store_symbol;
 		bool get_returnval;
 		int returnval;
-
+		//initialise new bools
 		int offset_base;
 		int current_offset;
 		int para_no;

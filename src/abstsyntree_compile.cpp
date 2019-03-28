@@ -39,16 +39,19 @@ void identifier::compile(translate_context& context){
 		outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get == (context.symtab).end()){
 			GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
-			std::cerr<<"symbol already stored"<<std::endl;
+			GetTempReg(context.t_reg_no);
+			std::cout<<"\tsw      $"<<context.t_reg_no<<","<<context.current_offset<<"($fp)"<<std::endl;
 		}
 		else{
-
+				std::cerr<<"symbol already stored"<<std::endl;
 		}
 	}
 	else if(context.load_symbol){
 			outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get != (context.symtab).end()){
 			GetSymtab(context.symtab,context.current_scope,value,context.current_offset);
+			std::cout<<"\tlw      $"<<context.t_reg_no<<","<<context.current_offset<<"($fp)"<<std::endl;
+			std::cout<<"\tnop"<<std::endl;
 		}
 		else{
 			std::cerr<<"symbol not found"<<std::endl;
@@ -220,10 +223,6 @@ void while_stmt::compile(translate_context &context){
 	std::cout<<"\tb       $L"<<current_ln<<std::endl;
 	std::cout<<"\tnop"<<std::endl;
 }
-void type_qual::compile(translate_context& context){
-
-
-}
 
 void array::compile(translate_context& context){
 
@@ -234,9 +233,35 @@ void member::compile(translate_context& context){
 void decl::compile(translate_context& context){
 
 }
+void type_qual::compile(translate_context& context){
+	std::cerr<<"qual"<<std::endl;
+	//std::cout<<qual;
+}
+void decl_list::compile(translate_context& context){
+	std::cerr<<"decllist"<<std::endl;
+	for(int i=0;i<v.size();i++){
+		if(v[i]!=NULL){
+			v[i]->compile(context);
+		}
+	}
+	std::cout<<std::endl;
+};
+void init_decl_list::compile(translate_context& context){
+	std::cerr<<"initdecllist"<<std::endl;
+	for(int i=0;i<v.size();i++){
+		if(v[i]!=NULL){
+			v[i]->compile(context);
+		}
+	}
+	std::cout<<std::endl;
+};
 
 void ideclarator::compile(translate_context& context){
-
+	std::cerr<<"ideclarator"<<std::endl;
+	//print_tab(tc);
+	if(var!=NULL){
+		var->compile(context);
+	}
 }
 void function_name::compile(translate_context& context){
 
@@ -280,12 +305,6 @@ void switch_stmt::compile(translate_context& context){
 void decl_specs::compile(translate_context& context){
 
 }
-void decl_list::compile(translate_context& context){
-
-}
-void init_decl_list::compile(translate_context& context){
-
-}
 void p_declarator::compile(translate_context& context){
 
 }
@@ -320,8 +339,10 @@ void function_definition::compile(translate_context &context){
 	std::cout<<".align  2"<<std::endl;
 	std::cout<<".globl  ";
 	name->compile(context);std::cout<<std::endl;
+	context.is_label=true;
 	std::cout<<".ent    ";
 	name->compile(context);std::cout<<std::endl;
+	context.is_label=true;
 	std::cout<<".type   ";
 	name->compile(context);std::cout<<", @function"<<std::endl;
 	std::cerr<<"funcdef"<<std::endl;

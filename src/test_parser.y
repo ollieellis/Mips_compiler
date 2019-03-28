@@ -28,7 +28,7 @@
 	string_list* strlist;
 }
 
-%token T_NUMBER T_IDENTIFIER T_STRING
+%token T_NUMBER T_IDENTIFIER T_STR
 %token T_PLUS T_MINUS T_DIVIDE T_STAR T_MOD
 %token T_POINT T_INCR T_DECR T_LSHIFT T_RSHIFT T_EQ T_NEQ T_GT T_GTE T_LT T_LTE T_NOT
 %token T_AND T_OR T_BWXOR T_BWAND T_BWOR T_BWNOT
@@ -57,7 +57,7 @@
 
 
 %type <number> T_NUMBER
-%type <string> T_IDENTIFIER T_STRING T_INCR T_DECR T_LBRACKET T_RBRACKET T_MOD T_DIVIDE T_AND T_BWOR
+%type <string> T_IDENTIFIER T_STR T_INCR T_DECR T_LBRACKET T_RBRACKET T_MOD T_DIVIDE T_AND T_BWOR
 %type <string> T_WHILE T_IF T_ELSE T_ASSIGN T_EQMULT T_EQDIV T_EQMOD T_EQPLUS T_EQMINUS
 %type <string> T_EQLSHIFT T_EQRSHIFT T_EQBWAND T_EQEXPONENT T_EQBWOR T_DEFAULT T_CASE
 %type <string>  T_BWAND T_STAR T_PLUS T_MINUS T_BWNOT T_NOT T_QEND T_RETURN
@@ -76,7 +76,7 @@ ROOT_NODE: TRANSLATION_UNIT { g_root=$1;}
 PRI_EXPR
 	: T_IDENTIFIER { std::cerr<<"PRIM"<<*$1;$$ = new identifier(*$1);}
 	| T_NUMBER { $$ = new constant($1);std::cerr<<$1;}
-	| T_STRING { $$ = new str_lit(*$1);}
+	| T_STR { $$ = new str_lit(*$1);}
 	| T_LBRACKET EXPR T_RBRACKET { std::cerr<<"BRACKETED"<<std::endl;$$= new bracketed_expr(*$1, *$3, $2);}
 	;
 
