@@ -4,13 +4,20 @@
 #include "abstsyntree.hpp"
 #include <string>
 #include <vector>
+typedef std::unordered_map< int, std::unordered_map< std::string, int> > outer_map;
+typedef std::unordered_map< std::string, int> inner_map;
+
 
 void GetTempReg(int& r);
 void ReplaceTempReg(int& r);
+int GetOuterKey(std::vector<int> v);
+void GiveSymtab(outer_map M, std::vector<int> v, std::string symbol, int offset);
+void GetSymtab(outer_map M, std::vector<int> v, std::string symbol, int offset);
+
 //static int makeNameUnq=0;
 //use r1 and r2 names each time
-//nodes need functions in translate and compile
-void  constant::compile(translate_context& context){//ostream printing?
+
+void  constant::compile(translate_context& context){
 	std::cerr<<"const"<<context.get_returnval;
 	if(context.get_returnval){
 		context.returnval=value;
@@ -24,17 +31,32 @@ void identifier::compile(translate_context& context){
   	std::cout<<value;std::cout<<":"<<std::endl;
 		context.is_label=false;
 	}
-	else if(context.get_symbol){
-
+	else if(context.store_symbol){
 		//search current_scope for right inner map
 		//search inner map for current variable
 		//get/create variable offset
-		//context.symtab;
-		std::vector<std::string> vattributes;
+		context.current_offset++;
+		outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
+		if(get == (context.symtab).end()){
+			GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
+			std::cout<<"dsa";
+
+		}
+		else{
+
+		}
+	}
+	else if(context.load_symbol){
+			outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
+		if(get != (context.symtab).end()){
+			GetSymtab(context.symtab,context.current_scope,value,context.current_offset);
+		}
+		else{
+			std::cerr<<"symbol not found"<<std::endl;
+		}
 	}
 	else if(context.get_returnval){
-		//get variable offset
-		std::vector<std::string> vattributes;
+	//get variable offset
 	}
 }
 void str_lit::compile(translate_context& context){
@@ -222,7 +244,7 @@ void function_name::compile(translate_context& context){
 }
 void param_decl::compile(translate_context& context){
 	context.para_no++;
-	context.get_symbol=true;
+	context.load_symbol=true;
 	if(r!=NULL){
 		std::cerr<<"r"<<std::endl;
 		r->compile(context);
@@ -337,4 +359,23 @@ void GetTempReg(int& r){
 }
 void ReplaceTempReg(int& r){
 	r--;
+}
+void GiveSymtab(outer_map M, std::vector<int> v, std::string symbol, int offset){
+	inner_map temp;
+	temp[symbol]=offset;
+	int o_key=GetOuterKey(v);
+	M[o_key]=temp;
+}
+void GetSymtab(outer_map M, std::vector<int> v, std::string symbol, int offset){
+	inner_map temp;
+	temp[symbol]=offset;
+	int o_key=GetOuterKey(v);
+	M[o_key]=temp;
+}
+int GetOuterKey(std::vector<int> v){
+	int sum=0;
+	for(int i=1; i<=v.size(); i++){
+		sum=i*v[i]+sum;//produce unique number for each scope
+	}
+	return sum;
 }

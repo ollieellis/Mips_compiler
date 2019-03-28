@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include <memory>
 #include <list>
 
@@ -13,14 +14,15 @@
 class translate_context{//just use unchangeable registers pluse two
 	public:
     std::vector<int32_t> params;
-    std::unordered_map< int, std::unordered_map< std::string, std::vector<int> > > symtab;
+    std::unordered_map<int, std::unordered_map< std::string, int > > symtab;
 		//symtab outer map key = scope
 		//symtab inner map key = scope
 		//inner vectorindex/ 0:scope_no 1: storage offset
 		bool is_label;
 		int label_no;
 		bool get_condition;
-		bool get_symbol;
+		bool load_symbol;
+		bool store_symbol;
 		bool get_returnval;
 		int returnval;
 

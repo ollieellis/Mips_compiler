@@ -207,7 +207,6 @@ void unary_expr::translate(int& tc){
 	}
 	if(S!=NULL){
 		S->translate(tc);
-		std::cout<<std::endl;
 	}
 
 }

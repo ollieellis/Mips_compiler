@@ -1,9 +1,13 @@
-def square(n,m,p):
-	if (n):
-		pass
-		m=m+1
+def main():
+
+	return -20<-10
 
 
 
 
 
+# Boilerplate
+if __name__ == "__main__":
+    import sys
+    ret=main()
+    sys.exit(ret)
