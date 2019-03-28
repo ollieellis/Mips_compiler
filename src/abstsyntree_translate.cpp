@@ -31,7 +31,7 @@ void seperator_expr::translate(int& tc){
 	if(L!=NULL){
 		L->translate(tc);
 	}
-	std::cout<<",";
+	std::cout<<", ";
 	if(R!=NULL){
 		R->translate(tc);
 	}
@@ -398,6 +398,9 @@ void init_decl_list::translate(int& tc){
 	for(int i=0;i<v.size();i++){
 		if(v[i]!=NULL){
 			v[i]->translate(tc);
+			if(i<(v.size()-1)&&(v.size()>1)){
+				std::cout<<", ";
+			}
 		}
 	}
 	std::cout<<std::endl;
