@@ -371,6 +371,7 @@ void function_definition::translate(int& tc){
 	for(int i=0;i<global_var.size();i++){
 		std::cout<<"	global "<<global_var[i]<<std::endl;
 	}
+	globalf=false;
 	tc++;
 	print_tab(tc);std::cout<<"pass"<<std::endl;
 	if(body!=NULL){
@@ -396,7 +397,14 @@ void decl_list::translate(int& tc){
 void init_decl_list::translate(int& tc){
 	std::cerr<<"initdecllist"<<std::endl;
 	int temptc;
+
 	for(int i=0;i<v.size();i++){
+		if(tc==0){
+			globalf=true;
+		}
+		else{
+			globalf=false;
+		}
 		if(v[i]!=NULL){
 			if((i==0)){
 				v[i]->translate(tc);
@@ -407,8 +415,10 @@ void init_decl_list::translate(int& tc){
 				print_tab(temptc);v[i]->translate(tc);temptc=tc;
 			}
 			else{
+				std::cout<<std::endl;
 				v[i]->translate(tc);
 			}
+
 		}
 	}
 	std::cout<<std::endl;
