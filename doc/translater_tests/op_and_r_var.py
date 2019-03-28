@@ -1,17 +1,9 @@
 def main():
-	x=-5
-
-	if (0):
-		pass
-
-	else: 
-		pass
-		if (1):
-			pass
-			x=x-5
+	a=0
+	b=1
 
 
-
+	return a and b
 
 
 

@@ -1,17 +1,10 @@
 def main():
-	x=5
-	while (x==5):
-		pass
-		if (0):
-			pass
-
-		else: 
-			pass
-			x=x-5
+	a=20
+	b=-10
 
 
 
-
+	return a>=b
 
 
 

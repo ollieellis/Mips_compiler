@@ -58,6 +58,6 @@ clean :
 	-rm -f *.s
 	-rm -f test_deliverable/test_cases/*.o
 	-rm -f test_deliverable/test_cases/*bin
-	-rm -f doc/translater_test*.py
+	-rm -f doc/translater_test/*.py
 
 

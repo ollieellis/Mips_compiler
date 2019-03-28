@@ -1,19 +1,11 @@
 def main():
-	x=0
+	a=-20
 
-
-	x=5
-	if (1):
-		pass
-		if (1):
-			pass
-			x=x-5
+	b=-10
 
 
 
-
-
-	return x
+	return a<=b
 
 
 

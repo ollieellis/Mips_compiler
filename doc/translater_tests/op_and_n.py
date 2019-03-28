@@ -1,14 +1,6 @@
 def main():
-	x=5
-	while (x==5):
-		pass
-		if (1):
-			pass
-			x=x-5
 
-
-
-
+	return 0 and 0
 
 
 

@@ -1,23 +1,9 @@
 def main():
-	x=0
+	a=0
+	b=0
 
 
-	x=5
-	if (0):
-		pass
-
-	else: 
-		pass
-		while (x==5):
-			pass
-			x=x-5
-
-
-
-
-
-
-	return x
+	return a or b
 
 
 
