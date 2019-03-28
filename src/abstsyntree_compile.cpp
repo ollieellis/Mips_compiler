@@ -27,11 +27,14 @@ void  constant::compile(translate_context& context){
 	}
 }
 void identifier::compile(translate_context& context){
+	std::cerr<<"id"<<value<<std::endl;
 	if(context.is_label){
-  	std::cout<<value;std::cout<<":"<<std::endl;
+		std::cerr<<"label"<<std::endl;
+  	std::cout<<value;
 		context.is_label=false;
 	}
 	else if(context.store_symbol){
+		std::cerr<<"storesym"<<std::endl;
 		//search current_scope for right inner map
 		//search inner map for current variable
 		//get/create variable offset
@@ -40,13 +43,16 @@ void identifier::compile(translate_context& context){
 		if(get == (context.symtab).end()){
 			GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
 			GetTempReg(context.t_reg_no);
-			std::cout<<"\tsw      $"<<context.t_reg_no<<","<<context.current_offset<<"($fp)"<<std::endl;
+			std::cout<<"\tsw      $"<<context.t_reg_no<<","<<4*context.current_offset<<"($fp)"<<std::endl;
+			ReplaceTempReg(context.t_reg_no);
 		}
 		else{
 				std::cerr<<"symbol already stored"<<std::endl;
 		}
+			context.store_symbol=false;
 	}
 	else if(context.load_symbol){
+				std::cerr<<"loadsym"<<std::endl;
 			outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get != (context.symtab).end()){
 			GetSymtab(context.symtab,context.current_scope,value,context.current_offset);
@@ -58,8 +64,10 @@ void identifier::compile(translate_context& context){
 		}
 	}
 	else if(context.get_returnval){
+				std::cerr<<"getreturnval"<<std::endl;
 	//get variable offset
 	}
+		std::cerr<<"getnone"<<std::endl;
 }
 void str_lit::compile(translate_context& context){
   std::cout<<value;
@@ -230,9 +238,6 @@ void array::compile(translate_context& context){
 void member::compile(translate_context& context){
 
 }
-void decl::compile(translate_context& context){
-
-}
 void type_qual::compile(translate_context& context){
 	std::cerr<<"qual"<<std::endl;
 	//std::cout<<qual;
@@ -259,6 +264,7 @@ void init_decl_list::compile(translate_context& context){
 void ideclarator::compile(translate_context& context){
 	std::cerr<<"ideclarator"<<std::endl;
 	//print_tab(tc);
+	context.store_symbol=true;
 	if(var!=NULL){
 		var->compile(context);
 	}
@@ -311,6 +317,11 @@ void p_declarator::compile(translate_context& context){
 void declarator::compile(translate_context& context){
 
 }
+void decl::compile(translate_context& context){
+	std::cerr<<"decl"<<std::endl;
+		L->compile(context);
+		R->compile(context);
+}
 void d_declarator::compile(translate_context& context){
 	std::cerr<<"ddec"<<std::endl;
 	if(dd!=NULL){
@@ -349,6 +360,7 @@ void function_definition::compile(translate_context &context){
 	if(name!=NULL){
 		context.is_label=true;
 		name->compile(context);
+		std::cout<<":"<<std::endl;
 	}
 	//colon printed in variable
 	std::cout<<"\taddiu   $sp,$sp,"<<"-"<<context.offset_base+4<<std::endl;//hardcoded, adjust number somehow?

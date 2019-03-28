@@ -382,6 +382,7 @@ void function_definition::translate(int& tc){
 }
 
 void decl::translate(int& tc){
+		std::cerr<<"decl"<<std::endl;
 		L->translate(tc);
 		R->translate(tc);
 }
