@@ -366,11 +366,13 @@ void function_definition::translate(int& tc){
 		params->translate(tc);
 	}
 	std::cout<<":"<<std::endl;
+
 	std::cerr<<"GsizeG"<<global_var.size()<<std::endl;
 	for(int i=0;i<global_var.size();i++){
 		std::cout<<"	global "<<global_var[i]<<std::endl;
 	}
 	tc++;
+	print_tab(tc);std::cout<<"pass"<<std::endl;
 	if(body!=NULL){
 		body->translate(tc);
 		std::cout<<std::endl;

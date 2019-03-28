@@ -3,6 +3,7 @@ x=0
 
 def f():
 	global x
+	pass
 	x=x+1
 
 	return x
@@ -12,6 +13,7 @@ def f():
 
 def main():
 	global x
+	pass
 
 	return f()+f()
 

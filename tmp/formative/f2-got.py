@@ -1,4 +1,5 @@
 def f():
+	pass
 
 	return 10
 
@@ -6,6 +7,7 @@ def f():
 
 
 def main():
+	pass
 
 	return f()
 

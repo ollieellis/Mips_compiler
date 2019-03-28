@@ -3,6 +3,7 @@ x=0
 
 def main():
 	global x
+	pass
 	x=1
 
 	return x

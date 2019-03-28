@@ -1,4 +1,5 @@
 def function(a,b):
+	pass
 	if (a<b):
 		pass
 		a=a-1
@@ -26,6 +27,7 @@ def function(a,b):
 
 
 def main():
+	pass
 
 	return function(0,0)+function(1,2)+function(4,3)+function(6,7)
 

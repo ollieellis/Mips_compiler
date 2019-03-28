@@ -39,8 +39,7 @@ void identifier::compile(translate_context& context){
 		outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get == (context.symtab).end()){
 			GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
-			std::cout<<"dsa";
-
+			std::cerr<<"symbol already stored"<<std::endl;
 		}
 		else{
 
