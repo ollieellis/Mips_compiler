@@ -213,7 +213,7 @@ void unary_expr::translate(int& tc){
 
 
 void size_of::translate(int& tc){
-	std::cout<<"sizeof(";
+	std::cerr<<"sizeof(";
 }
 
 void dir_abst_declarator::translate(int& tc){
