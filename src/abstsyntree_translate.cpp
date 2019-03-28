@@ -395,11 +395,19 @@ void decl_list::translate(int& tc){
 };
 void init_decl_list::translate(int& tc){
 	std::cerr<<"initdecllist"<<std::endl;
+	int temptc;
 	for(int i=0;i<v.size();i++){
 		if(v[i]!=NULL){
-			v[i]->translate(tc);
-			if(i<(v.size()-1)&&(v.size()>1)){
-				std::cout<<", ";
+			if((i==0)){
+				v[i]->translate(tc);
+				 temptc=tc;
+			}
+			else if(temptc!=0){
+				std::cout<<std::endl;
+				print_tab(temptc);v[i]->translate(tc);temptc=tc;
+			}
+			else{
+				v[i]->translate(tc);
 			}
 		}
 	}
@@ -407,12 +415,12 @@ void init_decl_list::translate(int& tc){
 };
 void p_declarator::translate(int& tc){
 	std::cerr<<"pdeclarator"<<std::endl;
-
-	std::cout<<"pdec: ->";
 }
 void print_tab(int x){
 	std::cerr<<"			current tab="<<x<<std::endl;
-	for(int i=0;i<x;i++){
-		std::cout<<"	";
+	if(x>0){
+		for(int i=0;i<x;i++){
+			std::cout<<"	";
+		}
 	}
 };
