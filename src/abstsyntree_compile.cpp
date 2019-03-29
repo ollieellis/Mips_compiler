@@ -47,11 +47,10 @@ void identifier::compile(translate_context& context){
 		context.current_offset++;
 		outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get == (context.symtab).end()){
-			GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
-			std::cout<<"\tsw      $8,"<<4*context.current_offset<<"($fp)"<<std::endl;
+			std::cerr<<"scope not here"<<std::endl;
 		}
 		else{
-				std::cerr<<"symbol already stored"<<std::endl;
+				std::cerr<<"scope already stored"<<std::endl;
 				GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
 				std::cout<<"\tsw      $8,"<<4*context.current_offset<<"($fp)"<<std::endl;
 		}
@@ -133,7 +132,7 @@ void binary_expr::compile(translate_context& context){
 		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op=="*"){
-		 std::cerr<<"sub"<<std::endl;
+		 std::cerr<<"mul"<<std::endl;
 		 L->compile(context);
 		 GetTempReg(context.t_reg_no);
 		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
@@ -143,13 +142,15 @@ void binary_expr::compile(translate_context& context){
 		 std::cout<<"\tmflo    $8"<<std::endl;
 	 }
 	 if(op=="/"){
-		 GetTempReg(context.t_reg_no);
-		 int under = context.t_reg_no;
-
-		  std::cout<<"\tbne    "<<under<<",$0"<<std::endl;
-			std::cout<<"\tbne    "<<under<<",$0"<<std::endl;
-			std::cout<<"\tbreak   7"<<std::endl;
-
+		 std::cerr<<"div"<<std::endl;
+			L->compile(context);
+			GetTempReg(context.t_reg_no);
+			std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+			int ls = context.t_reg_no;
+			R->compile(context);
+			std::cout<<"\tdiv     $"<<ls<<",$8"<<std::endl;
+			std::cout<<"\tmflo    $8"<<std::endl;
+			std::cout<<"\tmfhi    $8"<<std::endl;
 	 }
 	 /*
 	 if(op==std::string(1, %)){//check
@@ -166,14 +167,47 @@ void binary_expr::compile(translate_context& context){
 
 	 }
 	 if(op=="=="){
-		 if(context.get_condition){
-			 context.condition="beq";
-		 }
+		 std::cerr<<"lt"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 context.label_no++;
+		 std::cout<<"\tbne     $"<<ls<<",$"<<rs<<",neqlabel"<<context.label_no<<std::endl;
+		 std::cout<<"\tli      $8, "<<"1"<<std::endl;
+		  context.label_no++;
+		 std::cout<<"\tb       ,endlabel"<< context.label_no<<std::endl;
+		 std::cout<<"neqlabel"<<context.label_no<<":"<<std::endl;
+		 std::cout<<"\tli      $8, "<<"0"<<std::endl;
+		 std::cout<<"endlabel"<<context.label_no<<":"<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
+
 	 }
 	 if(op=="!="){
-		if(context.get_condition){
-			context.condition="bne";
-		}
+		 std::cerr<<"lt"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 context.label_no++;
+		 std::cout<<"\tbne     $"<<ls<<",$"<<rs<<",neqlabel"<<context.label_no<<std::endl;
+		 std::cout<<"\tli      $8, "<<"0"<<std::endl;
+			context.label_no++;
+		 std::cout<<"\tb       ,endlabel"<<context.label_no<<std::endl;
+		 std::cout<<"neqlabel"<<context.label_no<<":"<<std::endl;
+		 std::cout<<"\tli      $8, "<<"1"<<std::endl;
+		 std::cout<<"endlabel"<<context.label_no<<":"<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op=="&"){
 
@@ -182,14 +216,67 @@ void binary_expr::compile(translate_context& context){
 
 	 }
 	 if(op==">"){
-
+		 std::cerr<<"lt"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\taddiu   $"<<rs<<",$0,1"<<std::endl;
+		 std::cout<<"\tslt     $8,$"<<rs<<",$"<<ls<<std::endl;
+		 std::cout<<"\tandi    $8,$8,0x00ff"<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
+	 }
+	 if(op=="<"){
+		 std::cerr<<"lt"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\tslt     $8,$"<<ls<<",$"<<rs<<std::endl;
+		 std::cout<<"\tandi    $8,$8,0x00ff"<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op=="<="){
-		 context.condition="ble";
+		 std::cerr<<"lt"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\taddiu   $"<<rs<<",$0,1"<<std::endl;
+		 std::cout<<"\tslt     $8,$"<<ls<<",$"<<rs<<std::endl;
+		 std::cout<<"\tandi    $8,$8,0x00ff"<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 
 	 }
 	 if(op==">="){
-		 	 context.condition="bge";
+		 std::cerr<<"lt"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\tslt     $8,$"<<rs<<",$"<<ls<<std::endl;
+		 std::cout<<"\tandi    $8,$8,0x00ff"<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op=="!="){
 
@@ -198,14 +285,32 @@ void binary_expr::compile(translate_context& context){
 
 	 }
 	 if(op=="<<"){
-		 std::cout<<"\tlw      "<<"$2,28($fp)"<<std::endl;
-		 std::cout<<"\tnop"<<std::endl;
-		 std::cout<<"\tsll     "<<"$2,$2,1"<<std::endl;
-		 std::cout<<"\tsw      "<<"$2,24($fp)"<<std::endl;
+		 std::cerr<<"sub"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\tsll     $8,$"<<ls<<",$"<<rs<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op==">>"){
-		 std::cout<<"\tsra     "<<"$2,$2,1"<<std::endl;
-		 std::cout<<"\tsw      "<<"$2,24($fp)"<<std::endl;
+		 std::cerr<<"sub"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\tsra     $8,$"<<ls<<",$"<<rs<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 	 }
  }
  	context.load_symbol=false;
