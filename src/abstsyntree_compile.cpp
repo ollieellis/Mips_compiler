@@ -4,6 +4,7 @@
 #include "abstsyntree.hpp"
 #include <string>
 #include <vector>
+#include <cmath>
 typedef std::unordered_map< int, std::unordered_map< std::string, int> > outer_map;
 typedef std::unordered_map< std::string, int> inner_map;
 
@@ -450,6 +451,9 @@ void GetSymtab(outer_map M, std::vector<int> v, std::string symbol, int& l_o){
 	l_o = temp[symbol];
 }
 int GetOuterKey(std::vector<int> v){
-	int sum=3;
-	return sum;
+	int return_val=0;
+	for (int i=0; i<9; i++){
+  	return_val = return_val + v[i]*std::pow(10, i);
+	}
+	return return_val;
 }
