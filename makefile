@@ -20,13 +20,10 @@ debug : $(LINK_TARGET)
 	gdb --args bin/c_compiler --translate test_program.c d -o output.py
 
 $(LINK_TARGET) : src/complete_lexer.yy.o src/test_parser.tab.o $(OBJS)
-								 $(CC) $(CPPFLAGS) $^ -o $@
-
-bin/% : src/%.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+								 $(CC) $(CXXFLAGS) $^ -o $@
 
 src/%.o : src/%.cpp $(HPPFILES)
-					$(CC) $(CPPFLAGS) -c -o $@ $<
+					$(CC) $(CXXFLAGS) -c -o $@ $<
 
 src/test_parser.tab.cpp src/test_parser.tab.hpp: src/test_parser.y
 	bison -v -d src/test_parser.y -o src/test_parser.tab.cpp
@@ -34,9 +31,6 @@ src/test_parser.tab.cpp src/test_parser.tab.hpp: src/test_parser.y
 
 src/complete_lexer.yy.cpp: src/complete_lexer.flex src/test_parser.tab.hpp
 	flex -o src/complete_lexer.yy.cpp  src/complete_lexer.flex
-
-makeobj:
-				$(CC) $(CPPFLAGS) -o bin/testout
 
 lexer: src/complete_lexer.yy.cpp
 
