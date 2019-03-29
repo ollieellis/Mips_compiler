@@ -30,8 +30,8 @@ for i in ${input_dir}/*.c ; do
 
 	test_no_extension=$input_dir$"/"$test_no_extension$"bin" #be careful with this this is a redifinition
 
-	#bin/c_compiler -S test_c_extension -o test_s_extension
-	mips-linux-gnu-gcc -S $(echo $test_c_extension) -o $(echo $test_s_extension) #testing tests using gcc
+	bin/c_compiler -S $(echo $test_c_extension) -o $(echo $test_s_extension) #testing tests using gcc
+	#mips-linux-gnu-gcc -S $(echo $test_c_extension) -o $(echo $test_s_extension) #testing tests using gcc
 	#mips-linux-gnu-gcc -S $(echo $test_c_extension) -o $"out.s" #testing tests using gcc
 
 	$mips_gcc -o $(echo $test_o_extension) -c $(echo $test_s_extension)
