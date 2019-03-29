@@ -47,21 +47,22 @@ void identifier::compile(translate_context& context){
 		outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get == (context.symtab).end()){
 			GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
-			GetSymtab(context.symtab,context.current_scope,value,context.load_offset);
 			std::cout<<"\tsw      $8,"<<4*context.current_offset<<"($fp)"<<std::endl;
 		}
 		else{
 				std::cerr<<"symbol already stored"<<std::endl;
+				GiveSymtab(context.symtab,context.current_scope,value,context.current_offset);
+				std::cout<<"\tsw      $8,"<<4*context.current_offset<<"($fp)"<<std::endl;
 		}
 			context.store_symbol=false;
 	}
 	else if(context.load_symbol){
 		std::cerr<<"loadsym"<<std::endl;
+		std::cerr<<"OVER"<<GetOuterKey(context.current_scope)<<std::endl;
 		outer_map::const_iterator get=(context.symtab).find(GetOuterKey(context.current_scope));
 		if(get != (context.symtab).end()){
 			GetSymtab(context.symtab,context.current_scope,value,context.load_offset);
-			GetTempReg(context.t_reg_no);
-			std::cout<<"\tlw      $"<<context.t_reg_no<<","<<context.load_offset<<"($fp)"<<std::endl;
+			std::cout<<"\tlw      $8"<<","<<4*context.load_offset<<"($fp)"<<std::endl;
 			std::cout<<"\tnop"<<std::endl;
 		}
 		else{
@@ -95,13 +96,13 @@ void expr_stmt::compile(translate_context& context){
 void binary_expr::compile(translate_context& context){
 	std::cerr<<"binary"<<std::endl;
 	if(op=="="){
-			context.store_symbol=true;
 			R->compile(context);
+			context.store_symbol=true;
 			L->compile(context);
+
 	}
 	else{
 	context.load_symbol=true;
-
 	 if(op=="+"){//addu or addiu?s
 		 std::cerr<<"add"<<std::endl;
 		 L->compile(context);
@@ -117,13 +118,28 @@ void binary_expr::compile(translate_context& context){
 		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op=="-"){
+		 std::cerr<<"sub"<<std::endl;
 		 L->compile(context);
-		 std::cout<<"\tsubu    "<<context.t_reg_no<<" ";
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
 		 R->compile(context);
-		 std::cout<<context.t_reg_no<<std::endl;
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int rs= context.t_reg_no;
+		 std::cout<<"\tsubu    $8,$"<<ls<<",$"<<rs<<std::endl;
+		 ReplaceTempReg(context.t_reg_no);
+		 ReplaceTempReg(context.t_reg_no);
 	 }
 	 if(op=="*"){
-		 std::cout<<"\tmult    $3,$2"<<std::endl;
+		 std::cerr<<"sub"<<std::endl;
+		 L->compile(context);
+		 GetTempReg(context.t_reg_no);
+		 std::cout<<"\taddiu   $"<<context.t_reg_no<<",$8,0"<<std::endl;
+		 int ls = context.t_reg_no;
+		 R->compile(context);
+		 std::cout<<"\tmult    $"<<ls<<",$8"<<std::endl;
+		 std::cout<<"\tmflo    $8"<<std::endl;
 	 }
 	 if(op=="/"){
 		 GetTempReg(context.t_reg_no);
@@ -371,6 +387,8 @@ void function_definition::compile(translate_context &context){
 	context.current_scope[0]=context.current_scope[0]+1;
 	context.is_label=true;
 	context.offset_base=context.offset_base+126;
+	inner_map first;
+	context.symtab[GetOuterKey(context.current_scope)]=first;
 	//value to jump to on return context.current_ln
 	std::cout<<".align  2"<<std::endl;
 	std::cout<<".globl  ";
@@ -432,9 +450,6 @@ void GetSymtab(outer_map M, std::vector<int> v, std::string symbol, int& l_o){
 	l_o = temp[symbol];
 }
 int GetOuterKey(std::vector<int> v){
-	int sum=0;
-	for(int i=1; i<=v.size(); i++){
-		sum=i*v[i]+sum;//produce unique number for each scope
-	}
+	int sum=3;
 	return sum;
 }

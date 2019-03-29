@@ -1,2 +1,2 @@
 int f();
-int main() { return !( 1 == f() ); }
+int main() { return !( 9 == f() ); }
