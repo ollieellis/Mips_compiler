@@ -101,6 +101,7 @@ class expr_stmt: public node{
 		nodePtr E;
 		expr_stmt(nodePtr in): E(in){}
 		void translate(int& tc);
+		void compile(translate_context &context);
 		void print(){std::cerr<<"expr_list"<<std::endl;};
 };
 class label_stmt: public node{

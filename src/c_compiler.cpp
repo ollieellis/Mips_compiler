@@ -28,12 +28,15 @@ int main(int argc, char *argv[]){
 		//for (int i=0; i<5; ++i) stack.push(i);
 		std::vector<int> fill(100, 0);
 		context.label_no=1;//$L0 is for all returns jump to end
-		context.t_reg_no=8;
+		context.t_reg_no=9;
+		context.current_offset=0;
+		context.offset_base=0;
 		context.current_scope_index=0;
 		context.current_scope=fill;//100 scope levels
 		context.is_label=false;
 		context.store_symbol=false;
 		context.load_symbol=false;
+		context.load_offset=0;
 		context.get_returnval=false;
 		context.get_condition=false;
 

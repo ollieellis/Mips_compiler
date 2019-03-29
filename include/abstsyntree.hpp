@@ -28,6 +28,7 @@ class translate_context{//just use unchangeable registers pluse two
 		//initialise new bools
 		int offset_base;
 		int current_offset;
+		int load_offset;
 		int para_no;
 		std::vector<int> current_scope;
 		int current_scope_index;

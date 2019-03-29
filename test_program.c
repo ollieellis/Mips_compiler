@@ -1,5 +1,5 @@
-void f(int x, int y){  }
-
-void main(){
-	return (10);
+int main(){
+    int a=2;
+    a=a+7;
+    return a;
 }
