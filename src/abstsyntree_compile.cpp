@@ -30,7 +30,7 @@ void  constant::compile(translate_context& context){
 void identifier::compile(translate_context& context){
 	if(context.get_returnval){
 		GetSymtab(context.symtab,context.current_scope,value,context.load_offset);
-		std::cout<<"\tlw      $2,"<<context.load_offset<<"($fp)"<<std::endl;
+		std::cout<<"\tlw      $2,"<<4*context.load_offset<<"($fp)"<<std::endl;
 	}
 	std::cerr<<"id"<<value<<std::endl;
 	if(context.is_label){
@@ -101,7 +101,6 @@ void binary_expr::compile(translate_context& context){
 	}
 	else{
 	context.load_symbol=true;
-	std::cout<<"\tnop     "<<std::endl;
 
 	 if(op=="+"){//addu or addiu?s
 		 std::cerr<<"add"<<std::endl;
@@ -239,7 +238,6 @@ void jump_stmt::compile(translate_context &context){
 		body->compile(context);
 	}
 	if(what=="return"){
-		std::cerr<<"HERE"<<context.returnval;
 
 		std::cout<<"\tb       $L0"<<std::endl;
 	}
