@@ -26,13 +26,13 @@ int main(int argc, char *argv[]){
 
 		//ast->print();
 		//for (int i=0; i<5; ++i) stack.push(i);
-		std::vector<int> fill(100, 0);
+		std::vector<int> scope_temp(9, 0);
 		context.label_no=1;//$L0 is for all returns jump to end
 		context.t_reg_no=9;
 		context.current_offset=0;
 		context.offset_base=0;
 		context.current_scope_index=0;
-		context.current_scope=fill;//100 scope levels
+		context.current_scope=scope_temp;
 		context.is_label=false;
 		context.store_symbol=false;
 		context.load_symbol=false;
