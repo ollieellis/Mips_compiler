@@ -16,6 +16,7 @@ for i in ${input_dir}/*.c ; do
 	#https://www.thegeekstuff.com/2010/07/bash-string-manipulation/
 	#base=$(echo $i | sed -E -e "s|${input_dir}/([^.]+)[.]c|\1|g"); //from c formative
 	test_no_extension=$(echo $i | sed -E -e "s|${input_dir}/([^.]+)[.]c|\1|g");
+	name_4_result=$test_no_extension
 
 	#get driver
 	#https://stackoverflow.com/questions/4181703/how-to-concatenate-string-variables-in-bash
@@ -41,7 +42,7 @@ for i in ${input_dir}/*.c ; do
 	qemu-mips $(echo $test_no_extension)
 
 	exit_code=$?
-	echo $exit_code #testing
+	#echo $exit_code #testing
 
 	#-ansi -pedantic :
 	#-ansi: tells the compiler to implement the ANSI language option. This turns off certain "features" of GCC which are incompatible with the ANSI standard.
@@ -54,6 +55,7 @@ for i in ${input_dir}/*.c ; do
 		test_result="fail"
 	fi
 	((no_tests = no_tests + 1))
+	echo $name_4_result$" "$test_result
 
 	#print file name n pass/fail
 	#clean directory ??????

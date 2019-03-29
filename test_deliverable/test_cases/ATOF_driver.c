@@ -1,4 +1,5 @@
-int atof();
+double ATOF();
+
 int main(){
-	return atof();
+	return !(ATOF()==5.463);
 }

@@ -1,1 +1,2 @@
-//meant to be empty
+void x(){
+}

@@ -1,6 +1,6 @@
 int x=5;
 
-global_variale(){
+int global_variable(){
 	x=x-5;
 	return x;
 }

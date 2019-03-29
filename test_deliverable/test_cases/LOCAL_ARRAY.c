@@ -1,5 +1,5 @@
 int local_array(){
-	int array[2];
+	int array[3];
 	array[0] = 1;
 	array[2] = 2;
 	int x;

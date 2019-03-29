@@ -1,4 +1,4 @@
-input_dir="doc/translater_tests"
+input_dir="doc/translater_tests/variables"
 
 make clean
 make all
@@ -8,7 +8,7 @@ for i in ${input_dir}/*.c ; do
 	py=$input_dir$"/"$test_no_extension$".py"
 	bin/c_compiler --translate $(echo $i) $(echo "-o") $(echo $py)
 	C_GOT=$?
-	echo "###################### PYTHOn ############################"
+	echo "############################### PYTHOn #####################################"
 	python3 $(echo $py)
 	P_GOT=$?
 

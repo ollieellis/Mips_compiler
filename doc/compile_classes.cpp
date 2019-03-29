@@ -21,6 +21,8 @@ void while_stmt::compile(translate_context &context){
 	std::cout<<"$L"<<while_start<<":";
 	
 	std::cout<<"lw ";//get free reg
+
+	//need to get condition not rlly sure how ngl
 	condition->compile(context); //this line should return a number becuase its an EXPR
 	//assuming it returns to s£2 the return reg??
 	std::cout << "beq " << "s$2, " << "$0 $L" << while_end <<std:endl; //no tabs n stuff yet
@@ -29,4 +31,21 @@ void while_stmt::compile(translate_context &context){
 	body->compile(context); //compiling $5 dont quite get the offset ngl
 	//here some sort of jump insturcution is neede but i dont know how to work out the offset
 	std::cout<<"$L"<<while_end<<":";
+}
+
+void ifelse_stmt(translate_context &context){
+	int else_start = context.label_no;//current label number
+	context.label_no = context.label_no+1;
+	int else_end = context.label_no;
+	context.label_no = context.label_no+1;
+
+	condition->compile(context); //this needs to translate the condition expression
+	//assumption here result of expresion is in s$2
+	std::cout << "beq " << "s$2, " << "$0 $L" << else_start <<std:endl; //no tabs n stuff yet
+
+	condition->compile(context);
+	std::cout << "beq " << "s$2, " << "$0 $L" << else_end <<std:endl; //no tabs n stuff yet
+	std::cout << "nop" 
+
+	std::cout<<"$L"<<else_start<<":";
 }
